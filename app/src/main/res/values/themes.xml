@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!--
+      Base platform theme. The app is Compose, so this theme only needs to remove
+      the action bar and set a calm window background to avoid a white flash on
+      launch. Colours and styling are handled by the Compose theme.
+
+      Uses the platform Material theme so no extra UI library is pulled in, which
+      keeps the app free of unnecessary dependencies. The dark variant is in
+      values-night/themes.xml.
+    -->
+    <style name="Theme.FlareEnough" parent="@android:style/Theme.Material.Light.NoActionBar">
+        <item name="android:windowBackground">@color/cream_background</item>
+        <item name="android:statusBarColor">@android:color/transparent</item>
+        <item name="android:navigationBarColor">@android:color/transparent</item>
+    </style>
+</resources>

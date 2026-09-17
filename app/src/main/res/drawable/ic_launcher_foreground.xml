@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  Launcher icon foreground. A calm sage ring with a small centre dot on the cream
+  background layer. Simple and gentle, in keeping with the app's look. Kept within
+  the adaptive icon safe zone so it is not clipped by any mask shape.
+-->
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="108dp"
+    android:height="108dp"
+    android:viewportWidth="108"
+    android:viewportHeight="108">
+
+    <!-- Outer ring: a sage disc with a cream hole punched through it. -->
+    <path
+        android:fillColor="@color/ic_launcher_sage"
+        android:pathData="M24,54 a30,30 0 1,0 60,0 a30,30 0 1,0 -60,0 Z" />
+    <path
+        android:fillColor="@color/ic_launcher_background"
+        android:pathData="M36,54 a18,18 0 1,0 36,0 a18,18 0 1,0 -36,0 Z" />
+
+    <!-- Centre dot. -->
+    <path
+        android:fillColor="@color/ic_launcher_sage"
+        android:pathData="M46,54 a8,8 0 1,0 16,0 a8,8 0 1,0 -16,0 Z" />
+</vector>

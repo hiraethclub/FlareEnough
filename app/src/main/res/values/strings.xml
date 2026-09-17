@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <!--
+      The app name. This is the single source of truth for the display name.
+      A pun on flares and "fair enough". Change it here and everywhere follows.
+    -->
+    <string name="app_name">Flare Enough</string>
+
+    <!-- Bottom navigation, one word each. -->
+    <string name="nav_today">Today</string>
+    <string name="nav_log">Log</string>
+    <string name="nav_history">History</string>
+    <string name="nav_stillness">Stillness</string>
+    <string name="nav_settings">Settings</string>
+
+    <!-- Common actions. -->
+    <string name="action_back">Back</string>
+
+    <!-- Temporary text for the setup milestone. Replaced by real screens later. -->
+    <string name="placeholder_today">Your next dose and today\'s check-in will live here.</string>
+    <string name="placeholder_log">Quick logging for doses and symptoms will live here.</string>
+    <string name="placeholder_history">Your calendar, timeline and charts will live here.</string>
+    <string name="placeholder_stillness">Timer, breathing pacer and bell will live here.</string>
+    <string name="placeholder_settings">Reminders, appearance, backup and about will live here.</string>
+
+</resources>

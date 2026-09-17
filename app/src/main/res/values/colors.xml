@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!--
+      Colours used by the Android platform theme (window background, launcher
+      icon). The Compose UI palette lives in Color.kt. These are kept in step
+      with it so there is no white flash before Compose draws.
+    -->
+    <color name="cream_background">#F6F1E7</color>
+    <color name="deep_background">#1E2328</color>
+
+    <!-- Launcher icon. -->
+    <color name="ic_launcher_background">#F6F1E7</color>
+    <color name="ic_launcher_sage">#7E9B84</color>
+</resources>
