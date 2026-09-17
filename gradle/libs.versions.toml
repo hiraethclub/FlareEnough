@@ -17,7 +17,10 @@ minSdk = "26"
 coreKtx = "1.15.0"
 lifecycle = "2.9.0"
 activityCompose = "1.10.1"
-composeBom = "2026.08.00"
+# Compose 1.12 (BOM 2026.08.00 and later) requires AGP 9 and compileSdk 37.
+# We stay on AGP 8.13 and compileSdk 36, so we pin the last BOM before that jump.
+# BOM 2026.06.01 ships Compose ui 1.11.4 and material3 1.4.0.
+composeBom = "2026.06.01"
 navigationCompose = "2.9.0"
 
 # Data.
