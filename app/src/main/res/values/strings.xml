@@ -24,4 +24,120 @@
     <string name="placeholder_stillness">Timer, breathing pacer and bell will live here.</string>
     <string name="placeholder_settings">Reminders, appearance, backup and about will live here.</string>
 
+    <!-- Common actions. -->
+    <string name="action_save">Save</string>
+    <string name="action_cancel">Cancel</string>
+    <string name="action_delete">Delete</string>
+    <string name="action_pause">Pause</string>
+    <string name="action_resume">Resume</string>
+    <string name="action_add">Add</string>
+    <string name="action_done">Done</string>
+    <string name="action_clear">Clear</string>
+
+    <!-- Settings entries. -->
+    <string name="settings_medications">Medications</string>
+    <string name="settings_medications_summary">Add and edit your medications</string>
+
+    <!-- Medications list. -->
+    <string name="medications_title">Medications</string>
+    <string name="medications_empty">No medications yet. Tap the plus button to add one.</string>
+    <string name="medications_add">Add medication</string>
+    <string name="medication_paused_label">Paused</string>
+    <string name="medication_stock_left">%1$d left</string>
+
+    <!-- Medication edit. -->
+    <string name="medication_add_title">Add medication</string>
+    <string name="medication_edit_title">Edit medication</string>
+    <string name="field_name">Name</string>
+    <string name="field_strength">Strength</string>
+    <string name="field_strength_hint">For example, 500 mg</string>
+    <string name="field_form">Form</string>
+    <string name="field_colour">Colour</string>
+    <string name="field_shape">Shape</string>
+    <string name="field_note">Note</string>
+    <string name="field_note_hint">For example, take with food</string>
+    <string name="optional_suffix">optional</string>
+
+    <string name="section_schedule">Schedule</string>
+    <string name="section_stock">Stock</string>
+    <string name="section_dates">Start and end</string>
+
+    <string name="schedule_type_label">How often</string>
+    <string name="schedule_type_every_day">Every day</string>
+    <string name="schedule_type_days_of_week">Days of the week</string>
+    <string name="schedule_type_every_n_days">Every few days</string>
+    <string name="schedule_type_weekly">Weekly</string>
+    <string name="schedule_type_cycle">Cycle with breaks</string>
+    <string name="schedule_type_as_needed">As needed</string>
+
+    <string name="times_label">Times</string>
+    <string name="add_time">Add time</string>
+    <string name="remove_time">Remove time</string>
+    <string name="interval_label">Every how many days</string>
+    <string name="cycle_on_label">Days on</string>
+    <string name="cycle_off_label">Days off</string>
+    <string name="days_of_week_label">On these days</string>
+    <string name="as_needed_gap_label">Minimum gap in hours</string>
+    <string name="as_needed_max_label">Most per day</string>
+    <string name="as_needed_explainer">The app only shows your last dose and a gentle notice if your own limits would be passed. It never suggests doses.</string>
+
+    <string name="stock_toggle">Track stock</string>
+    <string name="stock_count_label">Current count</string>
+    <string name="refill_label">Warn me at</string>
+
+    <string name="start_date_label">Start date</string>
+    <string name="end_date_label">End date</string>
+    <string name="date_not_set">Not set</string>
+
+    <string name="delete_confirm_title">Delete this medication?</string>
+    <string name="delete_confirm_message">Its history will be removed too. This cannot be undone.</string>
+    <string name="medication_deleted">Medication deleted</string>
+
+    <!-- Time and date pickers. -->
+    <string name="pick_time">Pick a time</string>
+    <string name="pick_date">Pick a date</string>
+
+    <!-- Medication forms. -->
+    <string name="form_tablet">Tablet</string>
+    <string name="form_capsule">Capsule</string>
+    <string name="form_injection">Injection</string>
+    <string name="form_liquid">Liquid</string>
+    <string name="form_cream">Cream</string>
+    <string name="form_inhaler">Inhaler</string>
+    <string name="form_patch">Patch</string>
+    <string name="form_other">Other</string>
+
+    <!-- Schedule summaries. -->
+    <string name="schedule_every_day">Every day at %1$s</string>
+    <string name="schedule_days">%1$s at %2$s</string>
+    <string name="schedule_weekly">Every %1$s at %2$s</string>
+    <string name="schedule_cycle">%1$d days on, %2$d days off, at %3$s</string>
+    <string name="schedule_as_needed">As needed</string>
+    <string name="schedule_as_needed_gap">As needed, at least %1$d hours apart</string>
+    <string name="schedule_no_times">No times set</string>
+    <plurals name="schedule_every_n_days">
+        <item quantity="one">Every day at %2$s</item>
+        <item quantity="other">Every %1$d days at %2$s</item>
+    </plurals>
+
+    <!-- Day names. Index 0 is Monday. -->
+    <string-array name="day_abbreviations">
+        <item>Mon</item>
+        <item>Tue</item>
+        <item>Wed</item>
+        <item>Thu</item>
+        <item>Fri</item>
+        <item>Sat</item>
+        <item>Sun</item>
+    </string-array>
+    <string-array name="day_full_names">
+        <item>Monday</item>
+        <item>Tuesday</item>
+        <item>Wednesday</item>
+        <item>Thursday</item>
+        <item>Friday</item>
+        <item>Saturday</item>
+        <item>Sunday</item>
+    </string-array>
+
 </resources>

@@ -1,10 +1,14 @@
 package club.hiraeth.flareenough.ui
 
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material3.CenterAlignedTopAppBar
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -14,31 +18,106 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
+import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.lifecycle.viewmodel.initializer
+import androidx.lifecycle.viewmodel.viewModelFactory
 import androidx.navigation.NavDestination.Companion.hierarchy
 import androidx.navigation.NavGraph.Companion.findStartDestination
+import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
+import androidx.navigation.navArgument
 import club.hiraeth.flareenough.R
 import club.hiraeth.flareenough.ui.history.HistoryScreen
 import club.hiraeth.flareenough.ui.log.LogScreen
+import club.hiraeth.flareenough.ui.medication.MedicationEditScreen
+import club.hiraeth.flareenough.ui.medication.MedicationEditViewModel
+import club.hiraeth.flareenough.ui.medication.MedicationListScreen
+import club.hiraeth.flareenough.ui.medication.MedicationListViewModel
 import club.hiraeth.flareenough.ui.navigation.Routes
 import club.hiraeth.flareenough.ui.navigation.TopDestination
 import club.hiraeth.flareenough.ui.settings.SettingsScreen
 import club.hiraeth.flareenough.ui.stillness.StillnessScreen
+import club.hiraeth.flareenough.ui.support.rememberAppContainer
 import club.hiraeth.flareenough.ui.today.TodayScreen
 
 /**
- * The whole app shell: a top bar, four bottom navigation destinations, and the
- * Settings screen reached from the top bar icon. This is the navigation skeleton
- * for the setup milestone. Real screen content arrives in later milestones.
+ * Top level navigation. The four tabs and Settings live inside the tabbed shell.
+ * Full screen flows like the medication list and editor sit above the shell so
+ * they get their own top bar and fill the screen, with no double chrome.
+ */
+@Composable
+fun FlareApp() {
+    val rootNav = rememberNavController()
+
+    NavHost(navController = rootNav, startDestination = ROUTE_MAIN) {
+        composable(ROUTE_MAIN) {
+            MainShell(onOpenMedications = { rootNav.navigate(Routes.MEDICATIONS) })
+        }
+
+        composable(Routes.MEDICATIONS) {
+            val container = rememberAppContainer()
+            val vm: MedicationListViewModel = viewModel(
+                factory = viewModelFactory {
+                    initializer { MedicationListViewModel(container.medicationRepository) }
+                },
+            )
+            MedicationListScreen(
+                onBack = { rootNav.popBackStack() },
+                onAddMedication = { rootNav.navigate(Routes.medicationEdit(0)) },
+                onOpenMedication = { id -> rootNav.navigate(Routes.medicationEdit(id)) },
+                viewModel = vm,
+            )
+        }
+
+        composable(
+            route = Routes.MEDICATION_EDIT_PATTERN,
+            arguments = listOf(
+                navArgument(Routes.MEDICATION_EDIT_ARG) { type = NavType.StringType },
+            ),
+        ) { backStackEntry ->
+            val medId = backStackEntry.arguments
+                ?.getString(Routes.MEDICATION_EDIT_ARG)
+                ?.toLongOrNull() ?: 0L
+            val container = rememberAppContainer()
+            val vm: MedicationEditViewModel = viewModel(
+                factory = viewModelFactory {
+                    initializer { MedicationEditViewModel(container.medicationRepository, medId) }
+                },
+            )
+            if (!vm.ready) {
+                LoadingScreen()
+            } else {
+                MedicationEditScreen(
+                    onBack = { rootNav.popBackStack() },
+                    onSaved = { rootNav.popBackStack() },
+                    onDeleted = { rootNav.popBackStack() },
+                    viewModel = vm,
+                )
+            }
+        }
+    }
+}
+
+@Composable
+private fun LoadingScreen() {
+    Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
+        CircularProgressIndicator()
+    }
+}
+
+/**
+ * The tabbed shell: a top bar, four bottom destinations, and Settings reached from
+ * the top bar icon.
  */
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun FlareApp() {
+private fun MainShell(onOpenMedications: () -> Unit) {
     val navController = rememberNavController()
     val backStackEntry by navController.currentBackStackEntryAsState()
     val currentRoute = backStackEntry?.destination?.route
@@ -46,9 +125,7 @@ fun FlareApp() {
 
     val titleRes = when (currentRoute) {
         Routes.SETTINGS -> R.string.nav_settings
-        else -> TopDestination.entries
-            .firstOrNull { it.route == currentRoute }
-            ?.labelRes
+        else -> TopDestination.entries.firstOrNull { it.route == currentRoute }?.labelRes
             ?: R.string.app_name
     }
 
@@ -81,8 +158,6 @@ fun FlareApp() {
             )
         },
         bottomBar = {
-            // The bottom bar is hidden on the Settings screen so it feels like a
-            // sub screen rather than a fifth tab.
             if (!onSettings) {
                 NavigationBar {
                     TopDestination.entries.forEach { destination ->
@@ -92,8 +167,6 @@ fun FlareApp() {
                             selected = selected,
                             onClick = {
                                 navController.navigate(destination.route) {
-                                    // Standard bottom nav behaviour: keep one copy of
-                                    // each destination and restore its state.
                                     popUpTo(navController.graph.findStartDestination().id) {
                                         saveState = true
                                     }
@@ -101,12 +174,7 @@ fun FlareApp() {
                                     restoreState = true
                                 }
                             },
-                            icon = {
-                                Icon(
-                                    imageVector = destination.icon,
-                                    contentDescription = null,
-                                )
-                            },
+                            icon = { Icon(destination.icon, contentDescription = null) },
                             label = { Text(stringResource(destination.labelRes)) },
                             alwaysShowLabel = true,
                         )
@@ -124,7 +192,11 @@ fun FlareApp() {
             composable(TopDestination.LOG.route) { LogScreen() }
             composable(TopDestination.HISTORY.route) { HistoryScreen() }
             composable(TopDestination.STILLNESS.route) { StillnessScreen() }
-            composable(Routes.SETTINGS) { SettingsScreen() }
+            composable(Routes.SETTINGS) {
+                SettingsScreen(onOpenMedications = onOpenMedications)
+            }
         }
     }
 }
+
+private const val ROUTE_MAIN = "main"

@@ -28,4 +28,14 @@ enum class TopDestination(
 /** Route names that are reached outside the bottom bar. */
 object Routes {
     const val SETTINGS = "settings"
+
+    /** The list of medications. */
+    const val MEDICATIONS = "medications"
+
+    /** Add or edit a medication. medId 0 means add a new one. */
+    const val MEDICATION_EDIT = "medication_edit"
+    const val MEDICATION_EDIT_ARG = "medId"
+    const val MEDICATION_EDIT_PATTERN = "$MEDICATION_EDIT/{$MEDICATION_EDIT_ARG}"
+
+    fun medicationEdit(medId: Long): String = "$MEDICATION_EDIT/$medId"
 }
