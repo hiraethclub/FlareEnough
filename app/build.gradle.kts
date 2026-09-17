@@ -2,6 +2,8 @@ plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
     alias(libs.plugins.kotlin.compose)
+    alias(libs.plugins.kotlin.ksp)
+    alias(libs.plugins.room)
 }
 
 android {
@@ -38,6 +40,14 @@ android {
         compose = true
     }
 
+    // Make the exported Room schemas available to instrumented migration tests as
+    // assets, so MigrationTestHelper can find them on the device.
+    sourceSets {
+        getByName("androidTest") {
+            assets.srcDir("$projectDir/schemas")
+        }
+    }
+
     // Dependency licence report tooling and Compose test manifests can duplicate
     // these files. Excluding them avoids a packaging clash.
     packaging {
@@ -55,6 +65,12 @@ kotlin {
     }
 }
 
+// Room exports the database schema as JSON to this folder on every build. The
+// files are committed so migrations can be written and tested against them.
+room {
+    schemaDirectory("$projectDir/schemas")
+}
+
 dependencies {
     // Pure Kotlin scheduling logic.
     implementation(project(":schedule"))
@@ -64,6 +80,11 @@ dependencies {
     implementation(libs.androidx.lifecycle.runtime.ktx)
     implementation(libs.androidx.lifecycle.viewmodel.compose)
     implementation(libs.androidx.activity.compose)
+
+    // Room database. The KSP compiler generates the DAO and database code.
+    implementation(libs.androidx.room.runtime)
+    implementation(libs.androidx.room.ktx)
+    ksp(libs.androidx.room.compiler)
 
     // Compose. The BOM keeps every Compose library on one tested version set.
     implementation(platform(libs.androidx.compose.bom))
@@ -82,6 +103,9 @@ dependencies {
     androidTestImplementation(libs.androidx.espresso.core)
     androidTestImplementation(platform(libs.androidx.compose.bom))
     androidTestImplementation(libs.androidx.compose.ui.test.junit4)
+
+    // Room instrumented tests (DAO behaviour and migrations on a device).
+    androidTestImplementation(libs.androidx.room.testing)
 
     // Compose tooling, debug builds only.
     debugImplementation(libs.androidx.compose.ui.tooling)

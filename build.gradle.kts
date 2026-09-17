@@ -5,6 +5,6 @@ plugins {
     alias(libs.plugins.kotlin.android) apply false
     alias(libs.plugins.kotlin.jvm) apply false
     alias(libs.plugins.kotlin.compose) apply false
-    // KSP and Room plugins are added in Milestone 2 (the database), with a KSP
-    // version verified against the chosen Kotlin version at that time.
+    alias(libs.plugins.kotlin.ksp) apply false
+    alias(libs.plugins.room) apply false
 }

@@ -24,8 +24,10 @@ composeBom = "2026.06.01"
 navigationCompose = "2.9.0"
 
 # Data.
-room = "2.7.1"
+room = "2.8.5"
 datastore = "1.1.1"
+# KSP tracks the Kotlin minor version. 2.3.12 pairs with Kotlin 2.3.21.
+ksp = "2.3.12"
 
 # Testing.
 junit4 = "4.13.2"
@@ -73,5 +75,5 @@ android-application = { id = "com.android.application", version.ref = "agp" }
 kotlin-android = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }
 kotlin-jvm = { id = "org.jetbrains.kotlin.jvm", version.ref = "kotlin" }
 kotlin-compose = { id = "org.jetbrains.kotlin.plugin.compose", version.ref = "kotlin" }
-kotlin-ksp = { id = "com.google.devtools.ksp", version = "2.3.21-2.0.2" }
+kotlin-ksp = { id = "com.google.devtools.ksp", version.ref = "ksp" }
 room = { id = "androidx.room", version.ref = "room" }
