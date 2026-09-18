@@ -107,6 +107,18 @@
     <string name="settings_medications_summary">Add and edit your medications</string>
     <string name="settings_reminders">Reminders</string>
     <string name="settings_reminders_summary">Check reminders can reach you</string>
+    <string name="settings_about">About</string>
+    <string name="settings_about_summary">Version, licence, and the not medical advice notice</string>
+
+    <!-- About screen. -->
+    <string name="about_title">About</string>
+    <string name="about_version">Version 0.1.0</string>
+    <string name="about_tagline">Free and open source. No ads, no tracking, no accounts.</string>
+    <string name="about_licence">Licensed under GPL-3.0, so it and any forks stay free.</string>
+    <string name="about_not_medical_title">Not medical advice</string>
+    <string name="about_not_medical_body">Flare Enough records and reminds only. It does not diagnose, recommend treatments, adjust doses, check interactions, or interpret symptoms. For medical advice, diagnosis, or treatment, please speak to a healthcare professional.</string>
+    <string name="about_privacy_title">Your data stays on your device</string>
+    <string name="about_privacy_body">The app has no internet permission and never sends your data anywhere. You are in control of any backup or export.</string>
 
     <!-- Notification channels. -->
     <string name="channel_dose_reminders">Dose reminders</string>

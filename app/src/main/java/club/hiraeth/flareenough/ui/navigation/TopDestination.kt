@@ -35,6 +35,9 @@ object Routes {
     /** The reminder health check screen. */
     const val REMINDER_HEALTH = "reminder_health"
 
+    /** The About screen. */
+    const val ABOUT = "about"
+
     /** Add or edit a medication. medId 0 means add a new one. */
     const val MEDICATION_EDIT = "medication_edit"
     const val MEDICATION_EDIT_ARG = "medId"

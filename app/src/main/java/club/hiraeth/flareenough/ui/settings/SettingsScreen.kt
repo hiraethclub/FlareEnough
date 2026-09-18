@@ -9,6 +9,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Info
 import androidx.compose.material.icons.filled.Medication
 import androidx.compose.material.icons.filled.NotificationsActive
 import androidx.compose.material3.Icon
@@ -26,6 +27,7 @@ import club.hiraeth.flareenough.R
 fun SettingsScreen(
     onOpenMedications: () -> Unit,
     onOpenReminderHealth: () -> Unit,
+    onOpenAbout: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
     Column(
@@ -45,7 +47,13 @@ fun SettingsScreen(
             summary = stringResource(R.string.settings_reminders_summary),
             onClick = onOpenReminderHealth,
         )
-        // More settings (appearance, backup, about) arrive in later milestones.
+        SettingsRow(
+            icon = Icons.Filled.Info,
+            title = stringResource(R.string.settings_about),
+            summary = stringResource(R.string.settings_about_summary),
+            onClick = onOpenAbout,
+        )
+        // More settings (appearance, backup) arrive in later milestones.
     }
 }
 

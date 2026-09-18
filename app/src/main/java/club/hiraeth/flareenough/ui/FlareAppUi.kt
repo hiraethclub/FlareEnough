@@ -33,6 +33,7 @@ import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
 import club.hiraeth.flareenough.R
+import club.hiraeth.flareenough.ui.about.AboutScreen
 import club.hiraeth.flareenough.ui.history.HistoryScreen
 import club.hiraeth.flareenough.ui.history.HistoryViewModel
 import club.hiraeth.flareenough.ui.medication.MedicationEditScreen
@@ -65,11 +66,16 @@ fun FlareApp() {
             MainShell(
                 onOpenMedications = { rootNav.navigate(Routes.MEDICATIONS) },
                 onOpenReminderHealth = { rootNav.navigate(Routes.REMINDER_HEALTH) },
+                onOpenAbout = { rootNav.navigate(Routes.ABOUT) },
             )
         }
 
         composable(Routes.REMINDER_HEALTH) {
             ReminderHealthScreen(onBack = { rootNav.popBackStack() })
+        }
+
+        composable(Routes.ABOUT) {
+            AboutScreen(onBack = { rootNav.popBackStack() })
         }
 
         composable(Routes.MEDICATIONS) {
@@ -138,6 +144,7 @@ private fun LoadingScreen() {
 private fun MainShell(
     onOpenMedications: () -> Unit,
     onOpenReminderHealth: () -> Unit,
+    onOpenAbout: () -> Unit,
 ) {
     val navController = rememberNavController()
     val backStackEntry by navController.currentBackStackEntryAsState()
@@ -274,6 +281,7 @@ private fun MainShell(
                 SettingsScreen(
                     onOpenMedications = onOpenMedications,
                     onOpenReminderHealth = onOpenReminderHealth,
+                    onOpenAbout = onOpenAbout,
                 )
             }
         }
