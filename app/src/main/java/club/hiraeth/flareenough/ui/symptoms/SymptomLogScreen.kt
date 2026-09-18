@@ -5,6 +5,7 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.ExperimentalLayoutApi
 import androidx.compose.foundation.layout.FlowRow
 import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -13,6 +14,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.ui.draw.clip
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
@@ -287,83 +289,85 @@ private val swollenTintLight = Color(0xFFF0DCD2)
 private val soreTintDark = Color(0xFF4A3F2A)
 private val swollenTintDark = Color(0xFF4A342B)
 
-private enum class BodyView { DIAGRAM, LIST }
-
-@OptIn(ExperimentalLayoutApi::class)
 @Composable
 private fun BodyMapSection(
     marks: Map<BodyRegion, BodyState>,
     onCycle: (BodyRegion) -> Unit,
 ) {
-    var view by remember { mutableStateOf(BodyView.DIAGRAM) }
-    Column(verticalArrangement = Arrangement.spacedBy(12.dp)) {
+    Column(verticalArrangement = Arrangement.spacedBy(6.dp)) {
         SectionTitle(stringResourceCompat(R.string.symptom_body_map))
-        Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
-            FilterChip(
-                selected = view == BodyView.DIAGRAM,
-                onClick = { view = BodyView.DIAGRAM },
-                label = { Text(stringResourceCompat(R.string.body_view_diagram)) },
-            )
-            FilterChip(
-                selected = view == BodyView.LIST,
-                onClick = { view = BodyView.LIST },
-                label = { Text(stringResourceCompat(R.string.body_view_list)) },
-            )
-        }
         Text(
             stringResourceCompat(R.string.body_map_hint),
             style = MaterialTheme.typography.bodyMedium,
             color = MaterialTheme.colorScheme.onSurfaceVariant,
         )
-        if (view == BodyView.DIAGRAM) {
-            BodyDiagram(marks = marks, onCycle = onCycle)
-        } else {
-            bodyRegionGroups.forEach { (areaRes, regions) ->
-                Text(
-                    stringResourceCompat(areaRes),
-                    style = MaterialTheme.typography.labelLarge,
-                    color = MaterialTheme.colorScheme.onSurfaceVariant,
+        bodyRegionGroups.forEach { (areaRes, regions) ->
+            Text(
+                stringResourceCompat(areaRes),
+                style = MaterialTheme.typography.labelLarge,
+                color = MaterialTheme.colorScheme.primary,
+                modifier = Modifier.padding(top = 10.dp, bottom = 2.dp),
+            )
+            regions.forEach { region ->
+                RegionRow(
+                    name = stringResourceCompat(region.labelRes()),
+                    state = marks[region],
+                    onClick = { onCycle(region) },
                 )
-                FlowRow(
-                    horizontalArrangement = Arrangement.spacedBy(8.dp),
-                    verticalArrangement = Arrangement.spacedBy(8.dp),
-                ) {
-                    regions.forEach { region ->
-                        RegionChip(
-                            name = stringResourceCompat(region.labelRes()),
-                            state = marks[region],
-                            onClick = { onCycle(region) },
-                        )
-                    }
-                }
             }
         }
     }
 }
 
 @Composable
-private fun RegionChip(name: String, state: BodyState?, onClick: () -> Unit) {
-    val dark = androidx.compose.foundation.isSystemInDarkTheme()
-    val soreTint = if (dark) soreTintDark else soreTintLight
-    val swollenTint = if (dark) swollenTintDark else swollenTintLight
-    val markedText = if (dark) Color(0xFFE6E7E9) else Color(0xFF2B2B2E)
-    val (bg, label) = when (state) {
-        null -> MaterialTheme.colorScheme.surfaceVariant to name
-        BodyState.SORE -> soreTint to (name + " · " + stringResourceCompat(R.string.body_state_sore))
-        BodyState.SWOLLEN -> swollenTint to (name + " · " + stringResourceCompat(R.string.body_state_swollen))
+private fun RegionRow(name: String, state: BodyState?, onClick: () -> Unit) {
+    Row(
+        modifier = Modifier
+            .fillMaxWidth()
+            .heightIn(min = 56.dp)
+            .clip(RoundedCornerShape(12.dp))
+            .clickable(onClick = onClick)
+            .padding(horizontal = 12.dp, vertical = 8.dp),
+        verticalAlignment = Alignment.CenterVertically,
+        horizontalArrangement = Arrangement.spacedBy(12.dp),
+    ) {
+        Text(name, modifier = Modifier.weight(1f), style = MaterialTheme.typography.bodyLarge)
+        StatePill(state)
     }
-    val fg = if (state == null) MaterialTheme.colorScheme.onSurfaceVariant else markedText
+}
+
+@Composable
+private fun StatePill(state: BodyState?) {
+    val dark = androidx.compose.foundation.isSystemInDarkTheme()
+    val bg = when (state) {
+        null -> Color.Transparent
+        BodyState.SORE -> if (dark) soreTintDark else soreTintLight
+        BodyState.SWOLLEN -> if (dark) swollenTintDark else swollenTintLight
+    }
+    val fg = when (state) {
+        null -> MaterialTheme.colorScheme.onSurfaceVariant
+        else -> if (dark) Color(0xFFE6E7E9) else Color(0xFF2B2B2E)
+    }
+    val label = when (state) {
+        null -> stringResourceCompat(R.string.body_state_none)
+        BodyState.SORE -> stringResourceCompat(R.string.body_state_sore)
+        BodyState.SWOLLEN -> stringResourceCompat(R.string.body_state_swollen)
+    }
     Surface(
-        onClick = onClick,
-        shape = androidx.compose.foundation.shape.RoundedCornerShape(20.dp),
+        shape = RoundedCornerShape(16.dp),
         color = bg,
         contentColor = fg,
-        modifier = Modifier.heightIn(min = 44.dp),
+        border = if (state == null) {
+            androidx.compose.foundation.BorderStroke(1.dp, MaterialTheme.colorScheme.outline)
+        } else {
+            null
+        },
+        modifier = Modifier.heightIn(min = 36.dp),
     ) {
         Text(
             label,
-            modifier = Modifier.padding(horizontal = 14.dp, vertical = 10.dp),
-            style = MaterialTheme.typography.bodyMedium,
+            modifier = Modifier.padding(horizontal = 14.dp, vertical = 8.dp),
+            style = MaterialTheme.typography.labelLarge,
         )
     }
 }

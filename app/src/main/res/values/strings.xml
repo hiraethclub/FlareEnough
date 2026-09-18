@@ -277,11 +277,7 @@
     <string name="body_state_sore">Sore</string>
     <string name="body_state_swollen">Swollen</string>
     <string name="body_state_none">Not marked</string>
-    <string name="body_map_hint">Tap once for sore, again for swollen, again to clear.</string>
-    <string name="body_view_diagram">Diagram</string>
-    <string name="body_view_list">List</string>
-    <string name="body_figure_front">Front</string>
-    <string name="body_figure_back">Back</string>
+    <string name="body_map_hint">Tap a part once for sore, again for swollen, again to clear.</string>
     <string name="body_area_head">Head and neck</string>
     <string name="body_area_arms">Shoulders and arms</string>
     <string name="body_area_hands">Hands</string>
