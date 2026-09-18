@@ -34,7 +34,6 @@ import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
 import club.hiraeth.flareenough.R
 import club.hiraeth.flareenough.ui.history.HistoryScreen
-import club.hiraeth.flareenough.ui.log.LogScreen
 import club.hiraeth.flareenough.ui.medication.MedicationEditScreen
 import club.hiraeth.flareenough.ui.medication.MedicationEditViewModel
 import club.hiraeth.flareenough.ui.medication.MedicationListScreen
@@ -45,6 +44,8 @@ import club.hiraeth.flareenough.ui.reminders.ReminderHealthScreen
 import club.hiraeth.flareenough.ui.settings.SettingsScreen
 import club.hiraeth.flareenough.ui.stillness.StillnessScreen
 import club.hiraeth.flareenough.ui.support.rememberAppContainer
+import club.hiraeth.flareenough.ui.symptoms.SymptomLogScreen
+import club.hiraeth.flareenough.ui.symptoms.SymptomLogViewModel
 import club.hiraeth.flareenough.ui.today.TodayScreen
 import club.hiraeth.flareenough.ui.today.TodayViewModel
 
@@ -227,7 +228,17 @@ private fun MainShell(
                     },
                 )
             }
-            composable(TopDestination.LOG.route) { LogScreen() }
+            composable(TopDestination.LOG.route) {
+                val container = rememberAppContainer()
+                val vm: SymptomLogViewModel = viewModel(
+                    factory = viewModelFactory {
+                        initializer {
+                            SymptomLogViewModel(container.symptomRepository, container.dayRepository)
+                        }
+                    },
+                )
+                SymptomLogScreen(viewModel = vm)
+            }
             composable(TopDestination.HISTORY.route) { HistoryScreen() }
             composable(TopDestination.STILLNESS.route) { StillnessScreen() }
             composable(Routes.SETTINGS) {

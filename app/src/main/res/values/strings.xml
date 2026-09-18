@@ -152,6 +152,85 @@
     <string name="pick_time">Pick a time</string>
     <string name="pick_date">Pick a date</string>
 
+    <!-- Symptom logging. -->
+    <string name="symptom_starter_title">Pick some trackers to start</string>
+    <string name="symptom_starter_sub">You can rename, add, or remove these any time.</string>
+    <string name="symptom_starter_add">Add these</string>
+    <string name="starter_pain">Pain</string>
+    <string name="starter_stiffness">Stiffness</string>
+    <string name="starter_fatigue">Fatigue</string>
+    <string name="starter_mood">Mood</string>
+    <string name="starter_anxiety">Anxiety</string>
+    <string name="starter_sleep">Sleep quality</string>
+
+    <string name="level_none">None</string>
+    <string name="level_mild">Mild</string>
+    <string name="level_moderate">Moderate</string>
+    <string name="level_bad">Bad</string>
+    <string name="level_severe">Severe</string>
+
+    <string name="symptom_flare">Flare day</string>
+    <string name="symptom_same_as_yesterday">Same as yesterday</string>
+    <string name="symptom_add_tracker">Add tracker</string>
+    <string name="symptom_body_map">Where does it hurt?</string>
+    <string name="symptom_notes">Notes</string>
+    <string name="symptom_add_note">Add a note</string>
+    <string name="symptom_tags">Tags</string>
+    <string name="symptom_add_tag">Add a tag</string>
+    <string name="symptom_no_trackers_hint">No trackers are showing. Add one below.</string>
+
+    <string name="body_state_sore">Sore</string>
+    <string name="body_state_swollen">Swollen</string>
+    <string name="body_state_none">Not marked</string>
+
+    <string name="yes">Yes</string>
+    <string name="no">No</string>
+
+    <string name="new_tracker_name">Tracker name</string>
+    <string name="new_tracker_type">Type</string>
+    <string name="type_five_level">Scale of 1 to 5</string>
+    <string name="type_yes_no">Yes or no</string>
+    <string name="type_duration">Duration</string>
+    <string name="type_number">Number</string>
+
+    <string name="settings_symptoms">Symptom trackers</string>
+    <string name="settings_symptoms_summary">Rename, hide, or remove trackers</string>
+    <string name="tracker_hidden">Hidden</string>
+    <string name="tracker_show">Show</string>
+    <string name="tracker_hide">Hide</string>
+
+    <!-- Body regions. Left and right kept separate. -->
+    <string name="region_hand_left">Left hand</string>
+    <string name="region_hand_right">Right hand</string>
+    <string name="region_fingers_left">Left fingers</string>
+    <string name="region_fingers_right">Right fingers</string>
+    <string name="region_wrist_left">Left wrist</string>
+    <string name="region_wrist_right">Right wrist</string>
+    <string name="region_elbow_left">Left elbow</string>
+    <string name="region_elbow_right">Right elbow</string>
+    <string name="region_shoulder_left">Left shoulder</string>
+    <string name="region_shoulder_right">Right shoulder</string>
+    <string name="region_neck">Neck</string>
+    <string name="region_jaw">Jaw</string>
+    <string name="region_back">Back</string>
+    <string name="region_hip_left">Left hip</string>
+    <string name="region_hip_right">Right hip</string>
+    <string name="region_knee_left">Left knee</string>
+    <string name="region_knee_right">Right knee</string>
+    <string name="region_ankle_left">Left ankle</string>
+    <string name="region_ankle_right">Right ankle</string>
+    <string name="region_foot_left">Left foot</string>
+    <string name="region_foot_right">Right foot</string>
+
+    <!-- Default duration bands, for a new duration tracker. -->
+    <string-array name="default_duration_options">
+        <item>Under 15 min</item>
+        <item>15 to 30 min</item>
+        <item>30 to 60 min</item>
+        <item>1 to 2 hours</item>
+        <item>Over 2 hours</item>
+    </string-array>
+
     <!-- Medication forms. -->
     <string name="form_tablet">Tablet</string>
     <string name="form_capsule">Capsule</string>
