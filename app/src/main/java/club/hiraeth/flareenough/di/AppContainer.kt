@@ -8,6 +8,7 @@ import club.hiraeth.flareenough.data.repository.MedicationRepository
 import club.hiraeth.flareenough.data.repository.MeditationRepository
 import club.hiraeth.flareenough.data.repository.StillnessContentRepository
 import club.hiraeth.flareenough.data.repository.SymptomRepository
+import club.hiraeth.flareenough.data.settings.SettingsRepository
 import club.hiraeth.flareenough.reminders.AlarmScheduler
 import club.hiraeth.flareenough.reminders.ReminderManager
 
@@ -49,6 +50,8 @@ class AppContainer(private val appContext: Context) {
     val stillnessContentRepository: StillnessContentRepository by lazy {
         StillnessContentRepository(database.stillnessContentDao())
     }
+
+    val settingsRepository: SettingsRepository by lazy { SettingsRepository(appContext) }
 
     val alarmScheduler: AlarmScheduler by lazy { AlarmScheduler(appContext) }
 

@@ -2,6 +2,7 @@ package club.hiraeth.flareenough.ui.symptoms
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import club.hiraeth.flareenough.data.settings.SettingsRepository
 import club.hiraeth.flareenough.data.db.entity.BodyRegion
 import club.hiraeth.flareenough.data.db.entity.BodyState
 import club.hiraeth.flareenough.data.db.entity.DayNoteEntity
@@ -31,9 +32,14 @@ data class TrackerRow(
 class SymptomLogViewModel(
     private val symptomRepository: SymptomRepository,
     private val dayRepository: DayRepository,
+    settingsRepository: SettingsRepository,
 ) : ViewModel() {
 
     private val today: Long = LocalDate.now().toEpochDay()
+
+    val hiddenBodyRegions: StateFlow<Set<BodyRegion>> =
+        settingsRepository.observeHiddenBodyRegions()
+            .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5_000), emptySet())
 
     val trackerRows: StateFlow<List<TrackerRow>> =
         combine(

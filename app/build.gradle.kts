@@ -87,6 +87,9 @@ dependencies {
     implementation(libs.androidx.room.ktx)
     ksp(libs.androidx.room.compiler)
 
+    // DataStore for simple settings.
+    implementation(libs.androidx.datastore.preferences)
+
     // Compose. The BOM keeps every Compose library on one tested version set.
     implementation(platform(libs.androidx.compose.bom))
     implementation(libs.androidx.compose.ui)

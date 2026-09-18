@@ -38,6 +38,9 @@ object Routes {
     /** The About screen. */
     const val ABOUT = "about"
 
+    /** Choosing which body parts appear in symptom logging. */
+    const val BODY_PARTS = "body_parts"
+
     /** Add or edit a medication. medId 0 means add a new one. */
     const val MEDICATION_EDIT = "medication_edit"
     const val MEDICATION_EDIT_ARG = "medId"

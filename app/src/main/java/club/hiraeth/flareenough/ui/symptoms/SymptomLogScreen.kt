@@ -61,6 +61,7 @@ fun SymptomLogScreen(
     val bodyMap by viewModel.bodyMap.collectAsStateWithLifecycle()
     val dayTags by viewModel.dayTags.collectAsStateWithLifecycle()
     val notes by viewModel.notes.collectAsStateWithLifecycle()
+    val hiddenRegions by viewModel.hiddenBodyRegions.collectAsStateWithLifecycle()
 
     val defaultLabels = defaultLevelLabels()
     var showAddTracker by remember { mutableStateOf(false) }
@@ -106,7 +107,13 @@ fun SymptomLogScreen(
             }
         }
 
-        item { BodyMapSection(marks = bodyMap, onCycle = { viewModel.cycleRegion(it) }) }
+        item {
+            BodyMapSection(
+                marks = bodyMap,
+                hidden = hiddenRegions,
+                onCycle = { viewModel.cycleRegion(it) },
+            )
+        }
         item { NotesSection(notes = notes, onAdd = { viewModel.addNote(it) }, onDelete = { viewModel.deleteNote(it) }) }
         item { TagsSection(tags = dayTags, onAdd = { viewModel.addTag(it) }, onRemove = { viewModel.removeTag(it) }) }
     }
@@ -292,6 +299,7 @@ private val swollenTintDark = Color(0xFF4A342B)
 @Composable
 private fun BodyMapSection(
     marks: Map<BodyRegion, BodyState>,
+    hidden: Set<BodyRegion>,
     onCycle: (BodyRegion) -> Unit,
 ) {
     Column(verticalArrangement = Arrangement.spacedBy(6.dp)) {
@@ -302,13 +310,15 @@ private fun BodyMapSection(
             color = MaterialTheme.colorScheme.onSurfaceVariant,
         )
         bodyRegionGroups.forEach { (areaRes, regions) ->
+            val visible = regions.filterNot { it in hidden }
+            if (visible.isEmpty()) return@forEach
             Text(
                 stringResourceCompat(areaRes),
                 style = MaterialTheme.typography.labelLarge,
                 color = MaterialTheme.colorScheme.primary,
                 modifier = Modifier.padding(top = 10.dp, bottom = 2.dp),
             )
-            regions.forEach { region ->
+            visible.forEach { region ->
                 RegionRow(
                     name = stringResourceCompat(region.labelRes()),
                     state = marks[region],

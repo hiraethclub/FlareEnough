@@ -138,6 +138,12 @@
     <string name="settings_reminders_summary">Check reminders can reach you</string>
     <string name="settings_about">About</string>
     <string name="settings_about_summary">Version, licence, and the not medical advice notice</string>
+    <string name="settings_body_parts">Body parts</string>
+    <string name="settings_body_parts_summary">Choose which body parts show up when logging</string>
+
+    <!-- Body parts settings screen. -->
+    <string name="body_parts_title">Body parts</string>
+    <string name="body_parts_intro">Tick the body parts you want to see when logging symptoms. Anything unticked is hidden from the log. This does not change anything you have already recorded.</string>
 
     <!-- About screen. -->
     <string name="about_title">About</string>

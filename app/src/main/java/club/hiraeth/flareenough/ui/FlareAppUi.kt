@@ -43,6 +43,7 @@ import club.hiraeth.flareenough.ui.medication.MedicationListViewModel
 import club.hiraeth.flareenough.ui.navigation.Routes
 import club.hiraeth.flareenough.ui.navigation.TopDestination
 import club.hiraeth.flareenough.ui.reminders.ReminderHealthScreen
+import club.hiraeth.flareenough.ui.settings.BodyPartsScreen
 import club.hiraeth.flareenough.ui.settings.SettingsScreen
 import club.hiraeth.flareenough.ui.stillness.StillnessScreen
 import club.hiraeth.flareenough.ui.stillness.StillnessViewModel
@@ -67,6 +68,7 @@ fun FlareApp() {
                 onOpenMedications = { rootNav.navigate(Routes.MEDICATIONS) },
                 onOpenReminderHealth = { rootNav.navigate(Routes.REMINDER_HEALTH) },
                 onOpenAbout = { rootNav.navigate(Routes.ABOUT) },
+                onOpenBodyParts = { rootNav.navigate(Routes.BODY_PARTS) },
             )
         }
 
@@ -76,6 +78,10 @@ fun FlareApp() {
 
         composable(Routes.ABOUT) {
             AboutScreen(onBack = { rootNav.popBackStack() })
+        }
+
+        composable(Routes.BODY_PARTS) {
+            BodyPartsScreen(onBack = { rootNav.popBackStack() })
         }
 
         composable(Routes.MEDICATIONS) {
@@ -145,6 +151,7 @@ private fun MainShell(
     onOpenMedications: () -> Unit,
     onOpenReminderHealth: () -> Unit,
     onOpenAbout: () -> Unit,
+    onOpenBodyParts: () -> Unit,
 ) {
     val navController = rememberNavController()
     val backStackEntry by navController.currentBackStackEntryAsState()
@@ -241,7 +248,11 @@ private fun MainShell(
                 val vm: SymptomLogViewModel = viewModel(
                     factory = viewModelFactory {
                         initializer {
-                            SymptomLogViewModel(container.symptomRepository, container.dayRepository)
+                            SymptomLogViewModel(
+                                container.symptomRepository,
+                                container.dayRepository,
+                                container.settingsRepository,
+                            )
                         }
                     },
                 )
@@ -285,6 +296,7 @@ private fun MainShell(
                     onOpenMedications = onOpenMedications,
                     onOpenReminderHealth = onOpenReminderHealth,
                     onOpenAbout = onOpenAbout,
+                    onOpenBodyParts = onOpenBodyParts,
                 )
             }
         }

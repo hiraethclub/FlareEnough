@@ -9,6 +9,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Accessibility
 import androidx.compose.material.icons.filled.Info
 import androidx.compose.material.icons.filled.Medication
 import androidx.compose.material.icons.filled.NotificationsActive
@@ -28,6 +29,7 @@ fun SettingsScreen(
     onOpenMedications: () -> Unit,
     onOpenReminderHealth: () -> Unit,
     onOpenAbout: () -> Unit,
+    onOpenBodyParts: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
     Column(
@@ -46,6 +48,12 @@ fun SettingsScreen(
             title = stringResource(R.string.settings_reminders),
             summary = stringResource(R.string.settings_reminders_summary),
             onClick = onOpenReminderHealth,
+        )
+        SettingsRow(
+            icon = Icons.Filled.Accessibility,
+            title = stringResource(R.string.settings_body_parts),
+            summary = stringResource(R.string.settings_body_parts_summary),
+            onClick = onOpenBodyParts,
         )
         SettingsRow(
             icon = Icons.Filled.Info,
