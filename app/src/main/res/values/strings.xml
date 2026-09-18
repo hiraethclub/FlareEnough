@@ -39,6 +39,16 @@
     <string name="reminders_late_banner">Reminders may be late. Tap to fix.</string>
     <string name="placeholder_log">Quick logging for doses and symptoms will live here.</string>
     <string name="placeholder_history">Your calendar, timeline and charts will live here.</string>
+
+    <!-- History. -->
+    <string name="history_nothing">Nothing logged this day.</string>
+    <string name="history_prev_month">Previous month</string>
+    <string name="history_next_month">Next month</string>
+    <string name="timeline_stillness">Stillness</string>
+    <string name="duration_minutes">%1$d min</string>
+    <string name="session_timer">Timer</string>
+    <string name="session_breathing">Breathing</string>
+    <string name="session_bell">Bell</string>
     <string name="placeholder_stillness">Timer, breathing pacer and bell will live here.</string>
     <string name="placeholder_settings">Reminders, appearance, backup and about will live here.</string>
 

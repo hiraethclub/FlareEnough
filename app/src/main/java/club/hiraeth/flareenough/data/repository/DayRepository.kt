@@ -51,6 +51,9 @@ class DayRepository(private val dao: DayDao) {
 
     fun observeNotes(epochDay: Long): Flow<List<DayNoteEntity>> = dao.observeNotes(epochDay)
 
+    fun observeNotesBetween(startEpochDay: Long, endEpochDay: Long): Flow<List<DayNoteEntity>> =
+        dao.observeNotesBetween(startEpochDay, endEpochDay)
+
     suspend fun addNote(epochDay: Long, text: String, nowMillis: Long): Long =
         dao.insertNote(DayNoteEntity(epochDay = epochDay, text = text, createdAtMillis = nowMillis))
 

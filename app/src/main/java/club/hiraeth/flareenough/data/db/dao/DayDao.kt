@@ -52,6 +52,9 @@ interface DayDao {
     @Query("SELECT * FROM day_notes WHERE epochDay = :epochDay ORDER BY createdAtMillis ASC")
     fun observeNotes(epochDay: Long): Flow<List<DayNoteEntity>>
 
+    @Query("SELECT * FROM day_notes WHERE epochDay BETWEEN :startEpochDay AND :endEpochDay ORDER BY epochDay ASC, createdAtMillis ASC")
+    fun observeNotesBetween(startEpochDay: Long, endEpochDay: Long): Flow<List<DayNoteEntity>>
+
     // Tags.
 
     @Insert(onConflict = OnConflictStrategy.IGNORE)

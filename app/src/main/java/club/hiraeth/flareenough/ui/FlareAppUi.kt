@@ -34,6 +34,7 @@ import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
 import club.hiraeth.flareenough.R
 import club.hiraeth.flareenough.ui.history.HistoryScreen
+import club.hiraeth.flareenough.ui.history.HistoryViewModel
 import club.hiraeth.flareenough.ui.medication.MedicationEditScreen
 import club.hiraeth.flareenough.ui.medication.MedicationEditViewModel
 import club.hiraeth.flareenough.ui.medication.MedicationListScreen
@@ -239,7 +240,23 @@ private fun MainShell(
                 )
                 SymptomLogScreen(viewModel = vm)
             }
-            composable(TopDestination.HISTORY.route) { HistoryScreen() }
+            composable(TopDestination.HISTORY.route) {
+                val container = rememberAppContainer()
+                val vm: HistoryViewModel = viewModel(
+                    factory = viewModelFactory {
+                        initializer {
+                            HistoryViewModel(
+                                container.medicationRepository,
+                                container.doseRepository,
+                                container.symptomRepository,
+                                container.dayRepository,
+                                container.meditationRepository,
+                            )
+                        }
+                    },
+                )
+                HistoryScreen(viewModel = vm)
+            }
             composable(TopDestination.STILLNESS.route) { StillnessScreen() }
             composable(Routes.SETTINGS) {
                 SettingsScreen(
