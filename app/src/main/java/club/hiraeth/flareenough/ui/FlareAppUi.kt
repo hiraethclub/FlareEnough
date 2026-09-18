@@ -41,6 +41,7 @@ import club.hiraeth.flareenough.ui.medication.MedicationListScreen
 import club.hiraeth.flareenough.ui.medication.MedicationListViewModel
 import club.hiraeth.flareenough.ui.navigation.Routes
 import club.hiraeth.flareenough.ui.navigation.TopDestination
+import club.hiraeth.flareenough.ui.reminders.ReminderHealthScreen
 import club.hiraeth.flareenough.ui.settings.SettingsScreen
 import club.hiraeth.flareenough.ui.stillness.StillnessScreen
 import club.hiraeth.flareenough.ui.support.rememberAppContainer
@@ -57,7 +58,14 @@ fun FlareApp() {
 
     NavHost(navController = rootNav, startDestination = ROUTE_MAIN) {
         composable(ROUTE_MAIN) {
-            MainShell(onOpenMedications = { rootNav.navigate(Routes.MEDICATIONS) })
+            MainShell(
+                onOpenMedications = { rootNav.navigate(Routes.MEDICATIONS) },
+                onOpenReminderHealth = { rootNav.navigate(Routes.REMINDER_HEALTH) },
+            )
+        }
+
+        composable(Routes.REMINDER_HEALTH) {
+            ReminderHealthScreen(onBack = { rootNav.popBackStack() })
         }
 
         composable(Routes.MEDICATIONS) {
@@ -87,7 +95,13 @@ fun FlareApp() {
             val container = rememberAppContainer()
             val vm: MedicationEditViewModel = viewModel(
                 factory = viewModelFactory {
-                    initializer { MedicationEditViewModel(container.medicationRepository, medId) }
+                    initializer {
+                        MedicationEditViewModel(
+                            container.medicationRepository,
+                            container.reminderManager,
+                            medId,
+                        )
+                    }
                 },
             )
             if (!vm.ready) {
@@ -117,7 +131,10 @@ private fun LoadingScreen() {
  */
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-private fun MainShell(onOpenMedications: () -> Unit) {
+private fun MainShell(
+    onOpenMedications: () -> Unit,
+    onOpenReminderHealth: () -> Unit,
+) {
     val navController = rememberNavController()
     val backStackEntry by navController.currentBackStackEntryAsState()
     val currentRoute = backStackEntry?.destination?.route
@@ -193,7 +210,10 @@ private fun MainShell(onOpenMedications: () -> Unit) {
             composable(TopDestination.HISTORY.route) { HistoryScreen() }
             composable(TopDestination.STILLNESS.route) { StillnessScreen() }
             composable(Routes.SETTINGS) {
-                SettingsScreen(onOpenMedications = onOpenMedications)
+                SettingsScreen(
+                    onOpenMedications = onOpenMedications,
+                    onOpenReminderHealth = onOpenReminderHealth,
+                )
             }
         }
     }

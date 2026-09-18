@@ -2,6 +2,7 @@ package club.hiraeth.flareenough
 
 import android.app.Application
 import club.hiraeth.flareenough.di.AppContainer
+import club.hiraeth.flareenough.reminders.NotificationChannels
 
 /**
  * The Application. It owns the single [AppContainer] that holds the app's wiring.
@@ -17,5 +18,6 @@ class FlareApp : Application() {
     override fun onCreate() {
         super.onCreate()
         container = AppContainer(this)
+        NotificationChannels.ensureCreated(this)
     }
 }

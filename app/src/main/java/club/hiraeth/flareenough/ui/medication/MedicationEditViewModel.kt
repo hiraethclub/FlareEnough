@@ -6,6 +6,7 @@ import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import club.hiraeth.flareenough.data.repository.MedicationRepository
+import club.hiraeth.flareenough.reminders.ReminderManager
 import kotlinx.coroutines.launch
 import java.time.LocalDate
 
@@ -15,6 +16,7 @@ import java.time.LocalDate
  */
 class MedicationEditViewModel(
     private val repository: MedicationRepository,
+    private val reminderManager: ReminderManager,
     private val medId: Long,
 ) : ViewModel() {
 
@@ -54,11 +56,13 @@ class MedicationEditViewModel(
             sortOrder = 0,
         )
         viewModelScope.launch {
-            if (form.isNew) {
+            val savedId = if (form.isNew) {
                 repository.create(entity, times)
             } else {
                 repository.update(entity, times)
+                entity.id
             }
+            reminderManager.rescheduleFor(savedId)
             onDone()
         }
     }
@@ -70,6 +74,7 @@ class MedicationEditViewModel(
         }
         viewModelScope.launch {
             repository.get(medId)?.let { repository.delete(it.medication) }
+            reminderManager.cancel(medId)
             onDone()
         }
     }

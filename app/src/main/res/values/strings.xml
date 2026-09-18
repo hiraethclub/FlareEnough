@@ -37,6 +37,43 @@
     <!-- Settings entries. -->
     <string name="settings_medications">Medications</string>
     <string name="settings_medications_summary">Add and edit your medications</string>
+    <string name="settings_reminders">Reminders</string>
+    <string name="settings_reminders_summary">Check reminders can reach you</string>
+
+    <!-- Notification channels. -->
+    <string name="channel_dose_reminders">Dose reminders</string>
+    <string name="channel_dose_reminders_desc">When a dose is due</string>
+    <string name="channel_refill_warnings">Refill warnings</string>
+    <string name="channel_refill_warnings_desc">When a medication is running low</string>
+    <string name="channel_meditation_bells">Meditation bells</string>
+    <string name="channel_meditation_bells_desc">Timer and mindfulness bells</string>
+    <string name="channel_daily_check_in">Daily check-in</string>
+    <string name="channel_daily_check_in_desc">A gentle daily symptom prompt</string>
+
+    <!-- Dose reminder notification. -->
+    <string name="reminder_due_now">Due now</string>
+    <string name="action_taken">Taken</string>
+    <string name="action_snooze">Snooze</string>
+    <string name="action_skip">Skip</string>
+    <string name="reminder_test_title">Test reminder</string>
+    <string name="reminder_test_text">If you can see this, reminders are working.</string>
+
+    <!-- Reminder health check. -->
+    <string name="reminder_health_title">Reminder health check</string>
+    <string name="reminder_health_intro">A quick check that reminders can reach you.</string>
+    <string name="check_notifications">Notifications allowed</string>
+    <string name="check_exact_alarms">Exact alarms allowed</string>
+    <string name="check_battery">Battery limits off</string>
+    <string name="check_next_reminder">Next reminder</string>
+    <string name="check_next_none">None scheduled</string>
+    <string name="status_ok">OK</string>
+    <string name="status_needs_attention">Needs attention</string>
+    <string name="action_allow">Allow</string>
+    <string name="action_fix">Fix</string>
+    <string name="test_reminder_button">Send a test reminder in 1 minute</string>
+    <string name="test_reminder_scheduled">Test reminder set for 1 minute from now.</string>
+    <string name="battery_advice">Some phones stop apps to save battery, which can make reminders late. If that happens, there is advice for your exact phone.</string>
+    <string name="battery_advice_link">Open dontkillmyapp.com</string>
 
     <!-- Medications list. -->
     <string name="medications_title">Medications</string>

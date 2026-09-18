@@ -7,6 +7,8 @@ import club.hiraeth.flareenough.data.repository.DoseRepository
 import club.hiraeth.flareenough.data.repository.MedicationRepository
 import club.hiraeth.flareenough.data.repository.MeditationRepository
 import club.hiraeth.flareenough.data.repository.SymptomRepository
+import club.hiraeth.flareenough.reminders.AlarmScheduler
+import club.hiraeth.flareenough.reminders.ReminderManager
 
 /**
  * Manual dependency injection container.
@@ -41,5 +43,11 @@ class AppContainer(private val appContext: Context) {
 
     val meditationRepository: MeditationRepository by lazy {
         MeditationRepository(database.meditationDao())
+    }
+
+    val alarmScheduler: AlarmScheduler by lazy { AlarmScheduler(appContext) }
+
+    val reminderManager: ReminderManager by lazy {
+        ReminderManager(appContext, medicationRepository, alarmScheduler)
     }
 }
