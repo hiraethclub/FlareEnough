@@ -1,28 +1,64 @@
 package club.hiraeth.flareenough.stillness
 
+import android.content.Context
 import android.media.AudioAttributes
 import android.media.AudioFormat
 import android.media.AudioTrack
+import android.media.MediaPlayer
 import kotlin.math.PI
 import kotlin.math.exp
+import kotlin.math.min
 import kotlin.math.sin
 
 /**
- * Plays a soft bell tone generated in code. The sound is synthesised here, not
- * shipped as an audio file, so there is nothing to licence and nothing to source.
- * It is a gentle fundamental with two quiet harmonics and a smooth fade, meant to
- * be a calm cue rather than an alarm.
+ * Plays the meditation bell.
  *
- * Every call is wrapped so a device that refuses audio never crashes the app.
+ * If a bell recording is bundled at res/raw/bell (for example a real singing bowl
+ * or bell that is free to redistribute), that is played. Otherwise it falls back to
+ * a bell synthesised in code: several inharmonic partials, like the modes of a
+ * struck metal bell, each with its own fade, so it rings and shimmers rather than
+ * beeping. The synth is self made, so there is nothing to licence.
+ *
+ * Everything is wrapped so a device that refuses audio never crashes the app.
  */
 object BellPlayer {
 
     private const val SAMPLE_RATE = 44_100
 
-    /** Play a single bell. [durationSeconds] shapes how long it rings out. */
-    fun play(durationSeconds: Double = 2.0, fundamentalHz: Double = 528.0) {
+    fun play(context: Context) {
+        val appContext = context.applicationContext
+        // Prefer a bundled recording if one has been added. Looked up by name so the
+        // code compiles and runs whether or not the file is present.
         try {
-            val samples = synthesise(durationSeconds, fundamentalHz)
+            val id = appContext.resources.getIdentifier("bell", "raw", appContext.packageName)
+            if (id != 0) {
+                val player = MediaPlayer.create(appContext, id)
+                if (player != null) {
+                    player.setOnCompletionListener { it.release() }
+                    player.start()
+                    return
+                }
+            }
+        } catch (_: Exception) {
+            // Fall through to the synthesised bell.
+        }
+        playSynth()
+    }
+
+    private class Partial(val ratio: Double, val amp: Double, val decay: Double)
+
+    private val partials = listOf(
+        Partial(1.00, 1.00, 2.2),
+        Partial(2.01, 0.60, 3.2),
+        Partial(2.42, 0.42, 3.8),
+        Partial(2.99, 0.30, 4.4),
+        Partial(4.21, 0.20, 5.8),
+        Partial(5.40, 0.12, 7.0),
+    )
+
+    private fun playSynth(durationSeconds: Double = 3.0, baseHz: Double = 700.0) {
+        try {
+            val samples = synthesise(durationSeconds, baseHz)
             val track = AudioTrack.Builder()
                 .setAudioAttributes(
                     AudioAttributes.Builder()
@@ -61,16 +97,19 @@ object BellPlayer {
         }
     }
 
-    private fun synthesise(durationSeconds: Double, fundamentalHz: Double): ShortArray {
+    private fun synthesise(durationSeconds: Double, baseHz: Double): ShortArray {
         val count = (durationSeconds * SAMPLE_RATE).toInt()
         val samples = ShortArray(count)
+        val ampSum = partials.sumOf { it.amp }
         for (i in 0 until count) {
             val t = i.toDouble() / SAMPLE_RATE
-            val envelope = exp(-3.0 * t)
-            val wave = sin(2.0 * PI * fundamentalHz * t) +
-                0.4 * sin(2.0 * PI * fundamentalHz * 2 * t) +
-                0.2 * sin(2.0 * PI * fundamentalHz * 3 * t)
-            val value = wave / 1.6 * envelope * 0.6
+            var value = 0.0
+            for (p in partials) {
+                value += p.amp * sin(2.0 * PI * baseHz * p.ratio * t) * exp(-p.decay * t)
+            }
+            // A short attack so the strike is soft, then normalise and set the level.
+            val attack = min(1.0, t / 0.004)
+            value = value / ampSum * attack * 0.7
             samples[i] = (value * Short.MAX_VALUE).toInt()
                 .coerceIn(Short.MIN_VALUE.toInt(), Short.MAX_VALUE.toInt())
                 .toShort()

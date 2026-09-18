@@ -1,6 +1,7 @@
 package club.hiraeth.flareenough.ui.theme
 
 import androidx.compose.material3.Typography
+import androidx.compose.ui.text.ExperimentalTextApi
 import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontVariation
@@ -18,6 +19,7 @@ import club.hiraeth.flareenough.R
  * Body text is set a little larger than the Material default for easier reading.
  * Layouts still work with system font scaling up to 200 percent.
  */
+@OptIn(ExperimentalTextApi::class)
 private fun quicksand(weight: Int): Font =
     Font(
         resId = R.font.quicksand,

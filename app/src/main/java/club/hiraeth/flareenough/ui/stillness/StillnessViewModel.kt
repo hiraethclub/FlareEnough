@@ -98,7 +98,7 @@ class StillnessViewModel(
                 durationSeconds = totalSeconds,
             )
         }
-        if (startBell) BellPlayer.play()
+        if (startBell) BellPlayer.play(appContext)
 
         timerJob = viewModelScope.launch {
             var elapsed = 0
@@ -109,7 +109,7 @@ class StillnessViewModel(
                 if (intervalBell && intervalMinutes > 0 &&
                     remainingSeconds > 0 && elapsed % (intervalMinutes * 60) == 0
                 ) {
-                    BellPlayer.play(durationSeconds = 1.5)
+                    BellPlayer.play(appContext)
                 }
             }
             // The end alarm rings the ending bell and logs the session. If the end

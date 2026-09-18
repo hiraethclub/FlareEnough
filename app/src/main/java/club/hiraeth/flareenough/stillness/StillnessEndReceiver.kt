@@ -16,7 +16,7 @@ import kotlinx.coroutines.launch
 class StillnessEndReceiver : BroadcastReceiver() {
 
     override fun onReceive(context: Context, intent: Intent) {
-        BellPlayer.play(durationSeconds = 3.0)
+        BellPlayer.play(context)
 
         val startTime = intent.getLongExtra(StillnessContract.EXTRA_START_TIME, 0L)
         val durationSeconds = intent.getIntExtra(StillnessContract.EXTRA_DURATION_SECONDS, 0)
