@@ -179,14 +179,22 @@ private fun TrackerCard(
     }
 }
 
-private val levelColors = listOf(
+private val levelColorsLight = listOf(
     Color(0xFFDDE7DC),
     Color(0xFFDCE6F0),
     Color(0xFFE6DFF0),
     Color(0xFFF3E7CF),
     Color(0xFFF0DCD2),
 )
-private val levelTextColor = Color(0xFF2B2B2E)
+private val levelColorsDark = listOf(
+    Color(0xFF33413A),
+    Color(0xFF2E3A46),
+    Color(0xFF393349),
+    Color(0xFF4A3F2A),
+    Color(0xFF4A342B),
+)
+private val levelTextLight = Color(0xFF2B2B2E)
+private val levelTextDark = Color(0xFFE6E7E9)
 
 @Composable
 private fun FiveLevelInput(
@@ -194,6 +202,9 @@ private fun FiveLevelInput(
     selected: Int?,
     onSelect: (Int) -> Unit,
 ) {
+    val dark = androidx.compose.foundation.isSystemInDarkTheme()
+    val palette = if (dark) levelColorsDark else levelColorsLight
+    val textColor = if (dark) levelTextDark else levelTextLight
     Row(horizontalArrangement = Arrangement.spacedBy(8.dp), modifier = Modifier.fillMaxWidth()) {
         for (level in 1..5) {
             val isSelected = selected == level
@@ -201,8 +212,8 @@ private fun FiveLevelInput(
                 onClick = { onSelect(level) },
                 modifier = Modifier.weight(1f).heightIn(min = 64.dp),
                 shape = RoundedCornerShape(14.dp),
-                color = levelColors[level - 1],
-                contentColor = levelTextColor,
+                color = palette[level - 1],
+                contentColor = textColor,
                 border = if (isSelected) {
                     androidx.compose.foundation.BorderStroke(3.dp, MaterialTheme.colorScheme.primary)
                 } else {
@@ -271,9 +282,10 @@ private fun NumberInput(value: Int?, unit: String?, onChange: (Int?) -> Unit) {
     )
 }
 
-private val soreTint = Color(0xFFF3E7CF)
-private val swollenTint = Color(0xFFF0DCD2)
-private val bodyChipText = Color(0xFF2B2B2E)
+private val soreTintLight = Color(0xFFF3E7CF)
+private val swollenTintLight = Color(0xFFF0DCD2)
+private val soreTintDark = Color(0xFF4A3F2A)
+private val swollenTintDark = Color(0xFF4A342B)
 
 @OptIn(ExperimentalLayoutApi::class)
 @Composable
@@ -312,12 +324,16 @@ private fun BodyMapSection(
 
 @Composable
 private fun RegionChip(name: String, state: BodyState?, onClick: () -> Unit) {
+    val dark = androidx.compose.foundation.isSystemInDarkTheme()
+    val soreTint = if (dark) soreTintDark else soreTintLight
+    val swollenTint = if (dark) swollenTintDark else swollenTintLight
+    val markedText = if (dark) Color(0xFFE6E7E9) else Color(0xFF2B2B2E)
     val (bg, label) = when (state) {
         null -> MaterialTheme.colorScheme.surfaceVariant to name
         BodyState.SORE -> soreTint to (name + " · " + stringResourceCompat(R.string.body_state_sore))
         BodyState.SWOLLEN -> swollenTint to (name + " · " + stringResourceCompat(R.string.body_state_swollen))
     }
-    val fg = if (state == null) MaterialTheme.colorScheme.onSurfaceVariant else bodyChipText
+    val fg = if (state == null) MaterialTheme.colorScheme.onSurfaceVariant else markedText
     Surface(
         onClick = onClick,
         shape = androidx.compose.foundation.shape.RoundedCornerShape(20.dp),

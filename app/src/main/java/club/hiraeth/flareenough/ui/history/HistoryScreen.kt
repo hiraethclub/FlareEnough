@@ -57,12 +57,19 @@ import java.time.YearMonth
 import java.time.format.DateTimeFormatter
 import java.util.Locale
 
-private val severityShades = listOf(
+private val severityShadesLight = listOf(
     Color(0xFFE7EFE6),
     Color(0xFFE7EEF5),
     Color(0xFFEDE8F5),
     Color(0xFFF6EEDC),
     Color(0xFFF3E0D7),
+)
+private val severityShadesDark = listOf(
+    Color(0xFF2C3730),
+    Color(0xFF29333D),
+    Color(0xFF322D40),
+    Color(0xFF403826),
+    Color(0xFF402E27),
 )
 
 @Composable
@@ -182,7 +189,9 @@ private fun DayCell(
     selected: Boolean,
     onClick: () -> Unit,
 ) {
-    val shade = summary?.maxSymptomLevel?.let { severityShades.getOrNull(it - 1) }
+    val dark = androidx.compose.foundation.isSystemInDarkTheme()
+    val shades = if (dark) severityShadesDark else severityShadesLight
+    val shade = summary?.maxSymptomLevel?.let { shades.getOrNull(it - 1) }
         ?: MaterialTheme.colorScheme.surface
     Box(
         modifier = Modifier
@@ -206,7 +215,7 @@ private fun DayCell(
             Text(
                 text = date.dayOfMonth.toString(),
                 style = MaterialTheme.typography.bodyMedium,
-                color = if (summary?.maxSymptomLevel != null) Color(0xFF2B2B2E) else MaterialTheme.colorScheme.onSurface,
+                color = MaterialTheme.colorScheme.onSurface,
             )
             if (summary?.hasActivity == true) {
                 Box(
