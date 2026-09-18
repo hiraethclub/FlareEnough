@@ -287,35 +287,54 @@ private val swollenTintLight = Color(0xFFF0DCD2)
 private val soreTintDark = Color(0xFF4A3F2A)
 private val swollenTintDark = Color(0xFF4A342B)
 
+private enum class BodyView { DIAGRAM, LIST }
+
 @OptIn(ExperimentalLayoutApi::class)
 @Composable
 private fun BodyMapSection(
     marks: Map<BodyRegion, BodyState>,
     onCycle: (BodyRegion) -> Unit,
 ) {
+    var view by remember { mutableStateOf(BodyView.DIAGRAM) }
     Column(verticalArrangement = Arrangement.spacedBy(12.dp)) {
         SectionTitle(stringResourceCompat(R.string.symptom_body_map))
+        Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+            FilterChip(
+                selected = view == BodyView.DIAGRAM,
+                onClick = { view = BodyView.DIAGRAM },
+                label = { Text(stringResourceCompat(R.string.body_view_diagram)) },
+            )
+            FilterChip(
+                selected = view == BodyView.LIST,
+                onClick = { view = BodyView.LIST },
+                label = { Text(stringResourceCompat(R.string.body_view_list)) },
+            )
+        }
         Text(
             stringResourceCompat(R.string.body_map_hint),
             style = MaterialTheme.typography.bodyMedium,
             color = MaterialTheme.colorScheme.onSurfaceVariant,
         )
-        bodyRegionGroups.forEach { (areaRes, regions) ->
-            Text(
-                stringResourceCompat(areaRes),
-                style = MaterialTheme.typography.labelLarge,
-                color = MaterialTheme.colorScheme.onSurfaceVariant,
-            )
-            FlowRow(
-                horizontalArrangement = Arrangement.spacedBy(8.dp),
-                verticalArrangement = Arrangement.spacedBy(8.dp),
-            ) {
-                regions.forEach { region ->
-                    RegionChip(
-                        name = stringResourceCompat(region.labelRes()),
-                        state = marks[region],
-                        onClick = { onCycle(region) },
-                    )
+        if (view == BodyView.DIAGRAM) {
+            BodyDiagram(marks = marks, onCycle = onCycle)
+        } else {
+            bodyRegionGroups.forEach { (areaRes, regions) ->
+                Text(
+                    stringResourceCompat(areaRes),
+                    style = MaterialTheme.typography.labelLarge,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant,
+                )
+                FlowRow(
+                    horizontalArrangement = Arrangement.spacedBy(8.dp),
+                    verticalArrangement = Arrangement.spacedBy(8.dp),
+                ) {
+                    regions.forEach { region ->
+                        RegionChip(
+                            name = stringResourceCompat(region.labelRes()),
+                            state = marks[region],
+                            onClick = { onCycle(region) },
+                        )
+                    }
                 }
             }
         }
