@@ -46,6 +46,7 @@ import club.hiraeth.flareenough.ui.settings.SettingsScreen
 import club.hiraeth.flareenough.ui.stillness.StillnessScreen
 import club.hiraeth.flareenough.ui.support.rememberAppContainer
 import club.hiraeth.flareenough.ui.today.TodayScreen
+import club.hiraeth.flareenough.ui.today.TodayViewModel
 
 /**
  * Top level navigation. The four tabs and Settings live inside the tabbed shell.
@@ -205,7 +206,27 @@ private fun MainShell(
             startDestination = TopDestination.TODAY.route,
             modifier = Modifier.padding(innerPadding),
         ) {
-            composable(TopDestination.TODAY.route) { TodayScreen() }
+            composable(TopDestination.TODAY.route) {
+                val container = rememberAppContainer()
+                val vm: TodayViewModel = viewModel(
+                    factory = viewModelFactory {
+                        initializer {
+                            TodayViewModel(container.medicationRepository, container.doseRepository)
+                        }
+                    },
+                )
+                TodayScreen(
+                    viewModel = vm,
+                    remindersMayBeLate = !container.alarmScheduler.canScheduleExact(),
+                    onOpenReminderHealth = onOpenReminderHealth,
+                    onQuickSymptom = {
+                        navController.navigate(TopDestination.LOG.route) { launchSingleTop = true }
+                    },
+                    onOpenStillness = {
+                        navController.navigate(TopDestination.STILLNESS.route) { launchSingleTop = true }
+                    },
+                )
+            }
             composable(TopDestination.LOG.route) { LogScreen() }
             composable(TopDestination.HISTORY.route) { HistoryScreen() }
             composable(TopDestination.STILLNESS.route) { StillnessScreen() }

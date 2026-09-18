@@ -19,6 +19,24 @@
 
     <!-- Temporary text for the setup milestone. Replaced by real screens later. -->
     <string name="placeholder_today">Your next dose and today\'s check-in will live here.</string>
+
+    <!-- Today screen. -->
+    <string name="today_next_dose">Next dose</string>
+    <string name="today_nothing_left">Nothing left to take today.</string>
+    <string name="today_no_medications">No medications yet. Add one in Settings.</string>
+    <string name="today_taken_earlier">Taken earlier</string>
+    <string name="today_todays_doses">Today\'s doses</string>
+    <string name="today_how_are_you">How are you?</string>
+    <string name="today_how_are_you_sub">Log how you feel in a few taps.</string>
+    <string name="today_stillness">Stillness</string>
+    <string name="today_stillness_sub">A few calm minutes.</string>
+    <string name="status_taken">Taken</string>
+    <string name="status_skipped">Skipped</string>
+    <string name="status_planned">Due</string>
+    <string name="action_undo">Undo</string>
+    <string name="snackbar_taken">Taken</string>
+    <string name="snackbar_skipped">Skipped</string>
+    <string name="reminders_late_banner">Reminders may be late. Tap to fix.</string>
     <string name="placeholder_log">Quick logging for doses and symptoms will live here.</string>
     <string name="placeholder_history">Your calendar, timeline and charts will live here.</string>
     <string name="placeholder_stillness">Timer, breathing pacer and bell will live here.</string>

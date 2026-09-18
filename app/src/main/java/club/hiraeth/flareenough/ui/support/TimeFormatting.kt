@@ -21,6 +21,10 @@ fun formatMinutesOfDay(context: Context, minutesPastMidnight: Int): String {
     return DateFormat.getTimeFormat(context).format(calendar.time)
 }
 
+/** Format an instant (epoch millis) as a time of day, using the phone's format. */
+fun formatInstantTime(context: Context, epochMillis: Long): String =
+    DateFormat.getTimeFormat(context).format(Date(epochMillis))
+
 /** Format a local date (epoch day) using the phone's date format. */
 fun formatEpochDay(context: Context, epochDay: Long): String {
     // Build the instant for local midnight of that day, so the shown date is right
