@@ -270,7 +270,11 @@ private fun MainShell(
                 val vm: StillnessViewModel = viewModel(
                     factory = viewModelFactory {
                         initializer {
-                            StillnessViewModel(context.applicationContext, container.meditationRepository)
+                            StillnessViewModel(
+                                context.applicationContext,
+                                container.meditationRepository,
+                                container.stillnessContentRepository,
+                            )
                         }
                     },
                 )

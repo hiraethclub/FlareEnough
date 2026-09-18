@@ -5,10 +5,13 @@ import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
 import androidx.room.TypeConverters
+import androidx.room.migration.Migration
+import androidx.sqlite.db.SupportSQLiteDatabase
 import club.hiraeth.flareenough.data.db.dao.DayDao
 import club.hiraeth.flareenough.data.db.dao.DoseDao
 import club.hiraeth.flareenough.data.db.dao.MedicationDao
 import club.hiraeth.flareenough.data.db.dao.MeditationDao
+import club.hiraeth.flareenough.data.db.dao.StillnessContentDao
 import club.hiraeth.flareenough.data.db.dao.SymptomDao
 import club.hiraeth.flareenough.data.db.entity.BodyMapEntryEntity
 import club.hiraeth.flareenough.data.db.entity.DayNoteEntity
@@ -17,6 +20,8 @@ import club.hiraeth.flareenough.data.db.entity.DoseEventEntity
 import club.hiraeth.flareenough.data.db.entity.FlareDayEntity
 import club.hiraeth.flareenough.data.db.entity.MedicationEntity
 import club.hiraeth.flareenough.data.db.entity.MeditationSessionEntity
+import club.hiraeth.flareenough.data.db.entity.PromptEntity
+import club.hiraeth.flareenough.data.db.entity.ReadingEntity
 import club.hiraeth.flareenough.data.db.entity.ScheduleTimeEntity
 import club.hiraeth.flareenough.data.db.entity.SymptomEntryEntity
 import club.hiraeth.flareenough.data.db.entity.SymptomTrackerEntity
@@ -42,8 +47,10 @@ import club.hiraeth.flareenough.data.db.entity.TagEntity
         TagEntity::class,
         DayTagCrossRef::class,
         MeditationSessionEntity::class,
+        PromptEntity::class,
+        ReadingEntity::class,
     ],
-    version = 1,
+    version = 2,
     exportSchema = true,
 )
 @TypeConverters(Converters::class)
@@ -54,10 +61,34 @@ abstract class FlareDatabase : RoomDatabase() {
     abstract fun symptomDao(): SymptomDao
     abstract fun dayDao(): DayDao
     abstract fun meditationDao(): MeditationDao
+    abstract fun stillnessContentDao(): StillnessContentDao
 
     companion object {
-        const val VERSION = 1
+        const val VERSION = 2
         const val NAME = "flare_enough.db"
+
+        /**
+         * Version 1 to 2: add the person's own stillness prompts and readings. The
+         * table definitions must match exactly what Room expects for these entities.
+         */
+        val MIGRATION_1_2 = object : Migration(1, 2) {
+            override fun migrate(db: SupportSQLiteDatabase) {
+                db.execSQL(
+                    "CREATE TABLE IF NOT EXISTS `stillness_prompts` (" +
+                        "`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, " +
+                        "`text` TEXT NOT NULL, " +
+                        "`createdAtMillis` INTEGER NOT NULL)",
+                )
+                db.execSQL(
+                    "CREATE TABLE IF NOT EXISTS `readings` (" +
+                        "`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, " +
+                        "`title` TEXT NOT NULL, " +
+                        "`body` TEXT NOT NULL, " +
+                        "`sortOrder` INTEGER NOT NULL, " +
+                        "`createdAtMillis` INTEGER NOT NULL)",
+                )
+            }
+        }
 
         /**
          * Build the database. Foreign key enforcement is turned on so cascades and
@@ -71,6 +102,7 @@ abstract class FlareDatabase : RoomDatabase() {
                 FlareDatabase::class.java,
                 NAME,
             )
+                .addMigrations(MIGRATION_1_2)
                 .build()
     }
 }

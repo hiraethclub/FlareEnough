@@ -47,16 +47,15 @@ object BellPlayer {
 
     private class Partial(val ratio: Double, val amp: Double, val decay: Double)
 
+    // A small hand bell: a high, clear fundamental with just a couple of bright
+    // partials that fade quickly, for a light "ting" rather than a deep gong.
     private val partials = listOf(
-        Partial(1.00, 1.00, 2.2),
-        Partial(2.01, 0.60, 3.2),
-        Partial(2.42, 0.42, 3.8),
-        Partial(2.99, 0.30, 4.4),
-        Partial(4.21, 0.20, 5.8),
-        Partial(5.40, 0.12, 7.0),
+        Partial(1.00, 1.00, 3.0),
+        Partial(2.70, 0.35, 4.4),
+        Partial(5.10, 0.14, 6.5),
     )
 
-    private fun playSynth(durationSeconds: Double = 3.0, baseHz: Double = 700.0) {
+    private fun playSynth(durationSeconds: Double = 2.4, baseHz: Double = 1320.0) {
         try {
             val samples = synthesise(durationSeconds, baseHz)
             val track = AudioTrack.Builder()
@@ -109,7 +108,7 @@ object BellPlayer {
             }
             // A short attack so the strike is soft, then normalise and set the level.
             val attack = min(1.0, t / 0.004)
-            value = value / ampSum * attack * 0.7
+            value = value / ampSum * attack * 0.6
             samples[i] = (value * Short.MAX_VALUE).toInt()
                 .coerceIn(Short.MIN_VALUE.toInt(), Short.MAX_VALUE.toInt())
                 .toShort()

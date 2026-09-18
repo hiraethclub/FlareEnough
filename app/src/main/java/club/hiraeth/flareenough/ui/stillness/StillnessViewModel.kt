@@ -11,12 +11,18 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import club.hiraeth.flareenough.data.db.entity.PromptEntity
+import club.hiraeth.flareenough.data.db.entity.ReadingEntity
 import club.hiraeth.flareenough.data.db.entity.SessionType
 import club.hiraeth.flareenough.data.repository.MeditationRepository
+import club.hiraeth.flareenough.data.repository.StillnessContentRepository
 import club.hiraeth.flareenough.stillness.BellPlayer
 import club.hiraeth.flareenough.stillness.StillnessTimerScheduler
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
+import kotlinx.coroutines.flow.SharingStarted
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 
 enum class BreathPhase { IN, HOLD, OUT }
@@ -40,9 +46,35 @@ val breathPatterns: Map<String, BreathPattern> = mapOf(
 class StillnessViewModel(
     private val appContext: Context,
     private val meditationRepository: MeditationRepository,
+    private val contentRepository: StillnessContentRepository,
 ) : ViewModel() {
 
     private val scheduler = StillnessTimerScheduler(appContext)
+
+    val customPrompts: StateFlow<List<PromptEntity>> =
+        contentRepository.observePrompts()
+            .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5_000), emptyList())
+
+    val readings: StateFlow<List<ReadingEntity>> =
+        contentRepository.observeReadings()
+            .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5_000), emptyList())
+
+    fun addPrompt(text: String) {
+        viewModelScope.launch { contentRepository.addPrompt(text, System.currentTimeMillis()) }
+    }
+
+    fun deletePrompt(prompt: PromptEntity) {
+        viewModelScope.launch { contentRepository.deletePrompt(prompt) }
+    }
+
+    fun addReading(title: String, body: String) {
+        if (title.isBlank() || body.isBlank()) return
+        viewModelScope.launch { contentRepository.addReading(title, body, System.currentTimeMillis()) }
+    }
+
+    fun deleteReading(reading: ReadingEntity) {
+        viewModelScope.launch { contentRepository.deleteReading(reading) }
+    }
 
     // Timer state.
     var durationMinutes by mutableIntStateOf(10)

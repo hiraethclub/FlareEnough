@@ -55,6 +55,15 @@
     <string name="stillness_timer_tab">Timer</string>
     <string name="stillness_breathing_tab">Breathing</string>
     <string name="stillness_prompts_tab">Prompts</string>
+    <string name="stillness_readings_tab">Readings</string>
+
+    <string name="prompts_your_title">Your prompts</string>
+    <string name="prompts_add">Add a line or quote</string>
+    <string name="readings_empty">No readings yet. Add your own, for example the Heart Sutra or a discourse you love, in the translation you use.</string>
+    <string name="reading_add">Add a reading</string>
+    <string name="reading_title_label">Title</string>
+    <string name="reading_body_label">Text</string>
+    <string name="reading_save">Save reading</string>
     <string name="stillness_length">Length</string>
     <string name="stillness_minutes">%1$d min</string>
     <string name="stillness_start">Start</string>
@@ -77,7 +86,12 @@
 
     <string name="prompt_next">Next</string>
 
-    <!-- Short stillness prompts. Original wording, one idea each. -->
+    <!--
+      Short stillness prompts. All original wording, one plain idea each, anchored
+      in sound, breath, touch, and body sensation. No copyrighted quotes are
+      bundled. People can add their own lines, including quotes they love, in the
+      "Your prompts" section.
+    -->
     <string-array name="stillness_prompts">
         <item>Notice your feet on the floor.</item>
         <item>Feel the weight of your hands where they rest.</item>
@@ -89,6 +103,21 @@
         <item>Unclench your jaw, and let it be soft.</item>
         <item>Feel the air move in, and then out.</item>
         <item>Rest your attention on one small sound nearby.</item>
+        <item>Notice the gentle rise and fall of your chest.</item>
+        <item>Let this breath be a little slower than the last.</item>
+        <item>Feel the ground holding you up.</item>
+        <item>Soften the space between your eyebrows.</item>
+        <item>Notice one thing you can hear, and let it be enough.</item>
+        <item>Let your hands be still and open.</item>
+        <item>Feel the warmth of your own breath.</item>
+        <item>Notice the pause at the end of the out breath.</item>
+        <item>Let your tongue rest soft in your mouth.</item>
+        <item>Come back to this breath, just this one.</item>
+        <item>Notice the weight of your body settling down.</item>
+        <item>Let the next breath arrive on its own.</item>
+        <item>Feel the small movements of sitting still.</item>
+        <item>Rest here for a moment, nothing to fix.</item>
+        <item>Notice the quiet underneath the sounds.</item>
     </string-array>
     <string name="placeholder_settings">Reminders, appearance, backup and about will live here.</string>
 
