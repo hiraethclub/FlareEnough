@@ -44,6 +44,7 @@ import club.hiraeth.flareenough.ui.navigation.TopDestination
 import club.hiraeth.flareenough.ui.reminders.ReminderHealthScreen
 import club.hiraeth.flareenough.ui.settings.SettingsScreen
 import club.hiraeth.flareenough.ui.stillness.StillnessScreen
+import club.hiraeth.flareenough.ui.stillness.StillnessViewModel
 import club.hiraeth.flareenough.ui.support.rememberAppContainer
 import club.hiraeth.flareenough.ui.symptoms.SymptomLogScreen
 import club.hiraeth.flareenough.ui.symptoms.SymptomLogViewModel
@@ -257,7 +258,18 @@ private fun MainShell(
                 )
                 HistoryScreen(viewModel = vm)
             }
-            composable(TopDestination.STILLNESS.route) { StillnessScreen() }
+            composable(TopDestination.STILLNESS.route) {
+                val context = androidx.compose.ui.platform.LocalContext.current
+                val container = rememberAppContainer()
+                val vm: StillnessViewModel = viewModel(
+                    factory = viewModelFactory {
+                        initializer {
+                            StillnessViewModel(context.applicationContext, container.meditationRepository)
+                        }
+                    },
+                )
+                StillnessScreen(viewModel = vm)
+            }
             composable(Routes.SETTINGS) {
                 SettingsScreen(
                     onOpenMedications = onOpenMedications,

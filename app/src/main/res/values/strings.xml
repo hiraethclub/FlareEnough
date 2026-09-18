@@ -50,6 +50,46 @@
     <string name="session_breathing">Breathing</string>
     <string name="session_bell">Bell</string>
     <string name="placeholder_stillness">Timer, breathing pacer and bell will live here.</string>
+
+    <!-- Stillness. -->
+    <string name="stillness_timer_tab">Timer</string>
+    <string name="stillness_breathing_tab">Breathing</string>
+    <string name="stillness_prompts_tab">Prompts</string>
+    <string name="stillness_length">Length</string>
+    <string name="stillness_minutes">%1$d min</string>
+    <string name="stillness_start">Start</string>
+    <string name="stillness_stop">Stop</string>
+    <string name="stillness_start_bell">Starting bell</string>
+    <string name="stillness_interval_bell">Interval bell</string>
+    <string name="stillness_end_bell">Ending bell</string>
+    <string name="stillness_interval_every">Interval every %1$d min</string>
+    <string name="stillness_off">Off</string>
+    <string name="stillness_interval_label">Interval bells</string>
+    <string name="stillness_remaining">%1$02d:%2$02d</string>
+
+    <string name="breathing_in">Breathe in</string>
+    <string name="breathing_out">Breathe out</string>
+    <string name="breathing_hold">Hold</string>
+    <string name="breathing_preset">Pattern</string>
+    <string name="breathing_46">In 4, out 6</string>
+    <string name="breathing_478">In 4, hold 7, out 8</string>
+    <string name="breathing_box">Box, 4 each</string>
+
+    <string name="prompt_next">Next</string>
+
+    <!-- Short stillness prompts. Original wording, one idea each. -->
+    <string-array name="stillness_prompts">
+        <item>Notice your feet on the floor.</item>
+        <item>Feel the weight of your hands where they rest.</item>
+        <item>Listen for the furthest sound you can hear.</item>
+        <item>Notice the temperature of the air on your skin.</item>
+        <item>Let your shoulders drop a little.</item>
+        <item>Feel your breath at the tip of your nose.</item>
+        <item>Notice where your body meets the chair or bed.</item>
+        <item>Unclench your jaw, and let it be soft.</item>
+        <item>Feel the air move in, and then out.</item>
+        <item>Rest your attention on one small sound nearby.</item>
+    </string-array>
     <string name="placeholder_settings">Reminders, appearance, backup and about will live here.</string>
 
     <!-- Common actions. -->

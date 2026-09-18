@@ -54,6 +54,11 @@
             android:name=".reminders.receivers.DoseActionReceiver"
             android:exported="false" />
 
+        <!-- Rings the ending bell and logs a stillness session when its timer ends. -->
+        <receiver
+            android:name=".stillness.StillnessEndReceiver"
+            android:exported="false" />
+
         <!-- Rebuilds all alarms after reboot, update, and clock or time zone
              changes, and when the exact alarm permission changes. These are all
              protected system broadcasts, so the receiver stays unexported. -->
