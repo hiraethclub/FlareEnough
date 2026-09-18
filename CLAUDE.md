@@ -9,7 +9,7 @@ break one of them, stop and raise it rather than working around it.
 Flare Enough is a free, open source Android app for tracking medication,
 logging symptoms, and supporting simple meditation. It is built for people with
 chronic illness, including people with painful or stiff hands, fatigue, anxiety,
-poor memory, difficulty reading long text, and aphantasia (no mental imagery).
+poor memory, and difficulty reading long text.
 Every design choice should make life easier on a bad day.
 
 The app name is a pun on flares and "fair enough". Keep the name in a single

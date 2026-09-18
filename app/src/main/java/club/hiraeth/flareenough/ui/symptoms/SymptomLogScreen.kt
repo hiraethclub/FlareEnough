@@ -271,31 +271,65 @@ private fun NumberInput(value: Int?, unit: String?, onChange: (Int?) -> Unit) {
     )
 }
 
+private val soreTint = Color(0xFFF3E7CF)
+private val swollenTint = Color(0xFFF0DCD2)
+private val bodyChipText = Color(0xFF2B2B2E)
+
 @OptIn(ExperimentalLayoutApi::class)
 @Composable
 private fun BodyMapSection(
     marks: Map<BodyRegion, BodyState>,
     onCycle: (BodyRegion) -> Unit,
 ) {
-    Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
+    Column(verticalArrangement = Arrangement.spacedBy(12.dp)) {
         SectionTitle(stringResourceCompat(R.string.symptom_body_map))
-        FlowRow(horizontalArrangement = Arrangement.spacedBy(8.dp), verticalArrangement = Arrangement.spacedBy(8.dp)) {
-            for (region in bodyRegionOrder) {
-                val state = marks[region]
-                val stateLabel = when (state) {
-                    BodyState.SORE -> stringResourceCompat(R.string.body_state_sore)
-                    BodyState.SWOLLEN -> stringResourceCompat(R.string.body_state_swollen)
-                    null -> stringResourceCompat(R.string.body_state_none)
+        Text(
+            stringResourceCompat(R.string.body_map_hint),
+            style = MaterialTheme.typography.bodyMedium,
+            color = MaterialTheme.colorScheme.onSurfaceVariant,
+        )
+        bodyRegionGroups.forEach { (areaRes, regions) ->
+            Text(
+                stringResourceCompat(areaRes),
+                style = MaterialTheme.typography.labelLarge,
+                color = MaterialTheme.colorScheme.onSurfaceVariant,
+            )
+            FlowRow(
+                horizontalArrangement = Arrangement.spacedBy(8.dp),
+                verticalArrangement = Arrangement.spacedBy(8.dp),
+            ) {
+                regions.forEach { region ->
+                    RegionChip(
+                        name = stringResourceCompat(region.labelRes()),
+                        state = marks[region],
+                        onClick = { onCycle(region) },
+                    )
                 }
-                FilterChip(
-                    selected = state != null,
-                    onClick = { onCycle(region) },
-                    label = {
-                        Text(stringResourceCompat(region.labelRes()) + ": " + stateLabel)
-                    },
-                )
             }
         }
+    }
+}
+
+@Composable
+private fun RegionChip(name: String, state: BodyState?, onClick: () -> Unit) {
+    val (bg, label) = when (state) {
+        null -> MaterialTheme.colorScheme.surfaceVariant to name
+        BodyState.SORE -> soreTint to (name + " · " + stringResourceCompat(R.string.body_state_sore))
+        BodyState.SWOLLEN -> swollenTint to (name + " · " + stringResourceCompat(R.string.body_state_swollen))
+    }
+    val fg = if (state == null) MaterialTheme.colorScheme.onSurfaceVariant else bodyChipText
+    Surface(
+        onClick = onClick,
+        shape = androidx.compose.foundation.shape.RoundedCornerShape(20.dp),
+        color = bg,
+        contentColor = fg,
+        modifier = Modifier.heightIn(min = 44.dp),
+    ) {
+        Text(
+            label,
+            modifier = Modifier.padding(horizontal = 14.dp, vertical = 10.dp),
+            style = MaterialTheme.typography.bodyMedium,
+        )
     }
 }
 

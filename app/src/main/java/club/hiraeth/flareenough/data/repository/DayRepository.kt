@@ -27,6 +27,9 @@ class DayRepository(private val dao: DayDao) {
 
     fun observeBodyMap(epochDay: Long): Flow<List<BodyMapEntryEntity>> = dao.observeBodyMap(epochDay)
 
+    fun observeBodyMapBetween(startEpochDay: Long, endEpochDay: Long): Flow<List<BodyMapEntryEntity>> =
+        dao.observeBodyMapBetween(startEpochDay, endEpochDay)
+
     /**
      * Cycle a region's mark: nothing to sore, sore to swollen, swollen to clear.
      * This matches the tap behaviour of the body map and the list fallback.

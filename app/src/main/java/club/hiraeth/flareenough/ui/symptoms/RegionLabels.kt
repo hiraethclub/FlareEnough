@@ -4,6 +4,28 @@ import androidx.annotation.StringRes
 import club.hiraeth.flareenough.R
 import club.hiraeth.flareenough.data.db.entity.BodyRegion
 
+/** Regions grouped by area, each with a heading, for a tidy body map. */
+val bodyRegionGroups: List<Pair<Int, List<BodyRegion>>> = listOf(
+    R.string.body_area_head to listOf(BodyRegion.JAW, BodyRegion.NECK),
+    R.string.body_area_arms to listOf(
+        BodyRegion.SHOULDER_LEFT, BodyRegion.SHOULDER_RIGHT,
+        BodyRegion.ELBOW_LEFT, BodyRegion.ELBOW_RIGHT,
+        BodyRegion.WRIST_LEFT, BodyRegion.WRIST_RIGHT,
+    ),
+    R.string.body_area_hands to listOf(
+        BodyRegion.HAND_LEFT, BodyRegion.HAND_RIGHT,
+        BodyRegion.FINGERS_LEFT, BodyRegion.FINGERS_RIGHT,
+    ),
+    R.string.body_area_back to listOf(
+        BodyRegion.BACK, BodyRegion.HIP_LEFT, BodyRegion.HIP_RIGHT,
+    ),
+    R.string.body_area_legs to listOf(
+        BodyRegion.KNEE_LEFT, BodyRegion.KNEE_RIGHT,
+        BodyRegion.ANKLE_LEFT, BodyRegion.ANKLE_RIGHT,
+        BodyRegion.FOOT_LEFT, BodyRegion.FOOT_RIGHT,
+    ),
+)
+
 /** The order regions appear in the body map list, roughly head to toe. */
 val bodyRegionOrder: List<BodyRegion> = listOf(
     BodyRegion.JAW,

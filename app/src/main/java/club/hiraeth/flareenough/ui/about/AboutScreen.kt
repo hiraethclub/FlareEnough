@@ -60,7 +60,20 @@ fun AboutScreen(onBack: () -> Unit) {
                 style = MaterialTheme.typography.bodyMedium,
                 color = MaterialTheme.colorScheme.onSurfaceVariant,
             )
+            Text(
+                stringResource(R.string.about_author),
+                style = MaterialTheme.typography.bodyMedium,
+            )
+            Text(
+                stringResource(R.string.about_contact),
+                style = MaterialTheme.typography.bodyMedium,
+                color = MaterialTheme.colorScheme.primary,
+            )
 
+            InfoCard(
+                title = stringResource(R.string.about_dedication_title),
+                body = stringResource(R.string.about_dedication_body),
+            )
             InfoCard(
                 title = stringResource(R.string.about_not_medical_title),
                 body = stringResource(R.string.about_not_medical_body),

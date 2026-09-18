@@ -19,6 +19,7 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.CheckCircle
 import androidx.compose.material.icons.filled.EditNote
+import androidx.compose.material.icons.filled.Healing
 import androidx.compose.material.icons.filled.KeyboardArrowLeft
 import androidx.compose.material.icons.filled.KeyboardArrowRight
 import androidx.compose.material.icons.filled.LocalFireDepartment
@@ -43,10 +44,12 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import club.hiraeth.flareenough.R
+import club.hiraeth.flareenough.data.db.entity.BodyState
 import club.hiraeth.flareenough.data.db.entity.DoseStatus
 import club.hiraeth.flareenough.data.db.entity.SessionType
 import club.hiraeth.flareenough.data.db.entity.SymptomTrackerEntity
 import club.hiraeth.flareenough.data.db.entity.TrackerType
+import club.hiraeth.flareenough.ui.symptoms.labelRes
 import club.hiraeth.flareenough.ui.support.formatEpochDay
 import club.hiraeth.flareenough.ui.support.formatInstantTime
 import java.time.LocalDate
@@ -266,6 +269,13 @@ private fun timelineContent(item: TimelineItem): Triple<androidx.compose.ui.grap
             Icons.Filled.LocalFireDepartment,
             stringResource(R.string.symptom_flare),
             null,
+        )
+        is TimelineItem.Body -> Triple(
+            Icons.Filled.Healing,
+            stringResource(item.region.labelRes()),
+            stringResource(
+                if (item.state == BodyState.SORE) R.string.body_state_sore else R.string.body_state_swollen,
+            ),
         )
         is TimelineItem.Note -> Triple(Icons.Filled.EditNote, item.text, null)
         is TimelineItem.Meditation -> Triple(

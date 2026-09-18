@@ -1,5 +1,7 @@
 package club.hiraeth.flareenough.ui.history
 
+import club.hiraeth.flareenough.data.db.entity.BodyRegion
+import club.hiraeth.flareenough.data.db.entity.BodyState
 import club.hiraeth.flareenough.data.db.entity.DoseStatus
 import club.hiraeth.flareenough.data.db.entity.SessionType
 import club.hiraeth.flareenough.data.db.entity.SymptomTrackerEntity
@@ -37,6 +39,12 @@ sealed interface TimelineItem {
     ) : TimelineItem
 
     data class Flare(override val timeMillis: Long?) : TimelineItem
+
+    data class Body(
+        override val timeMillis: Long?,
+        val region: BodyRegion,
+        val state: BodyState,
+    ) : TimelineItem
 
     data class Note(override val timeMillis: Long?, val text: String) : TimelineItem
 

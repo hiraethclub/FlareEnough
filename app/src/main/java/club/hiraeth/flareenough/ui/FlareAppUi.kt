@@ -151,6 +151,17 @@ private fun MainShell(
     val currentRoute = backStackEntry?.destination?.route
     val onSettings = currentRoute == Routes.SETTINGS
 
+    // One place that switches bottom tabs, used by the bar and by in-app shortcuts
+    // (like the Today cards), so the saved tab state stays consistent and returning
+    // to a tab always works.
+    val switchTab: (String) -> Unit = { route ->
+        navController.navigate(route) {
+            popUpTo(navController.graph.findStartDestination().id) { saveState = true }
+            launchSingleTop = true
+            restoreState = true
+        }
+    }
+
     val titleRes = when (currentRoute) {
         Routes.SETTINGS -> R.string.nav_settings
         else -> TopDestination.entries.firstOrNull { it.route == currentRoute }?.labelRes
@@ -193,15 +204,7 @@ private fun MainShell(
                             ?.any { it.route == destination.route } == true
                         NavigationBarItem(
                             selected = selected,
-                            onClick = {
-                                navController.navigate(destination.route) {
-                                    popUpTo(navController.graph.findStartDestination().id) {
-                                        saveState = true
-                                    }
-                                    launchSingleTop = true
-                                    restoreState = true
-                                }
-                            },
+                            onClick = { switchTab(destination.route) },
                             icon = { Icon(destination.icon, contentDescription = null) },
                             label = { Text(stringResource(destination.labelRes)) },
                             alwaysShowLabel = true,
@@ -229,12 +232,8 @@ private fun MainShell(
                     viewModel = vm,
                     remindersMayBeLate = !container.alarmScheduler.canScheduleExact(),
                     onOpenReminderHealth = onOpenReminderHealth,
-                    onQuickSymptom = {
-                        navController.navigate(TopDestination.LOG.route) { launchSingleTop = true }
-                    },
-                    onOpenStillness = {
-                        navController.navigate(TopDestination.STILLNESS.route) { launchSingleTop = true }
-                    },
+                    onQuickSymptom = { switchTab(TopDestination.LOG.route) },
+                    onOpenStillness = { switchTab(TopDestination.STILLNESS.route) },
                 )
             }
             composable(TopDestination.LOG.route) {

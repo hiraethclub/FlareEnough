@@ -119,6 +119,10 @@
     <string name="about_not_medical_body">Flare Enough records and reminds only. It does not diagnose, recommend treatments, adjust doses, check interactions, or interpret symptoms. For medical advice, diagnosis, or treatment, please speak to a healthcare professional.</string>
     <string name="about_privacy_title">Your data stays on your device</string>
     <string name="about_privacy_body">The app has no internet permission and never sends your data anywhere. You are in control of any backup or export.</string>
+    <string name="about_author">Made by Aisling de Grás</string>
+    <string name="about_contact">aisling@hiraeth.club</string>
+    <string name="about_dedication_title">Dedication</string>
+    <string name="about_dedication_body">For my friends and family. (A fuller dedication to come.)</string>
 
     <!-- Notification channels. -->
     <string name="channel_dose_reminders">Dose reminders</string>
@@ -244,6 +248,12 @@
     <string name="body_state_sore">Sore</string>
     <string name="body_state_swollen">Swollen</string>
     <string name="body_state_none">Not marked</string>
+    <string name="body_map_hint">Tap once for sore, again for swollen, again to clear.</string>
+    <string name="body_area_head">Head and neck</string>
+    <string name="body_area_arms">Shoulders and arms</string>
+    <string name="body_area_hands">Hands</string>
+    <string name="body_area_back">Back and hips</string>
+    <string name="body_area_legs">Legs and feet</string>
 
     <string name="yes">Yes</string>
     <string name="no">No</string>

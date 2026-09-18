@@ -41,6 +41,9 @@ interface DayDao {
     @Query("SELECT * FROM body_map_entries WHERE epochDay = :epochDay")
     suspend fun getBodyMap(epochDay: Long): List<BodyMapEntryEntity>
 
+    @Query("SELECT * FROM body_map_entries WHERE epochDay BETWEEN :startEpochDay AND :endEpochDay ORDER BY epochDay ASC")
+    fun observeBodyMapBetween(startEpochDay: Long, endEpochDay: Long): Flow<List<BodyMapEntryEntity>>
+
     // Notes.
 
     @Insert

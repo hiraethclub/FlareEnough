@@ -14,7 +14,7 @@ The name is a pun on flares and "fair enough". Dry, and a little defiant.
 - Reminders that actually fire on time, including when the phone is idle and
   after a reboot.
 - A calm, gentle interface designed for bad days: sore hands, fatigue, brain fog,
-  anxiety, and aphantasia.
+  and anxiety.
 
 ## Not medical advice
 

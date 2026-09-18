@@ -2,6 +2,7 @@ package club.hiraeth.flareenough.ui.history
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import club.hiraeth.flareenough.data.db.entity.BodyMapEntryEntity
 import club.hiraeth.flareenough.data.db.entity.DoseEventEntity
 import club.hiraeth.flareenough.data.db.entity.DoseStatus
 import club.hiraeth.flareenough.data.db.entity.DayNoteEntity
@@ -34,6 +35,7 @@ private data class MonthRaw(
     val flareDays: Set<Long>,
     val meditation: List<MeditationSessionEntity>,
     val notes: List<DayNoteEntity>,
+    val bodyMap: List<BodyMapEntryEntity>,
 )
 
 @OptIn(ExperimentalCoroutinesApi::class)
@@ -65,19 +67,23 @@ class HistoryViewModel(
             val endDay = ym.atEndOfMonth().toEpochDay()
             val startMillis = ym.atDay(1).atStartOfDay(zone).toInstant().toEpochMilli()
             val endMillis = ym.plusMonths(1).atDay(1).atStartOfDay(zone).toInstant().toEpochMilli()
-            combine(
+            val core = combine(
                 doseRepository.observeBetween(startMillis, endMillis),
                 symptomRepository.observeEntriesBetween(startDay, endDay),
                 dayRepository.observeFlareDaysBetween(startDay, endDay),
                 meditationRepository.observeBetween(startMillis, endMillis),
                 dayRepository.observeNotesBetween(startDay, endDay),
             ) { doses, symptoms, flareDays, meditation, notes ->
-                MonthRaw(doses, symptoms, flareDays.toSet(), meditation, notes)
+                MonthRaw(doses, symptoms, flareDays.toSet(), meditation, notes, emptyList())
+            }
+            // Body map is a sixth source, combined on top so the timeline can show it.
+            combine(core, dayRepository.observeBodyMapBetween(startDay, endDay)) { raw, bodyMap ->
+                raw.copy(bodyMap = bodyMap)
             }
         }.stateIn(
             viewModelScope,
             SharingStarted.WhileSubscribed(5_000),
-            MonthRaw(emptyList(), emptyList(), emptySet(), emptyList(), emptyList()),
+            MonthRaw(emptyList(), emptyList(), emptySet(), emptyList(), emptyList(), emptyList()),
         )
 
     val uiState: StateFlow<HistoryUiState> =
@@ -114,6 +120,7 @@ class HistoryViewModel(
         val symptomsByDay = raw.symptoms.groupBy { it.epochDay }
         val meditationByDay = raw.meditation.groupBy { dayOf(it.startTimeMillis) }
         val notesByDay = raw.notes.groupBy { it.epochDay }
+        val bodyByDay = raw.bodyMap.groupBy { it.epochDay }
 
         val result = mutableMapOf<Long, DaySummary>()
         var date = ym.atDay(1)
@@ -128,7 +135,8 @@ class HistoryViewModel(
             val hasActivity = dosesByDay.containsKey(epochDay) ||
                 daySymptoms.isNotEmpty() ||
                 meditationByDay.containsKey(epochDay) ||
-                notesByDay.containsKey(epochDay)
+                notesByDay.containsKey(epochDay) ||
+                bodyByDay.containsKey(epochDay)
             if (hasActivity || raw.flareDays.contains(epochDay)) {
                 result[epochDay] = DaySummary(
                     epochDay = epochDay,
@@ -175,6 +183,15 @@ class HistoryViewModel(
         }
         if (raw.flareDays.contains(epochDay)) {
             items.add(TimelineItem.Flare(timeMillis = null))
+        }
+        raw.bodyMap.filter { it.epochDay == epochDay }.forEach { mark ->
+            items.add(
+                TimelineItem.Body(
+                    timeMillis = mark.createdAtMillis,
+                    region = mark.region,
+                    state = mark.state,
+                ),
+            )
         }
         raw.notes.filter { it.epochDay == epochDay }.forEach { note ->
             items.add(TimelineItem.Note(timeMillis = note.createdAtMillis, text = note.text))
