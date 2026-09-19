@@ -3,6 +3,7 @@ package club.hiraeth.flareenough.data.settings
 import android.content.Context
 import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences
+import androidx.datastore.preferences.core.booleanPreferencesKey
 import androidx.datastore.preferences.core.edit
 import androidx.datastore.preferences.core.stringSetPreferencesKey
 import androidx.datastore.preferences.preferencesDataStore
@@ -38,7 +39,19 @@ class SettingsRepository(context: Context) {
         }
     }
 
+    /**
+     * Whether the optional period tracker is on. Off by default, so it appears only
+     * for people who choose to turn it on.
+     */
+    fun observePeriodTrackingEnabled(): Flow<Boolean> =
+        store.data.map { prefs -> prefs[PERIOD_TRACKING_ENABLED] ?: false }
+
+    suspend fun setPeriodTrackingEnabled(enabled: Boolean) {
+        store.edit { prefs -> prefs[PERIOD_TRACKING_ENABLED] = enabled }
+    }
+
     private companion object {
         val HIDDEN_BODY_REGIONS = stringSetPreferencesKey("hidden_body_regions")
+        val PERIOD_TRACKING_ENABLED = booleanPreferencesKey("period_tracking_enabled")
     }
 }

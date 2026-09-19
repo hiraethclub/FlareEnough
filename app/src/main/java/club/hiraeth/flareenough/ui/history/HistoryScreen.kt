@@ -26,6 +26,7 @@ import androidx.compose.material.icons.filled.LocalFireDepartment
 import androidx.compose.material.icons.filled.RemoveCircleOutline
 import androidx.compose.material.icons.filled.SelfImprovement
 import androidx.compose.material.icons.filled.SentimentSatisfied
+import androidx.compose.material.icons.filled.WaterDrop
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
@@ -46,6 +47,7 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import club.hiraeth.flareenough.R
 import club.hiraeth.flareenough.data.db.entity.BodyState
 import club.hiraeth.flareenough.data.db.entity.DoseStatus
+import club.hiraeth.flareenough.data.db.entity.PeriodFlow
 import club.hiraeth.flareenough.data.db.entity.SessionType
 import club.hiraeth.flareenough.data.db.entity.SymptomTrackerEntity
 import club.hiraeth.flareenough.data.db.entity.TrackerType
@@ -278,6 +280,18 @@ private fun timelineContent(item: TimelineItem): Triple<androidx.compose.ui.grap
             Icons.Filled.LocalFireDepartment,
             stringResource(R.string.symptom_flare),
             null,
+        )
+        is TimelineItem.Period -> Triple(
+            Icons.Filled.WaterDrop,
+            stringResource(R.string.period_title),
+            stringResource(
+                when (item.flow) {
+                    PeriodFlow.SPOTTING -> R.string.period_flow_spotting
+                    PeriodFlow.LIGHT -> R.string.period_flow_light
+                    PeriodFlow.MEDIUM -> R.string.period_flow_medium
+                    PeriodFlow.HEAVY -> R.string.period_flow_heavy
+                },
+            ),
         )
         is TimelineItem.Body -> Triple(
             Icons.Filled.Healing,

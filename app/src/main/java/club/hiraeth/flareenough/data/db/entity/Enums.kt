@@ -101,6 +101,18 @@ enum class BodyState {
     SWOLLEN,
 }
 
+/**
+ * How much bleeding was recorded for a day, for the optional period tracker. The app
+ * only records this, in the person's own words of intensity. It never predicts a
+ * cycle, estimates fertile days, or reads anything into the pattern.
+ */
+enum class PeriodFlow {
+    SPOTTING,
+    LIGHT,
+    MEDIUM,
+    HEAVY,
+}
+
 /** The kind of stillness session, logged to the timeline with duration only. */
 enum class SessionType {
     TIMER,

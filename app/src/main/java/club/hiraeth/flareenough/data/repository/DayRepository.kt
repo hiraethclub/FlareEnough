@@ -6,6 +6,8 @@ import club.hiraeth.flareenough.data.db.entity.BodyState
 import club.hiraeth.flareenough.data.db.entity.DayNoteEntity
 import club.hiraeth.flareenough.data.db.entity.DayTagCrossRef
 import club.hiraeth.flareenough.data.db.entity.FlareDayEntity
+import club.hiraeth.flareenough.data.db.entity.PeriodDayEntity
+import club.hiraeth.flareenough.data.db.entity.PeriodFlow
 import club.hiraeth.flareenough.data.db.entity.TagEntity
 import club.hiraeth.flareenough.data.db.entity.BodyRegion
 import kotlinx.coroutines.flow.Flow
@@ -22,6 +24,22 @@ class DayRepository(private val dao: DayDao) {
 
     suspend fun setFlare(epochDay: Long, flare: Boolean, nowMillis: Long) =
         dao.setFlareDay(FlareDayEntity(epochDay = epochDay, flare = flare, createdAtMillis = nowMillis))
+
+    // Period days.
+
+    fun observePeriodDay(epochDay: Long): Flow<PeriodDayEntity?> = dao.observePeriodDay(epochDay)
+
+    fun observePeriodDaysBetween(startEpochDay: Long, endEpochDay: Long): Flow<List<PeriodDayEntity>> =
+        dao.observePeriodDaysBetween(startEpochDay, endEpochDay)
+
+    /** Mark a day's flow, or pass null to clear it so the day is no longer a bleeding day. */
+    suspend fun setPeriodFlow(epochDay: Long, flow: PeriodFlow?, nowMillis: Long) {
+        if (flow == null) {
+            dao.clearPeriodDay(epochDay)
+        } else {
+            dao.setPeriodDay(PeriodDayEntity(epochDay = epochDay, flow = flow, createdAtMillis = nowMillis))
+        }
+    }
 
     // Body map.
 

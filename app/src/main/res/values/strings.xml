@@ -140,6 +140,8 @@
     <string name="settings_about_summary">Version, licence, and the not medical advice notice</string>
     <string name="settings_body_parts">Body parts</string>
     <string name="settings_body_parts_summary">Choose which body parts show up when logging</string>
+    <string name="settings_period">Period tracking</string>
+    <string name="settings_period_summary">Show a place to log bleeding days when you log symptoms</string>
 
     <!-- Body parts settings screen. -->
     <string name="body_parts_title">Body parts</string>
@@ -284,6 +286,16 @@
     <string name="body_state_swollen">Swollen</string>
     <string name="body_state_none">Not marked</string>
     <string name="body_map_hint">Tap a part once for sore, again for swollen, again to clear.</string>
+    <string name="body_map_all_hidden">All body parts are hidden. Turn some back on in Settings, Body parts.</string>
+
+    <!-- Optional period tracker. Records bleeding days only, never predicts a cycle. -->
+    <string name="period_title">Period</string>
+    <string name="period_hint_none">If you are bleeding today, tap how much. This records the day only.</string>
+    <string name="period_hint_marked">Marked for today. Tap the same level again to clear it.</string>
+    <string name="period_flow_spotting">Spotting</string>
+    <string name="period_flow_light">Light</string>
+    <string name="period_flow_medium">Medium</string>
+    <string name="period_flow_heavy">Heavy</string>
     <string name="body_area_head">Head and neck</string>
     <string name="body_area_arms">Shoulders and arms</string>
     <string name="body_area_hands">Hands</string>

@@ -79,6 +79,18 @@ data class FlareDayEntity(
     val createdAtMillis: Long,
 )
 
+/**
+ * A bleeding day for the optional period tracker, with its flow. A row exists only
+ * for days the person marked. There is no row for days without bleeding, and the app
+ * never fills days in or predicts them.
+ */
+@Entity(tableName = "period_days")
+data class PeriodDayEntity(
+    @PrimaryKey val epochDay: Long,
+    val flow: PeriodFlow,
+    val createdAtMillis: Long,
+)
+
 /** A free text note for a day. Never required. */
 @Entity(tableName = "day_notes", indices = [Index("epochDay")])
 data class DayNoteEntity(

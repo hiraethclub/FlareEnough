@@ -6,6 +6,7 @@ import club.hiraeth.flareenough.data.db.entity.BodyState
 import club.hiraeth.flareenough.data.db.entity.DoseStatus
 import club.hiraeth.flareenough.data.db.entity.LoggedVia
 import club.hiraeth.flareenough.data.db.entity.MedicationForm
+import club.hiraeth.flareenough.data.db.entity.PeriodFlow
 import club.hiraeth.flareenough.data.db.entity.ScheduleType
 import club.hiraeth.flareenough.data.db.entity.SessionType
 import club.hiraeth.flareenough.data.db.entity.TrackerType
@@ -83,6 +84,12 @@ class Converters {
 
     @TypeConverter
     fun toSessionType(value: String): SessionType = SessionType.valueOf(value)
+
+    @TypeConverter
+    fun fromPeriodFlow(value: PeriodFlow): String = value.name
+
+    @TypeConverter
+    fun toPeriodFlow(value: String): PeriodFlow = PeriodFlow.valueOf(value)
 
     private companion object {
         const val SEPARATOR = ""

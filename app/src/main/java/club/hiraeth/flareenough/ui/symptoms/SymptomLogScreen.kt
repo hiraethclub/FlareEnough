@@ -47,6 +47,7 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import club.hiraeth.flareenough.R
 import club.hiraeth.flareenough.data.db.entity.BodyRegion
 import club.hiraeth.flareenough.data.db.entity.BodyState
+import club.hiraeth.flareenough.data.db.entity.PeriodFlow
 import club.hiraeth.flareenough.data.db.entity.SymptomTrackerEntity
 import club.hiraeth.flareenough.data.db.entity.TrackerType
 
@@ -62,6 +63,8 @@ fun SymptomLogScreen(
     val dayTags by viewModel.dayTags.collectAsStateWithLifecycle()
     val notes by viewModel.notes.collectAsStateWithLifecycle()
     val hiddenRegions by viewModel.hiddenBodyRegions.collectAsStateWithLifecycle()
+    val periodEnabled by viewModel.periodTrackingEnabled.collectAsStateWithLifecycle()
+    val periodFlow by viewModel.periodFlowToday.collectAsStateWithLifecycle()
 
     val defaultLabels = defaultLevelLabels()
     var showAddTracker by remember { mutableStateOf(false) }
@@ -76,6 +79,9 @@ fun SymptomLogScreen(
         }
 
         item { FlareRow(flare = flare, onToggle = { viewModel.toggleFlare() }) }
+        if (periodEnabled) {
+            item { PeriodSection(flow = periodFlow, onSelect = { viewModel.setPeriodFlow(it) }) }
+        }
         item {
             OutlinedButton(
                 onClick = { viewModel.sameAsYesterday() },
@@ -152,6 +158,79 @@ private fun FlareRow(flare: Boolean, onToggle: () -> Unit) {
                 style = MaterialTheme.typography.titleMedium,
             )
             Switch(checked = flare, onCheckedChange = { onToggle() })
+        }
+    }
+}
+
+private val periodTintLight = mapOf(
+    PeriodFlow.SPOTTING to Color(0xFFF3E4E7),
+    PeriodFlow.LIGHT to Color(0xFFEBD3D8),
+    PeriodFlow.MEDIUM to Color(0xFFE0C0C7),
+    PeriodFlow.HEAVY to Color(0xFFD3AEB6),
+)
+private val periodTintDark = mapOf(
+    PeriodFlow.SPOTTING to Color(0xFF3A2E31),
+    PeriodFlow.LIGHT to Color(0xFF44343A),
+    PeriodFlow.MEDIUM to Color(0xFF4E3A41),
+    PeriodFlow.HEAVY to Color(0xFF593F48),
+)
+
+private fun periodFlowLabelRes(flow: PeriodFlow): Int = when (flow) {
+    PeriodFlow.SPOTTING -> R.string.period_flow_spotting
+    PeriodFlow.LIGHT -> R.string.period_flow_light
+    PeriodFlow.MEDIUM -> R.string.period_flow_medium
+    PeriodFlow.HEAVY -> R.string.period_flow_heavy
+}
+
+/**
+ * The optional period tracker. Four flow levels, each a word plus a soft tint so it
+ * never reads by colour alone. Tapping a level marks the day, tapping it again clears
+ * it. The app records only: there is no cycle prediction anywhere.
+ */
+@Composable
+private fun PeriodSection(flow: PeriodFlow?, onSelect: (PeriodFlow) -> Unit) {
+    val dark = androidx.compose.foundation.isSystemInDarkTheme()
+    val tints = if (dark) periodTintDark else periodTintLight
+    val textColor = if (dark) levelTextDark else levelTextLight
+    ElevatedCard(modifier = Modifier.fillMaxWidth()) {
+        Column(modifier = Modifier.padding(16.dp), verticalArrangement = Arrangement.spacedBy(10.dp)) {
+            Text(stringResourceCompat(R.string.period_title), style = MaterialTheme.typography.titleMedium)
+            Text(
+                stringResourceCompat(
+                    if (flow == null) R.string.period_hint_none else R.string.period_hint_marked,
+                ),
+                style = MaterialTheme.typography.bodyMedium,
+                color = MaterialTheme.colorScheme.onSurfaceVariant,
+            )
+            Row(horizontalArrangement = Arrangement.spacedBy(8.dp), modifier = Modifier.fillMaxWidth()) {
+                PeriodFlow.entries.forEach { level ->
+                    val isSelected = flow == level
+                    Surface(
+                        onClick = { onSelect(level) },
+                        modifier = Modifier.weight(1f).heightIn(min = 64.dp),
+                        shape = RoundedCornerShape(14.dp),
+                        color = tints[level] ?: Color.Transparent,
+                        contentColor = textColor,
+                        border = if (isSelected) {
+                            androidx.compose.foundation.BorderStroke(3.dp, MaterialTheme.colorScheme.primary)
+                        } else {
+                            null
+                        },
+                    ) {
+                        Column(
+                            modifier = Modifier.padding(4.dp).fillMaxSize(),
+                            horizontalAlignment = Alignment.CenterHorizontally,
+                            verticalArrangement = Arrangement.Center,
+                        ) {
+                            Text(
+                                stringResourceCompat(periodFlowLabelRes(level)),
+                                style = MaterialTheme.typography.labelLarge,
+                                textAlign = TextAlign.Center,
+                            )
+                        }
+                    }
+                }
+            }
         }
     }
 }
@@ -309,6 +388,15 @@ private fun BodyMapSection(
             style = MaterialTheme.typography.bodyMedium,
             color = MaterialTheme.colorScheme.onSurfaceVariant,
         )
+        val anyVisible = bodyRegionGroups.any { (_, regions) -> regions.any { it !in hidden } }
+        if (!anyVisible) {
+            Text(
+                stringResourceCompat(R.string.body_map_all_hidden),
+                style = MaterialTheme.typography.bodyMedium,
+                color = MaterialTheme.colorScheme.onSurfaceVariant,
+                modifier = Modifier.padding(top = 8.dp),
+            )
+        }
         bodyRegionGroups.forEach { (areaRes, regions) ->
             val visible = regions.filterNot { it in hidden }
             if (visible.isEmpty()) return@forEach

@@ -5,6 +5,7 @@ import androidx.lifecycle.viewModelScope
 import club.hiraeth.flareenough.data.settings.SettingsRepository
 import club.hiraeth.flareenough.data.db.entity.BodyRegion
 import club.hiraeth.flareenough.data.db.entity.BodyState
+import club.hiraeth.flareenough.data.db.entity.PeriodFlow
 import club.hiraeth.flareenough.data.db.entity.DayNoteEntity
 import club.hiraeth.flareenough.data.db.entity.SymptomEntryEntity
 import club.hiraeth.flareenough.data.db.entity.SymptomTrackerEntity
@@ -40,6 +41,15 @@ class SymptomLogViewModel(
     val hiddenBodyRegions: StateFlow<Set<BodyRegion>> =
         settingsRepository.observeHiddenBodyRegions()
             .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5_000), emptySet())
+
+    val periodTrackingEnabled: StateFlow<Boolean> =
+        settingsRepository.observePeriodTrackingEnabled()
+            .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5_000), false)
+
+    val periodFlowToday: StateFlow<PeriodFlow?> =
+        dayRepository.observePeriodDay(today)
+            .map { it?.flow }
+            .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5_000), null)
 
     val trackerRows: StateFlow<List<TrackerRow>> =
         combine(
@@ -95,6 +105,14 @@ class SymptomLogViewModel(
         val next = !flare.value
         viewModelScope.launch {
             dayRepository.setFlare(today, next, System.currentTimeMillis())
+        }
+    }
+
+    /** Set today's flow, or pass null (or the current flow again) to clear the bleeding day. */
+    fun setPeriodFlow(flow: PeriodFlow?) {
+        val next = if (flow != null && flow == periodFlowToday.value) null else flow
+        viewModelScope.launch {
+            dayRepository.setPeriodFlow(today, next, System.currentTimeMillis())
         }
     }
 

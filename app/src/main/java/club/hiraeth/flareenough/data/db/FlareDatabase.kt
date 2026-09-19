@@ -20,6 +20,7 @@ import club.hiraeth.flareenough.data.db.entity.DoseEventEntity
 import club.hiraeth.flareenough.data.db.entity.FlareDayEntity
 import club.hiraeth.flareenough.data.db.entity.MedicationEntity
 import club.hiraeth.flareenough.data.db.entity.MeditationSessionEntity
+import club.hiraeth.flareenough.data.db.entity.PeriodDayEntity
 import club.hiraeth.flareenough.data.db.entity.PromptEntity
 import club.hiraeth.flareenough.data.db.entity.ReadingEntity
 import club.hiraeth.flareenough.data.db.entity.ScheduleTimeEntity
@@ -49,8 +50,9 @@ import club.hiraeth.flareenough.data.db.entity.TagEntity
         MeditationSessionEntity::class,
         PromptEntity::class,
         ReadingEntity::class,
+        PeriodDayEntity::class,
     ],
-    version = 2,
+    version = 3,
     exportSchema = true,
 )
 @TypeConverters(Converters::class)
@@ -64,7 +66,7 @@ abstract class FlareDatabase : RoomDatabase() {
     abstract fun stillnessContentDao(): StillnessContentDao
 
     companion object {
-        const val VERSION = 2
+        const val VERSION = 3
         const val NAME = "flare_enough.db"
 
         /**
@@ -91,6 +93,21 @@ abstract class FlareDatabase : RoomDatabase() {
         }
 
         /**
+         * Version 2 to 3: add the optional period tracker's bleeding days. The table
+         * definition must match exactly what Room expects for [PeriodDayEntity].
+         */
+        val MIGRATION_2_3 = object : Migration(2, 3) {
+            override fun migrate(db: SupportSQLiteDatabase) {
+                db.execSQL(
+                    "CREATE TABLE IF NOT EXISTS `period_days` (" +
+                        "`epochDay` INTEGER PRIMARY KEY NOT NULL, " +
+                        "`flow` TEXT NOT NULL, " +
+                        "`createdAtMillis` INTEGER NOT NULL)",
+                )
+            }
+        }
+
+        /**
          * Build the database. Foreign key enforcement is turned on so cascades and
          * relationships behave. There is no fallback to destructive migration: data
          * must never be silently dropped, so every version bump needs a real
@@ -102,7 +119,7 @@ abstract class FlareDatabase : RoomDatabase() {
                 FlareDatabase::class.java,
                 NAME,
             )
-                .addMigrations(MIGRATION_1_2)
+                .addMigrations(MIGRATION_1_2, MIGRATION_2_3)
                 .build()
     }
 }

@@ -9,6 +9,7 @@ import club.hiraeth.flareenough.data.db.entity.BodyMapEntryEntity
 import club.hiraeth.flareenough.data.db.entity.DayNoteEntity
 import club.hiraeth.flareenough.data.db.entity.DayTagCrossRef
 import club.hiraeth.flareenough.data.db.entity.FlareDayEntity
+import club.hiraeth.flareenough.data.db.entity.PeriodDayEntity
 import club.hiraeth.flareenough.data.db.entity.TagEntity
 import kotlinx.coroutines.flow.Flow
 
@@ -26,6 +27,20 @@ interface DayDao {
 
     @Query("SELECT epochDay FROM flare_days WHERE flare = 1 AND epochDay BETWEEN :startEpochDay AND :endEpochDay")
     fun observeFlareDaysBetween(startEpochDay: Long, endEpochDay: Long): Flow<List<Long>>
+
+    // Period days.
+
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    suspend fun setPeriodDay(periodDay: PeriodDayEntity)
+
+    @Query("DELETE FROM period_days WHERE epochDay = :epochDay")
+    suspend fun clearPeriodDay(epochDay: Long)
+
+    @Query("SELECT * FROM period_days WHERE epochDay = :epochDay")
+    fun observePeriodDay(epochDay: Long): Flow<PeriodDayEntity?>
+
+    @Query("SELECT * FROM period_days WHERE epochDay BETWEEN :startEpochDay AND :endEpochDay ORDER BY epochDay ASC")
+    fun observePeriodDaysBetween(startEpochDay: Long, endEpochDay: Long): Flow<List<PeriodDayEntity>>
 
     // Body map.
 
