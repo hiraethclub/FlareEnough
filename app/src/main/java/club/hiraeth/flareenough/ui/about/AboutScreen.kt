@@ -19,6 +19,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.style.LineBreak
 import androidx.compose.ui.unit.dp
 import club.hiraeth.flareenough.R
 
@@ -88,13 +89,24 @@ fun AboutScreen(onBack: () -> Unit) {
 
 @Composable
 private fun InfoCard(title: String, body: String) {
+    // The body is split on line breaks so each line reads as its own short
+    // paragraph with a little space around it, rather than one dense block with
+    // stray words dangling at the ends. LineBreak.Paragraph evens out the wrapping.
+    val paragraphs = body.split("\n").map { it.trim() }.filter { it.isNotEmpty() }
     ElevatedCard {
         Column(
             modifier = Modifier.padding(16.dp),
-            verticalArrangement = Arrangement.spacedBy(8.dp),
+            verticalArrangement = Arrangement.spacedBy(12.dp),
         ) {
             Text(title, style = MaterialTheme.typography.titleMedium)
-            Text(body, style = MaterialTheme.typography.bodyMedium)
+            Column(verticalArrangement = Arrangement.spacedBy(10.dp)) {
+                paragraphs.forEach { paragraph ->
+                    Text(
+                        paragraph,
+                        style = MaterialTheme.typography.bodyMedium.copy(lineBreak = LineBreak.Paragraph),
+                    )
+                }
+            }
         }
     }
 }
