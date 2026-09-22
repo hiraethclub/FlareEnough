@@ -158,6 +158,19 @@
     <string name="about_privacy_body">The app has no internet permission and never sends your data anywhere. You are in control of any backup or export.</string>
     <string name="about_author">Made by Aisling de Grás</string>
     <string name="about_contact">aisling@hiraeth.club</string>
+
+    <!-- Stay in touch card. Links open in the browser or the relevant app through the
+         system, so the app still needs no internet permission of its own. -->
+    <string name="about_connect_title">Stay in touch</string>
+    <string name="about_connect_intro">Say hello, or support the app if it helps you.</string>
+    <string name="about_email_label">Email</string>
+    <string name="about_threads_label">Threads</string>
+    <string name="about_threads_handle">@hiraeth.clwb</string>
+    <string name="about_kofi_label">Support on Ko-fi</string>
+    <string name="about_kofi_handle">ko-fi.com/hiraethclub</string>
+    <string name="about_threads_url" translatable="false">https://www.threads.net/@hiraeth.clwb</string>
+    <string name="about_kofi_url" translatable="false">https://ko-fi.com/hiraethclub</string>
+
     <string name="about_dedication_title">Dedication</string>
     <string name="about_dedication_body">For Emma, my soulmate, who makes the hard days softer.\nFor Max, our son, who shows us the world new again.\nFor Phoebe, loyal and warm, never far from my feet.\nAnd for Imogen and John, who have held me through it all.\nMade with love, and in the hope it helps someone else through their own bad days.</string>
 

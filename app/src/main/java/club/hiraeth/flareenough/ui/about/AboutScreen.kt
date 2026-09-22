@@ -1,16 +1,25 @@
 package club.hiraeth.flareenough.ui.about
 
+import android.content.Context
+import android.content.Intent
+import android.net.Uri
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.BoxWithConstraints
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
+import androidx.compose.material.icons.filled.AlternateEmail
+import androidx.compose.material.icons.filled.Email
+import androidx.compose.material.icons.filled.Favorite
 import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.material3.ElevatedCard
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -23,6 +32,8 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
@@ -74,17 +85,13 @@ fun AboutScreen(onBack: () -> Unit) {
                 stringResource(R.string.about_author),
                 style = MaterialTheme.typography.bodyMedium,
             )
-            Text(
-                stringResource(R.string.about_contact),
-                style = MaterialTheme.typography.bodyMedium,
-                color = MaterialTheme.colorScheme.primary,
-            )
 
             InfoCard(
                 title = stringResource(R.string.about_dedication_title),
                 body = stringResource(R.string.about_dedication_body),
                 centerBody = true,
             )
+            ConnectCard()
             InfoCard(
                 title = stringResource(R.string.about_not_medical_title),
                 body = stringResource(R.string.about_not_medical_body),
@@ -94,6 +101,98 @@ fun AboutScreen(onBack: () -> Unit) {
                 body = stringResource(R.string.about_privacy_body),
             )
         }
+    }
+}
+
+/**
+ * A calm card of ways to reach the maker and, optionally, to support the app. Every
+ * row opens in the browser or the relevant app through a system intent, so the app
+ * itself still needs no internet permission and touches no network. A missing
+ * handler is caught, so a tap never crashes.
+ */
+@Composable
+private fun ConnectCard() {
+    val context = LocalContext.current
+    val email = stringResource(R.string.about_contact)
+    val threadsUrl = stringResource(R.string.about_threads_url)
+    val kofiUrl = stringResource(R.string.about_kofi_url)
+    ElevatedCard {
+        Column(
+            modifier = Modifier.padding(16.dp),
+            verticalArrangement = Arrangement.spacedBy(4.dp),
+        ) {
+            Text(stringResource(R.string.about_connect_title), style = MaterialTheme.typography.titleMedium)
+            Text(
+                stringResource(R.string.about_connect_intro),
+                style = MaterialTheme.typography.bodyMedium,
+                color = MaterialTheme.colorScheme.onSurfaceVariant,
+                modifier = Modifier.padding(bottom = 4.dp),
+            )
+            LinkRow(
+                icon = Icons.Filled.Email,
+                title = stringResource(R.string.about_email_label),
+                detail = email,
+                onClick = { sendEmail(context, email) },
+            )
+            LinkRow(
+                icon = Icons.Filled.AlternateEmail,
+                title = stringResource(R.string.about_threads_label),
+                detail = stringResource(R.string.about_threads_handle),
+                onClick = { openUri(context, threadsUrl) },
+            )
+            LinkRow(
+                icon = Icons.Filled.Favorite,
+                title = stringResource(R.string.about_kofi_label),
+                detail = stringResource(R.string.about_kofi_handle),
+                onClick = { openUri(context, kofiUrl) },
+            )
+        }
+    }
+}
+
+@Composable
+private fun LinkRow(
+    icon: ImageVector,
+    title: String,
+    detail: String,
+    onClick: () -> Unit,
+) {
+    Row(
+        modifier = Modifier
+            .fillMaxWidth()
+            .heightIn(min = 56.dp)
+            .clickable(onClick = onClick)
+            .padding(vertical = 8.dp),
+        verticalAlignment = Alignment.CenterVertically,
+        horizontalArrangement = Arrangement.spacedBy(16.dp),
+    ) {
+        Icon(
+            imageVector = icon,
+            contentDescription = null,
+            tint = MaterialTheme.colorScheme.primary,
+        )
+        Column(modifier = Modifier.weight(1f)) {
+            Text(title, style = MaterialTheme.typography.bodyLarge)
+            Text(
+                detail,
+                style = MaterialTheme.typography.bodyMedium,
+                color = MaterialTheme.colorScheme.onSurfaceVariant,
+            )
+        }
+    }
+}
+
+/** Open a web link in the browser or matching app. No network access in this app. */
+private fun openUri(context: Context, uri: String) {
+    runCatching {
+        context.startActivity(Intent(Intent.ACTION_VIEW, Uri.parse(uri)))
+    }
+}
+
+/** Open the mail app to write to an address, with nothing sent by the app itself. */
+private fun sendEmail(context: Context, address: String) {
+    runCatching {
+        context.startActivity(Intent(Intent.ACTION_SENDTO, Uri.parse("mailto:$address")))
     }
 }
 

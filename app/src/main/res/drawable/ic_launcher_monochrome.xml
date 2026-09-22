@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  Monochrome launcher layer for Android themed icons. Only the shape matters; the
+  system supplies the colour. A single sun with rays above a gentle horizon line,
+  kept simple so it reads clearly as one silhouette at small sizes.
+-->
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="108dp"
+    android:height="108dp"
+    android:viewportWidth="108"
+    android:viewportHeight="108">
+
+    <group>
+        <path android:strokeColor="#1F1F1F" android:strokeWidth="5"
+            android:strokeLineCap="round" android:pathData="M35,37 L28,33" />
+        <path android:strokeColor="#1F1F1F" android:strokeWidth="5"
+            android:strokeLineCap="round" android:pathData="M43,29 L39,22" />
+        <path android:strokeColor="#1F1F1F" android:strokeWidth="5"
+            android:strokeLineCap="round" android:pathData="M54,26 L54,18" />
+        <path android:strokeColor="#1F1F1F" android:strokeWidth="5"
+            android:strokeLineCap="round" android:pathData="M65,29 L69,22" />
+        <path android:strokeColor="#1F1F1F" android:strokeWidth="5"
+            android:strokeLineCap="round" android:pathData="M73,37 L80,33" />
+    </group>
+
+    <path
+        android:fillColor="#1F1F1F"
+        android:pathData="M38,48 a16,16 0 1,0 32,0 a16,16 0 1,0 -32,0 Z" />
+
+    <path android:strokeColor="#1F1F1F" android:strokeWidth="6"
+        android:strokeLineCap="round" android:pathData="M22,80 Q54,72 86,80" />
+</vector>
