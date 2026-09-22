@@ -8,9 +8,13 @@
     <color name="cream_background">#F6F1E7</color>
     <color name="deep_background">#1E2328</color>
 
-    <!-- Launcher icon. A soft dawn: a warm sun rising over a calm horizon. -->
+    <!-- Launcher icon. A soft dawn: a warm sun rising behind a hill, with a calm
+         strip of water in the foreground. -->
     <color name="ic_launcher_background">#F6F1E7</color>
     <color name="ic_launcher_sage">#7E9B84</color>
-    <color name="ic_launcher_sun">#E0A96D</color>
-    <color name="ic_launcher_sky">#A9C4D6</color>
+    <color name="ic_launcher_sage_light">#95AE99</color>
+    <color name="ic_launcher_sun">#E7A85C</color>
+    <color name="ic_launcher_sun_core">#F2C57E</color>
+    <color name="ic_launcher_water">#A9C4D6</color>
+    <color name="ic_launcher_water_light">#C4D7E4</color>
 </resources>

@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-  Launcher icon foreground: a soft dawn. A warm sun rising over a calm horizon on
-  the cream background layer. It nods to "flare" through the sun, but gently and
-  hopefully, not as an alarm. Kept within the adaptive icon safe zone so the sun is
-  never clipped by a mask shape. The horizon may meet the edges, which reads as a
-  horizon should. A separate monochrome layer is used for themed icons.
+  Launcher icon foreground: a soft dawn. A warm sun rises from behind a sage hill,
+  with a calm strip of water in the foreground, like a lake or sea at first light.
+  It nods to "flare" through the sun, but gently and hopefully. The sun is drawn
+  first, then the hill over it so the sun rises from behind, then the water in front.
+  A separate monochrome layer is used for themed icons.
 -->
 <vector xmlns:android="http://schemas.android.com/apk/res/android"
     android:width="108dp"
@@ -15,27 +15,38 @@
     <!-- Soft rays around the top of the sun. -->
     <group>
         <path android:strokeColor="@color/ic_launcher_sun" android:strokeWidth="5"
-            android:strokeLineCap="round" android:pathData="M35,37 L28,33" />
+            android:strokeLineCap="round" android:pathData="M30,44 L22,40" />
         <path android:strokeColor="@color/ic_launcher_sun" android:strokeWidth="5"
-            android:strokeLineCap="round" android:pathData="M43,29 L39,22" />
+            android:strokeLineCap="round" android:pathData="M38,32 L32,25" />
         <path android:strokeColor="@color/ic_launcher_sun" android:strokeWidth="5"
-            android:strokeLineCap="round" android:pathData="M54,26 L54,18" />
+            android:strokeLineCap="round" android:pathData="M54,27 L54,17" />
         <path android:strokeColor="@color/ic_launcher_sun" android:strokeWidth="5"
-            android:strokeLineCap="round" android:pathData="M65,29 L69,22" />
+            android:strokeLineCap="round" android:pathData="M70,32 L76,25" />
         <path android:strokeColor="@color/ic_launcher_sun" android:strokeWidth="5"
-            android:strokeLineCap="round" android:pathData="M73,37 L80,33" />
+            android:strokeLineCap="round" android:pathData="M78,44 L86,40" />
     </group>
 
-    <!-- The sun. -->
+    <!-- The sun, with a soft lighter core. Drawn before the hill so it rises behind. -->
     <path
         android:fillColor="@color/ic_launcher_sun"
-        android:pathData="M36,48 a18,18 0 1,0 36,0 a18,18 0 1,0 -36,0 Z" />
+        android:pathData="M32,60 a22,22 0 1,0 44,0 a22,22 0 1,0 -44,0 Z" />
+    <path
+        android:fillColor="@color/ic_launcher_sun_core"
+        android:pathData="M41,60 a13,13 0 1,0 26,0 a13,13 0 1,0 -26,0 Z" />
 
-    <!-- Calm horizon: a sage rise with a soft sky band beneath. -->
+    <!-- Sage hill, with a sunlit crest, over the lower part of the sun. -->
     <path
         android:fillColor="@color/ic_launcher_sage"
-        android:pathData="M0,76 Q54,66 108,76 L108,90 Q54,80 0,90 Z" />
+        android:pathData="M0,66 Q54,54 108,66 L108,87 L0,87 Z" />
     <path
-        android:fillColor="@color/ic_launcher_sky"
-        android:pathData="M0,90 Q54,80 108,90 L108,98 Q54,88 0,98 Z" />
+        android:fillColor="@color/ic_launcher_sage_light"
+        android:pathData="M0,66 Q54,54 108,66 L108,71 Q54,59 0,71 Z" />
+
+    <!-- Calm water in the foreground, with a soft surface sheen. -->
+    <path
+        android:fillColor="@color/ic_launcher_water"
+        android:pathData="M0,87 L108,87 L108,108 L0,108 Z" />
+    <path
+        android:fillColor="@color/ic_launcher_water_light"
+        android:pathData="M0,87 L108,87 L108,91 L0,91 Z" />
 </vector>
