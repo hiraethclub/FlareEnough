@@ -1,10 +1,12 @@
 package club.hiraeth.flareenough.ui.about
 
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.BoxWithConstraints
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
@@ -18,10 +20,15 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.rememberTextMeasurer
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.unit.Constraints
 import androidx.compose.ui.unit.dp
 import club.hiraeth.flareenough.R
 
@@ -92,10 +99,9 @@ fun AboutScreen(onBack: () -> Unit) {
 
 @Composable
 private fun InfoCard(title: String, body: String, centerBody: Boolean = false) {
-    // Each line of the body is its own short paragraph with a little space around
-    // it. The dedication is centred (centerBody), the way a book dedication is set,
-    // so a short trailing line reads as a deliberate couplet rather than a stray
-    // word left dangling. This holds at any width and font scale.
+    // Each line of the body is its own short paragraph with a little space around it.
+    // The dedication (centerBody) is centred and balanced, the way a book dedication
+    // is set, so no line is left with a stray word hanging off the end.
     val paragraphs = body.split("\n").map { it.trim() }.filter { it.isNotEmpty() }
     ElevatedCard {
         Column(
@@ -109,14 +115,67 @@ private fun InfoCard(title: String, body: String, centerBody: Boolean = false) {
                 horizontalAlignment = if (centerBody) Alignment.CenterHorizontally else Alignment.Start,
             ) {
                 paragraphs.forEach { paragraph ->
-                    Text(
-                        paragraph,
-                        style = MaterialTheme.typography.bodyMedium,
-                        textAlign = if (centerBody) TextAlign.Center else TextAlign.Start,
-                        modifier = if (centerBody) Modifier.fillMaxWidth() else Modifier,
-                    )
+                    if (centerBody) {
+                        BalancedText(text = paragraph, style = MaterialTheme.typography.bodyMedium)
+                    } else {
+                        Text(paragraph, style = MaterialTheme.typography.bodyMedium)
+                    }
                 }
             }
         }
+    }
+}
+
+/**
+ * Text that wraps in balanced lines, so a two line phrase splits into two roughly
+ * equal halves instead of a long line with one stray word beneath it. It measures
+ * the text, then narrows the width to the tightest point that still uses the same
+ * number of lines, which pushes the wrap to a balanced spot. Centred, this reads
+ * like a book dedication. It re-measures with the layout, so it stays right at any
+ * width and font scale. Used only for the short, static dedication lines.
+ */
+@Composable
+private fun BalancedText(text: String, style: TextStyle) {
+    val measurer = rememberTextMeasurer()
+    BoxWithConstraints(modifier = Modifier.fillMaxWidth(), contentAlignment = Alignment.Center) {
+        val fullWidthPx = with(LocalDensity.current) { maxWidth.roundToPx() }
+        val targetWidthPx = remember(text, style, fullWidthPx) {
+            if (fullWidthPx <= 0) {
+                fullWidthPx
+            } else {
+                val naturalLines = measurer
+                    .measure(text, style, constraints = Constraints(maxWidth = fullWidthPx))
+                    .lineCount
+                if (naturalLines <= 1) {
+                    fullWidthPx
+                } else {
+                    // Smallest width that still fits in `naturalLines` lines without a
+                    // word overflowing. Binary search over the available width.
+                    var lo = 1
+                    var hi = fullWidthPx
+                    while (lo < hi) {
+                        val mid = (lo + hi) / 2
+                        val result = measurer.measure(
+                            text,
+                            style,
+                            constraints = Constraints(maxWidth = mid),
+                        )
+                        if (result.lineCount <= naturalLines && !result.hasVisualOverflow) {
+                            hi = mid
+                        } else {
+                            lo = mid + 1
+                        }
+                    }
+                    lo
+                }
+            }
+        }
+        val targetWidthDp = with(LocalDensity.current) { targetWidthPx.toDp() }
+        Text(
+            text = text,
+            style = style,
+            textAlign = TextAlign.Center,
+            modifier = Modifier.width(targetWidthDp),
+        )
     }
 }
