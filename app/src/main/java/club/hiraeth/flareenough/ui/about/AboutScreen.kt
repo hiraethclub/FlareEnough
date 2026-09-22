@@ -3,6 +3,7 @@ package club.hiraeth.flareenough.ui.about
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
@@ -17,9 +18,10 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.style.LineBreak
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import club.hiraeth.flareenough.R
 
@@ -74,6 +76,7 @@ fun AboutScreen(onBack: () -> Unit) {
             InfoCard(
                 title = stringResource(R.string.about_dedication_title),
                 body = stringResource(R.string.about_dedication_body),
+                centerBody = true,
             )
             InfoCard(
                 title = stringResource(R.string.about_not_medical_title),
@@ -88,10 +91,11 @@ fun AboutScreen(onBack: () -> Unit) {
 }
 
 @Composable
-private fun InfoCard(title: String, body: String) {
-    // The body is split on line breaks so each line reads as its own short
-    // paragraph with a little space around it, rather than one dense block with
-    // stray words dangling at the ends. LineBreak.Paragraph evens out the wrapping.
+private fun InfoCard(title: String, body: String, centerBody: Boolean = false) {
+    // Each line of the body is its own short paragraph with a little space around
+    // it. The dedication is centred (centerBody), the way a book dedication is set,
+    // so a short trailing line reads as a deliberate couplet rather than a stray
+    // word left dangling. This holds at any width and font scale.
     val paragraphs = body.split("\n").map { it.trim() }.filter { it.isNotEmpty() }
     ElevatedCard {
         Column(
@@ -99,11 +103,17 @@ private fun InfoCard(title: String, body: String) {
             verticalArrangement = Arrangement.spacedBy(12.dp),
         ) {
             Text(title, style = MaterialTheme.typography.titleMedium)
-            Column(verticalArrangement = Arrangement.spacedBy(10.dp)) {
+            Column(
+                modifier = Modifier.fillMaxWidth(),
+                verticalArrangement = Arrangement.spacedBy(10.dp),
+                horizontalAlignment = if (centerBody) Alignment.CenterHorizontally else Alignment.Start,
+            ) {
                 paragraphs.forEach { paragraph ->
                     Text(
                         paragraph,
-                        style = MaterialTheme.typography.bodyMedium.copy(lineBreak = LineBreak.Paragraph),
+                        style = MaterialTheme.typography.bodyMedium,
+                        textAlign = if (centerBody) TextAlign.Center else TextAlign.Start,
+                        modifier = if (centerBody) Modifier.fillMaxWidth() else Modifier,
                     )
                 }
             }
