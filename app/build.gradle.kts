@@ -1,3 +1,6 @@
+import java.io.FileInputStream
+import java.util.Properties
+
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
@@ -5,6 +8,19 @@ plugins {
     alias(libs.plugins.kotlin.ksp)
     alias(libs.plugins.room)
 }
+
+// Release signing material. The key is never committed. It is provided either by a
+// local keystore.properties file (for building on your own machine) or by environment
+// variables in CI, which come from GitHub secrets. Both are listed in .gitignore.
+val keystorePropertiesFile = rootProject.file("keystore.properties")
+val keystoreProperties = Properties().apply {
+    if (keystorePropertiesFile.exists()) {
+        FileInputStream(keystorePropertiesFile).use { load(it) }
+    }
+}
+val releaseStorePath: String? = System.getenv("KEYSTORE_FILE")
+    ?: keystoreProperties.getProperty("storeFile")
+val hasReleaseKey = releaseStorePath != null
 
 android {
     namespace = "club.hiraeth.flareenough"
@@ -20,6 +36,22 @@ android {
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
 
+    signingConfigs {
+        // Only created when a key is actually available, so ordinary debug builds
+        // and CI need no signing material.
+        if (hasReleaseKey) {
+            create("release") {
+                storeFile = file(releaseStorePath!!)
+                storePassword = System.getenv("KEYSTORE_PASSWORD")
+                    ?: keystoreProperties.getProperty("storePassword")
+                keyAlias = System.getenv("KEY_ALIAS")
+                    ?: keystoreProperties.getProperty("keyAlias")
+                keyPassword = System.getenv("KEY_PASSWORD")
+                    ?: keystoreProperties.getProperty("keyPassword")
+            }
+        }
+    }
+
     buildTypes {
         release {
             // No shrinking yet. Turned on and tested in the release milestone.
@@ -28,6 +60,14 @@ android {
                 getDefaultProguardFile("proguard-android-optimize.txt"),
                 "proguard-rules.pro",
             )
+            // Sign with the real release key when it is present, for example in the
+            // release workflow. Falls back to the debug key so a local assembleRelease
+            // still produces an installable APK for testing.
+            signingConfig = if (hasReleaseKey) {
+                signingConfigs.getByName("release")
+            } else {
+                signingConfigs.getByName("debug")
+            }
         }
     }
 
