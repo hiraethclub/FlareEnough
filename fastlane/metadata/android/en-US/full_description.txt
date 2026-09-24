@@ -1,0 +1,15 @@
+Flare Enough is a calm, private app for living with a chronic illness. It helps you keep track of your medication, log how you are feeling, and take a few quiet minutes for yourself, and it is built to be gentle on a bad day.
+
+Everything stays on your device. The app has no internet permission at all, no ads, no trackers, no accounts, and no sign in. The only way data leaves your phone is when you choose to export or back it up yourself.
+
+What it does:
+
+* Medication reminders that fire on time, including in Doze and after a restart, using exact alarms.
+* Simple symptom logging, with a body map, notes, and tags, in plain words, with no guilt and no streaks.
+* An optional period tracker you can turn on or off.
+* A quiet Stillness section with a timer, gentle breathing, and a soft bell, plus prompts and readings you can add yourself.
+* A calm, muted look with a light and a dark theme, large touch targets, full TalkBack support, and support for large system text.
+
+Flare Enough records and reminds only. It does not diagnose, recommend treatments, adjust doses, check interactions, or interpret symptoms. For medical advice, please speak to a healthcare professional.
+
+Free and open source, licensed under the GPL-3.0.

@@ -1,0 +1,33 @@
+# F-Droid build recipe for the official F-Droid repository.
+#
+# This file does NOT belong in this app repository. It is a ready made copy for you
+# to place in your fork of https://gitlab.com/fdroid/fdroiddata at
+#   metadata/club.hiraeth.flareenough.yml
+# and then open a merge request. See FDROID.md for the steps.
+#
+# Confirm the licence line before submitting: GPL-3.0-only means version 3 only,
+# GPL-3.0-or-later means version 3 or any later version. Change it if needed.
+
+Categories:
+  - Sports & Health
+License: GPL-3.0-only
+AuthorName: Aisling de Grás
+SourceCode: https://github.com/hiraethclub/FlareEnough
+IssueTracker: https://github.com/hiraethclub/FlareEnough/issues
+Changelog: https://github.com/hiraethclub/FlareEnough/releases
+
+RepoType: git
+Repo: https://github.com/hiraethclub/FlareEnough.git
+
+Builds:
+  - versionName: 0.1.0
+    versionCode: 1
+    commit: 3b9592cd21163149a03e297df759c12b80e7f747
+    subdir: app
+    gradle:
+      - yes
+
+AutoUpdateMode: Version
+UpdateCheckMode: Tags
+CurrentVersion: 0.1.0
+CurrentVersionCode: 1

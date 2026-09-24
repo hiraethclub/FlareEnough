@@ -1,0 +1,9 @@
+First release.
+
+* Medication reminders using exact alarms, reliable across restarts and clock changes.
+* Symptom logging with a body map, notes, and tags.
+* Optional period tracker.
+* Stillness section with a timer, breathing, and a soft bell.
+* Calm light and dark themes, TalkBack support, and large text support.
+
+Fully offline. No ads, no trackers, no accounts.

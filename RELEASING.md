@@ -10,7 +10,49 @@ installs over an existing copy, and everyone would have to uninstall and reinsta
 
 ## One time setup
 
-You only do this once.
+You only do this once. If you are on Windows, follow the Windows walkthrough just
+below. On Linux or macOS, use the numbered steps after it.
+
+### Windows walkthrough
+
+Use Windows PowerShell (Start button, type PowerShell, open Windows PowerShell).
+
+1. Point PowerShell at keytool, which comes bundled with Android Studio. Adjust the
+   path to where Android Studio is installed:
+
+   ```
+   $keytool = "D:\Android Studio\jbr\bin\keytool.exe"
+   & $keytool -help
+   ```
+
+   If that path does not exist, try `jre` instead of `jbr`. If you do not have
+   Android Studio, install a JDK from https://adoptium.net and then just use
+   `keytool` on its own.
+
+2. Make a folder and create the key:
+
+   ```
+   mkdir $HOME\flare-enough-keys
+   cd $HOME\flare-enough-keys
+   & $keytool -genkeypair -v -keystore flare-enough-release.jks -alias flare-enough -keyalg RSA -keysize 4096 -validity 10000
+   ```
+
+   It asks for a keystore password (type it twice, nothing shows as you type), then
+   some name and address fields you can press Enter through, then `yes` to confirm,
+   then a key password (press Enter to reuse the keystore password). Write the
+   password down safely.
+
+3. Back up `flare-enough-release.jks` and its password somewhere private and durable.
+   This file cannot be recreated.
+
+4. Copy the key onto the clipboard as text, ready to paste into the secret:
+
+   ```
+   [Convert]::ToBase64String([IO.File]::ReadAllBytes("$PWD\flare-enough-release.jks")) | Set-Clipboard
+   ```
+
+5. Add the four repository secrets on GitHub, as described in step 3 below. For
+   `KEYSTORE_BASE64`, paste with Ctrl+V (the clipboard from step 4 above).
 
 ### 1. Create your signing key
 
