@@ -12,4 +12,4 @@ What it does:
 
 Flare Enough records and reminds only. It does not diagnose, recommend treatments, adjust doses, check interactions, or interpret symptoms. For medical advice, please speak to a healthcare professional.
 
-Free and open source, licensed under the GPL-3.0.
+Free and open source, licensed under the GPL, version 3 or later.

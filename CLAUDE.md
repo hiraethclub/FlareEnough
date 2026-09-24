@@ -95,7 +95,7 @@ string resource (`R.string.app_name`) and a single Kotlin constant
 - Manual dependency injection: one `AppContainer` owned by `FlareApp`, wired by
   hand so it can be read top to bottom. No Hilt.
 - compileSdk 36, targetSdk 36, minSdk 26.
-- Licence: GPL-3.0. The app and any forks stay free.
+- Licence: GPL-3.0-or-later. The app and any forks stay free.
 
 ## Module layout
 

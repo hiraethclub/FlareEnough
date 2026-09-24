@@ -151,7 +151,7 @@
     <string name="about_title">About</string>
     <string name="about_version">Version 0.1.0</string>
     <string name="about_tagline">Free and open source. No ads, no tracking, no accounts.</string>
-    <string name="about_licence">Licensed under GPL-3.0, so it and any forks stay free.</string>
+    <string name="about_licence">Licensed under the GPL, version 3 or later, so it and any forks stay free.</string>
     <string name="about_not_medical_title">Not medical advice</string>
     <string name="about_not_medical_body">Flare Enough records and reminds only. It does not diagnose, recommend treatments, adjust doses, check interactions, or interpret symptoms. For medical advice, diagnosis, or treatment, please speak to a healthcare professional.</string>
     <string name="about_privacy_title">Your data stays on your device</string>

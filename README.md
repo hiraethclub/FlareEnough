@@ -24,7 +24,12 @@ medical advice, diagnosis, or treatment, speak to a healthcare professional.
 
 ## Licence
 
-GPL-3.0. See [LICENSE](LICENSE). The app and any forks stay free.
+Flare Enough is free software: you can redistribute it and modify it under the
+terms of the GNU General Public License as published by the Free Software
+Foundation, either version 3 of the License, or (at your option) any later
+version. See [LICENSE](LICENSE). The app and any forks stay free.
+
+SPDX identifier: GPL-3.0-or-later.
 
 ## Building
 

@@ -5,12 +5,9 @@
 #   metadata/club.hiraeth.flareenough.yml
 # and then open a merge request. See FDROID.md for the steps.
 #
-# Confirm the licence line before submitting: GPL-3.0-only means version 3 only,
-# GPL-3.0-or-later means version 3 or any later version. Change it if needed.
-
 Categories:
   - Sports & Health
-License: GPL-3.0-only
+License: GPL-3.0-or-later
 AuthorName: Aisling de Grás
 SourceCode: https://github.com/hiraethclub/FlareEnough
 IssueTracker: https://github.com/hiraethclub/FlareEnough/issues
