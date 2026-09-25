@@ -30,10 +30,18 @@ android {
         applicationId = "club.hiraeth.flareenough"
         minSdk = libs.versions.minSdk.get().toInt()
         targetSdk = libs.versions.targetSdk.get().toInt()
-        versionCode = 1
-        versionName = "0.1.0"
+        versionCode = 2
+        versionName = "0.1.1"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
+    }
+
+    // Android's build tool adds a "dependency metadata" block to the APK by default,
+    // aimed at Google Play. It is not wanted here and F-Droid rejects it, so turn it
+    // off. This keeps the built APK clean and has no effect on how the app works.
+    dependenciesInfo {
+        includeInApk = false
+        includeInBundle = false
     }
 
     signingConfigs {

@@ -1,0 +1,1 @@
+Maintenance release. A small packaging fix so the app builds and publishes cleanly on F-Droid. Nothing changes in how the app works.
