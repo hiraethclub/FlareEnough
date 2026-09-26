@@ -30,8 +30,8 @@ android {
         applicationId = "club.hiraeth.flareenough"
         minSdk = libs.versions.minSdk.get().toInt()
         targetSdk = libs.versions.targetSdk.get().toInt()
-        versionCode = 2
-        versionName = "0.1.1"
+        versionCode = 3
+        versionName = "0.1.2"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
@@ -62,8 +62,13 @@ android {
 
     buildTypes {
         release {
-            // No shrinking yet. Turned on and tested in the release milestone.
-            isMinifyEnabled = false
+            // R8 shrinks and optimises the release build, removing unused code and
+            // making the download smaller. The default optimised rules keep enums
+            // (values and valueOf, which the database converters rely on), and the
+            // AndroidX libraries ship their own keep rules, so no app specific rules
+            // are needed. Resource shrinking stays off for now to avoid removing any
+            // resource that is only referenced by name.
+            isMinifyEnabled = true
             proguardFiles(
                 getDefaultProguardFile("proguard-android-optimize.txt"),
                 "proguard-rules.pro",

@@ -1,0 +1,1 @@
+Maintenance release. Turn on code shrinking (R8) so the app is a smaller download. Nothing changes in how the app works.
