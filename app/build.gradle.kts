@@ -34,6 +34,12 @@ android {
         versionName = "0.1.2"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
+
+        // The launcher label. Normal builds show the real app name from the single
+        // string resource. The test build type overrides this placeholder so the
+        // two apps can be told apart on the home screen. The production name still
+        // lives only in strings.xml (R.string.app_name); nothing here changes it.
+        manifestPlaceholders["appLabel"] = "@string/app_name"
     }
 
     // Android's build tool adds a "dependency metadata" block to the APK by default,
@@ -81,6 +87,26 @@ android {
             } else {
                 signingConfigs.getByName("debug")
             }
+        }
+
+        // A side by side test build. It behaves exactly like a real release (R8
+        // shrinking and the same rules, inherited from the release type above), but
+        // installs as a separate app so you can keep the real one for daily use.
+        //
+        //   - A different application id (club.hiraeth.flareenough.test) makes Android
+        //     treat it as a distinct app, with its own data, alarms, and icon. It
+        //     never touches the real app's medications or history.
+        //   - A "(Test)" launcher label and a "-test" version so it is easy to tell
+        //     apart from the live app.
+        //   - Always signed with the debug key, so this build needs no signing secret
+        //     and never uses the real release key. The differing application id means
+        //     there is no signature clash with the installed release app.
+        create("testRelease") {
+            initWith(getByName("release"))
+            applicationIdSuffix = ".test"
+            versionNameSuffix = "-test"
+            signingConfig = signingConfigs.getByName("debug")
+            manifestPlaceholders["appLabel"] = "Flare Enough (Test)"
         }
     }
 

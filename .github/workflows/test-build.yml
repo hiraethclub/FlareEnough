@@ -1,0 +1,62 @@
+name: Test build
+
+# Build a side by side test APK you can install next to the live app.
+#
+# Start it by hand from the Actions tab (there is a "Run workflow" button). It
+# builds the testRelease variant, which is a real release build (R8 shrinking and
+# all) but with a different application id, so it installs as a separate app called
+# "Flare Enough (Test)" and never touches your real app's data.
+#
+# It is signed with the debug key, so no signing secret is needed, and it creates
+# no git tag or release, so F-Droid keeps picking up only the real releases. When
+# the run finishes, download the APK from the run's Artifacts section and install
+# it on your phone.
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  test-build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out the code
+        uses: actions/checkout@v4
+
+      - name: Set up JDK 21
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: "21"
+
+      - name: Set up the Android SDK
+        uses: android-actions/setup-android@v4
+        with:
+          packages: platform-tools
+
+      - name: Cache Gradle
+        uses: actions/cache@v4
+        with:
+          path: |
+            ~/.gradle/caches
+            ~/.gradle/wrapper
+          key: gradle-${{ runner.os }}-${{ hashFiles('**/*.gradle.kts', 'gradle/libs.versions.toml', 'gradle/wrapper/gradle-wrapper.properties') }}
+          restore-keys: gradle-${{ runner.os }}-
+
+      - name: Run the scheduling logic tests (pure JVM)
+        run: ./gradlew :schedule:test --no-daemon --stacktrace
+
+      - name: Run the app unit tests
+        run: ./gradlew :app:testDebugUnitTest --no-daemon --stacktrace
+
+      - name: Build the test APK
+        run: ./gradlew :app:assembleTestRelease --no-daemon --stacktrace
+
+      - name: Upload the test APK
+        uses: actions/upload-artifact@v4
+        with:
+          name: flare-enough-test-apk
+          path: app/build/outputs/apk/testRelease/*.apk
+          if-no-files-found: error
