@@ -173,6 +173,9 @@ dependencies {
     // DataStore for simple settings.
     implementation(libs.androidx.datastore.preferences)
 
+    // App lock. Wraps biometrics and the device PIN or pattern, no Play Services.
+    implementation(libs.androidx.biometric)
+
     // Compose. The BOM keeps every Compose library on one tested version set.
     implementation(platform(libs.androidx.compose.bom))
     implementation(libs.androidx.compose.ui)

@@ -9,10 +9,13 @@ import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
+import android.widget.Toast
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Accessibility
+import androidx.compose.material.icons.filled.Backup
 import androidx.compose.material.icons.filled.Bloodtype
 import androidx.compose.material.icons.filled.Info
+import androidx.compose.material.icons.filled.Lock
 import androidx.compose.material.icons.filled.Medication
 import androidx.compose.material.icons.filled.NotificationsActive
 import androidx.compose.material3.Icon
@@ -23,6 +26,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.clearAndSetSemantics
 import androidx.compose.ui.unit.dp
@@ -31,6 +35,7 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.lifecycle.viewmodel.initializer
 import androidx.lifecycle.viewmodel.viewModelFactory
 import club.hiraeth.flareenough.R
+import club.hiraeth.flareenough.ui.lock.deviceCanAuthenticate
 import club.hiraeth.flareenough.ui.support.rememberAppContainer
 
 @Composable
@@ -39,15 +44,18 @@ fun SettingsScreen(
     onOpenReminderHealth: () -> Unit,
     onOpenAbout: () -> Unit,
     onOpenBodyParts: () -> Unit,
+    onOpenData: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
     val container = rememberAppContainer()
+    val context = LocalContext.current
     val viewModel: SettingsViewModel = viewModel(
         factory = viewModelFactory {
             initializer { SettingsViewModel(container.settingsRepository) }
         },
     )
     val periodEnabled by viewModel.periodTrackingEnabled.collectAsStateWithLifecycle()
+    val appLockEnabled by viewModel.appLockEnabled.collectAsStateWithLifecycle()
 
     Column(
         modifier = modifier
@@ -79,13 +87,35 @@ fun SettingsScreen(
             checked = periodEnabled,
             onCheckedChange = { viewModel.setPeriodTrackingEnabled(it) },
         )
+        SettingsToggleRow(
+            icon = Icons.Filled.Lock,
+            title = stringResource(R.string.settings_app_lock),
+            summary = stringResource(R.string.settings_app_lock_summary),
+            checked = appLockEnabled,
+            onCheckedChange = { wantOn ->
+                if (wantOn && !deviceCanAuthenticate(context)) {
+                    Toast.makeText(
+                        context,
+                        context.getString(R.string.app_lock_unavailable),
+                        Toast.LENGTH_LONG,
+                    ).show()
+                } else {
+                    viewModel.setAppLockEnabled(wantOn)
+                }
+            },
+        )
+        SettingsRow(
+            icon = Icons.Filled.Backup,
+            title = stringResource(R.string.settings_data),
+            summary = stringResource(R.string.settings_data_summary),
+            onClick = onOpenData,
+        )
         SettingsRow(
             icon = Icons.Filled.Info,
             title = stringResource(R.string.settings_about),
             summary = stringResource(R.string.settings_about_summary),
             onClick = onOpenAbout,
         )
-        // More settings (appearance, backup) arrive in later milestones.
     }
 }
 

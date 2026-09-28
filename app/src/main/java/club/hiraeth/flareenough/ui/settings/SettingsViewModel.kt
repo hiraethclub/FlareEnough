@@ -22,4 +22,14 @@ class SettingsViewModel(
             settingsRepository.setPeriodTrackingEnabled(enabled)
         }
     }
+
+    val appLockEnabled: StateFlow<Boolean> =
+        settingsRepository.observeAppLockEnabled()
+            .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5_000), false)
+
+    fun setAppLockEnabled(enabled: Boolean) {
+        viewModelScope.launch {
+            settingsRepository.setAppLockEnabled(enabled)
+        }
+    }
 }

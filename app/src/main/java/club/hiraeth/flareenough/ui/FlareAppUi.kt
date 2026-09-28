@@ -34,6 +34,7 @@ import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
 import club.hiraeth.flareenough.R
 import club.hiraeth.flareenough.ui.about.AboutScreen
+import club.hiraeth.flareenough.ui.data.DataScreen
 import club.hiraeth.flareenough.ui.dayedit.DayEditScreen
 import club.hiraeth.flareenough.ui.dayedit.DayEditViewModel
 import club.hiraeth.flareenough.ui.history.HistoryScreen
@@ -71,6 +72,7 @@ fun FlareApp() {
                 onOpenReminderHealth = { rootNav.navigate(Routes.REMINDER_HEALTH) },
                 onOpenAbout = { rootNav.navigate(Routes.ABOUT) },
                 onOpenBodyParts = { rootNav.navigate(Routes.BODY_PARTS) },
+                onOpenData = { rootNav.navigate(Routes.DATA) },
                 onEditDay = { epochDay -> rootNav.navigate(Routes.dayEdit(epochDay)) },
             )
         }
@@ -85,6 +87,10 @@ fun FlareApp() {
 
         composable(Routes.BODY_PARTS) {
             BodyPartsScreen(onBack = { rootNav.popBackStack() })
+        }
+
+        composable(Routes.DATA) {
+            DataScreen(onBack = { rootNav.popBackStack() })
         }
 
         composable(Routes.MEDICATIONS) {
@@ -180,6 +186,7 @@ private fun MainShell(
     onOpenReminderHealth: () -> Unit,
     onOpenAbout: () -> Unit,
     onOpenBodyParts: () -> Unit,
+    onOpenData: () -> Unit,
     onEditDay: (Long) -> Unit,
 ) {
     val navController = rememberNavController()
@@ -326,6 +333,7 @@ private fun MainShell(
                     onOpenReminderHealth = onOpenReminderHealth,
                     onOpenAbout = onOpenAbout,
                     onOpenBodyParts = onOpenBodyParts,
+                    onOpenData = onOpenData,
                 )
             }
         }

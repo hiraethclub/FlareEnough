@@ -412,4 +412,59 @@
         <item>Sunday</item>
     </string-array>
 
+    <!-- Dose status word used in exports. -->
+    <string name="status_missed">Missed</string>
+
+    <!-- Backup, restore, and export. All user driven, all on device. -->
+    <string name="settings_data">Backup and export</string>
+    <string name="settings_data_summary">Save a backup, restore one, or export your log</string>
+    <string name="data_title">Backup and export</string>
+    <string name="data_intro">Everything here stays on your device. You choose where each file goes, and nothing is ever sent anywhere.</string>
+    <string name="data_backup">Back up all data</string>
+    <string name="data_backup_summary">Save one file with everything the app has recorded.</string>
+    <string name="data_restore">Restore from a backup</string>
+    <string name="data_restore_summary">Replace what is here with a backup file. The app will restart.</string>
+    <string name="data_export_medication">Export medication log (CSV)</string>
+    <string name="data_export_medication_summary">A spreadsheet of every dose you logged.</string>
+    <string name="data_export_daily">Export daily log (CSV)</string>
+    <string name="data_export_daily_summary">A spreadsheet with one row per day: symptoms, joints, notes, and tags.</string>
+    <string name="data_export_pdf">Create a PDF report</string>
+    <string name="data_export_pdf_summary">A plain summary to keep or show someone. A record only, with no advice.</string>
+    <string name="data_backup_done">Backup saved.</string>
+    <string name="data_export_done">Exported.</string>
+    <string name="data_failed">That did not work: %1$s</string>
+    <string name="data_unknown_error">unknown problem</string>
+    <string name="data_restore_confirm_title">Restore this backup?</string>
+    <string name="data_restore_confirm_body">This replaces everything currently in the app with the backup, and the app will restart. Your backup file is not changed.</string>
+    <string name="data_restore_confirm_action">Restore</string>
+
+    <!-- CSV column headings. Data only, no interpretation. -->
+    <string name="csv_date">Date</string>
+    <string name="csv_time">Time</string>
+    <string name="csv_medication">Medication</string>
+    <string name="csv_strength">Strength</string>
+    <string name="csv_status">Status</string>
+    <string name="csv_taken_at">Taken at</string>
+    <string name="csv_flare">Flare</string>
+    <string name="csv_joints">Joints</string>
+    <string name="csv_notes">Notes</string>
+    <string name="csv_tags">Tags</string>
+
+    <!-- PDF report. Record only, no interpretation. -->
+    <string name="pdf_report_title">%1$s report</string>
+    <string name="pdf_generated">Generated %1$s</string>
+    <string name="pdf_not_medical">This is a record only, not medical advice.</string>
+    <string name="pdf_medications">Medications</string>
+    <string name="pdf_daily_log">Daily log</string>
+    <string name="pdf_none">Nothing recorded yet.</string>
+
+    <!-- Optional app lock, using the device unlock only. -->
+    <string name="settings_app_lock">App lock</string>
+    <string name="settings_app_lock_summary">Ask for your device unlock when the app opens</string>
+    <string name="app_lock_unavailable">Set up a screen lock (PIN, pattern, or fingerprint) on your device first, then turn this on.</string>
+    <string name="app_lock_locked">%1$s is locked</string>
+    <string name="app_lock_unlock">Unlock</string>
+    <string name="app_lock_prompt_title">Unlock %1$s</string>
+    <string name="app_lock_prompt_subtitle">Use your usual device unlock</string>
+
 </resources>

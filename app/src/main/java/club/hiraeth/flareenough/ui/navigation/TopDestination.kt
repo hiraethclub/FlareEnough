@@ -41,6 +41,9 @@ object Routes {
     /** Choosing which body parts appear in symptom logging. */
     const val BODY_PARTS = "body_parts"
 
+    /** Backup, restore, and exporting the log. */
+    const val DATA = "data"
+
     /** Editing a whole past day: medication, symptoms, and the rest. */
     const val DAY_EDIT = "day_edit"
     const val DAY_EDIT_ARG = "epochDay"

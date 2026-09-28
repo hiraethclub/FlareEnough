@@ -50,8 +50,21 @@ class SettingsRepository(context: Context) {
         store.edit { prefs -> prefs[PERIOD_TRACKING_ENABLED] = enabled }
     }
 
+    /**
+     * Whether the app asks for the device unlock (biometric, PIN, or pattern) when it
+     * opens. Off by default. Nothing about this leaves the device: it uses the system
+     * unlock only, and stores no secret of its own.
+     */
+    fun observeAppLockEnabled(): Flow<Boolean> =
+        store.data.map { prefs -> prefs[APP_LOCK_ENABLED] ?: false }
+
+    suspend fun setAppLockEnabled(enabled: Boolean) {
+        store.edit { prefs -> prefs[APP_LOCK_ENABLED] = enabled }
+    }
+
     private companion object {
         val HIDDEN_BODY_REGIONS = stringSetPreferencesKey("hidden_body_regions")
         val PERIOD_TRACKING_ENABLED = booleanPreferencesKey("period_tracking_enabled")
+        val APP_LOCK_ENABLED = booleanPreferencesKey("app_lock_enabled")
     }
 }

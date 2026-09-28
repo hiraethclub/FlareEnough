@@ -26,6 +26,11 @@ navigationCompose = "2.9.0"
 # Data.
 room = "2.8.5"
 datastore = "1.1.1"
+
+# App lock. The AndroidX biometric library wraps fingerprint, face, and the device
+# PIN or pattern behind one prompt, with no Google Play Services, so it is fine on
+# F-Droid. 1.1.0 is the current stable release.
+biometric = "1.1.0"
 # KSP tracks the Kotlin minor version. 2.3.12 pairs with Kotlin 2.3.21.
 ksp = "2.3.12"
 
@@ -63,6 +68,9 @@ androidx-room-testing = { group = "androidx.room", name = "room-testing", versio
 
 # DataStore.
 androidx-datastore-preferences = { group = "androidx.datastore", name = "datastore-preferences", version.ref = "datastore" }
+
+# App lock.
+androidx-biometric = { group = "androidx.biometric", name = "biometric", version.ref = "biometric" }
 
 # Testing.
 junit4 = { group = "junit", name = "junit", version.ref = "junit4" }

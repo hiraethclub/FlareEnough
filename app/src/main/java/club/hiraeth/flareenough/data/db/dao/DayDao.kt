@@ -95,4 +95,24 @@ interface DayDao {
             "ORDER BY t.name COLLATE NOCASE ASC",
     )
     fun observeTagsForDay(epochDay: Long): Flow<List<TagEntity>>
+
+    // One shot snapshots for exports.
+
+    @Query("SELECT * FROM flare_days WHERE flare = 1 ORDER BY epochDay ASC")
+    suspend fun getAllFlareDays(): List<FlareDayEntity>
+
+    @Query("SELECT * FROM period_days ORDER BY epochDay ASC")
+    suspend fun getAllPeriodDays(): List<PeriodDayEntity>
+
+    @Query("SELECT * FROM body_map_entries ORDER BY epochDay ASC")
+    suspend fun getAllBodyMap(): List<BodyMapEntryEntity>
+
+    @Query("SELECT * FROM day_notes ORDER BY epochDay ASC, createdAtMillis ASC")
+    suspend fun getAllNotes(): List<DayNoteEntity>
+
+    @Query("SELECT * FROM tags ORDER BY name COLLATE NOCASE ASC")
+    suspend fun getAllTags(): List<TagEntity>
+
+    @Query("SELECT * FROM day_tags")
+    suspend fun getAllDayTags(): List<DayTagCrossRef>
 }

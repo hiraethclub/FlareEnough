@@ -1,6 +1,7 @@
 package club.hiraeth.flareenough.di
 
 import android.content.Context
+import club.hiraeth.flareenough.data.backup.BackupManager
 import club.hiraeth.flareenough.data.db.FlareDatabase
 import club.hiraeth.flareenough.data.repository.DayRepository
 import club.hiraeth.flareenough.data.repository.DoseRepository
@@ -9,6 +10,8 @@ import club.hiraeth.flareenough.data.repository.MeditationRepository
 import club.hiraeth.flareenough.data.repository.StillnessContentRepository
 import club.hiraeth.flareenough.data.repository.SymptomRepository
 import club.hiraeth.flareenough.data.settings.SettingsRepository
+import club.hiraeth.flareenough.export.LogExporter
+import club.hiraeth.flareenough.export.PdfReporter
 import club.hiraeth.flareenough.reminders.AlarmScheduler
 import club.hiraeth.flareenough.reminders.ReminderManager
 
@@ -52,6 +55,30 @@ class AppContainer(private val appContext: Context) {
     }
 
     val settingsRepository: SettingsRepository by lazy { SettingsRepository(appContext) }
+
+    // Backup, restore, and exports. All are user driven and stay on the device: the
+    // person chooses the file through the system picker every time.
+    val backupManager: BackupManager by lazy { BackupManager(appContext, database) }
+
+    val logExporter: LogExporter by lazy {
+        LogExporter(
+            appContext,
+            database.medicationDao(),
+            database.doseDao(),
+            database.symptomDao(),
+            database.dayDao(),
+        )
+    }
+
+    val pdfReporter: PdfReporter by lazy {
+        PdfReporter(
+            appContext,
+            database.medicationDao(),
+            database.doseDao(),
+            database.symptomDao(),
+            database.dayDao(),
+        )
+    }
 
     val alarmScheduler: AlarmScheduler by lazy { AlarmScheduler(appContext) }
 

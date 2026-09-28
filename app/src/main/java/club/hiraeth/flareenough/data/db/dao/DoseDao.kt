@@ -52,6 +52,13 @@ interface DoseDao {
     )
     suspend fun findForSlot(medicationId: Long, scheduledTimeMillis: Long): DoseEventEntity?
 
+    /** Every dose event, oldest first, for exports. */
+    @Query(
+        "SELECT * FROM dose_events " +
+            "ORDER BY COALESCE(actualTimeMillis, scheduledTimeMillis, createdAtMillis) ASC",
+    )
+    suspend fun getAllDoses(): List<DoseEventEntity>
+
     /** Count of as needed doses taken for a medication within a time window (its daily max check). */
     @Query(
         "SELECT COUNT(*) FROM dose_events WHERE medicationId = :medicationId AND status = 'TAKEN' " +

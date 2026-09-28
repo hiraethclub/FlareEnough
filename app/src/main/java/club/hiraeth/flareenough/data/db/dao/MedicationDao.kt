@@ -49,6 +49,10 @@ interface MedicationDao {
     @Query("SELECT * FROM medications WHERE id = :id")
     suspend fun getWithTimes(id: Long): MedicationWithTimes?
 
+    /** Every medication, once, for exports. */
+    @Query("SELECT * FROM medications ORDER BY sortOrder ASC, name COLLATE NOCASE ASC")
+    suspend fun getAllMedications(): List<MedicationEntity>
+
     // Schedule times are managed together with their medication.
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)

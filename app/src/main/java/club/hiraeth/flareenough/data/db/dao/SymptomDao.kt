@@ -35,6 +35,10 @@ interface SymptomDao {
     @Query("SELECT COUNT(*) FROM symptom_trackers")
     suspend fun trackerCount(): Int
 
+    /** Every tracker, once, for exports. */
+    @Query("SELECT * FROM symptom_trackers ORDER BY sortOrder ASC, name COLLATE NOCASE ASC")
+    suspend fun getAllTrackers(): List<SymptomTrackerEntity>
+
     // Entries.
 
     @Insert
@@ -69,4 +73,8 @@ interface SymptomDao {
         "SELECT * FROM symptom_entries WHERE epochDay BETWEEN :startEpochDay AND :endEpochDay ORDER BY epochDay ASC",
     )
     fun observeEntriesBetween(startEpochDay: Long, endEpochDay: Long): Flow<List<SymptomEntryEntity>>
+
+    /** Every symptom entry, oldest day first, for exports. */
+    @Query("SELECT * FROM symptom_entries ORDER BY epochDay ASC")
+    suspend fun getAllEntries(): List<SymptomEntryEntity>
 }
