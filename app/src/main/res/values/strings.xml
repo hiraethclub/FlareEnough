@@ -44,6 +44,12 @@
     <string name="history_nothing">Nothing logged this day.</string>
     <string name="history_prev_month">Previous month</string>
     <string name="history_next_month">Next month</string>
+    <string name="history_edit_day">Edit</string>
+
+    <!-- Editing a whole past day. -->
+    <string name="day_edit_hint">Change what was logged for this day.</string>
+    <string name="day_edit_medications">Medication</string>
+    <string name="day_edit_no_medications">No medication was scheduled this day.</string>
     <string name="timeline_stillness">Stillness</string>
     <string name="duration_minutes">%1$d min</string>
     <string name="session_timer">Timer</string>

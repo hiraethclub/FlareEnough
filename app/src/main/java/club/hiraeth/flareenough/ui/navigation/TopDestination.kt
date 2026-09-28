@@ -41,6 +41,13 @@ object Routes {
     /** Choosing which body parts appear in symptom logging. */
     const val BODY_PARTS = "body_parts"
 
+    /** Editing a whole past day: medication, symptoms, and the rest. */
+    const val DAY_EDIT = "day_edit"
+    const val DAY_EDIT_ARG = "epochDay"
+    const val DAY_EDIT_PATTERN = "$DAY_EDIT/{$DAY_EDIT_ARG}"
+
+    fun dayEdit(epochDay: Long): String = "$DAY_EDIT/$epochDay"
+
     /** Add or edit a medication. medId 0 means add a new one. */
     const val MEDICATION_EDIT = "medication_edit"
     const val MEDICATION_EDIT_ARG = "medId"

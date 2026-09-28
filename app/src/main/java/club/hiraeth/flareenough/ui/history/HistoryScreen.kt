@@ -18,6 +18,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.CheckCircle
+import androidx.compose.material.icons.filled.Edit
 import androidx.compose.material.icons.filled.EditNote
 import androidx.compose.material.icons.filled.Healing
 import androidx.compose.material.icons.filled.KeyboardArrowLeft
@@ -30,6 +31,7 @@ import androidx.compose.material.icons.filled.WaterDrop
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -77,6 +79,7 @@ private val severityShadesDark = listOf(
 @Composable
 fun HistoryScreen(
     viewModel: HistoryViewModel,
+    onEditDay: (Long) -> Unit,
     modifier: Modifier = Modifier,
 ) {
     val state by viewModel.uiState.collectAsStateWithLifecycle()
@@ -101,10 +104,27 @@ fun HistoryScreen(
             onSelect = { viewModel.selectDay(it) },
         )
 
-        Text(
-            text = formatEpochDay(context, state.selectedDay.toEpochDay()),
-            style = MaterialTheme.typography.titleMedium,
-        )
+        Row(
+            modifier = Modifier.fillMaxWidth(),
+            verticalAlignment = Alignment.CenterVertically,
+        ) {
+            Text(
+                text = formatEpochDay(context, state.selectedDay.toEpochDay()),
+                style = MaterialTheme.typography.titleMedium,
+                modifier = Modifier.weight(1f),
+            )
+            OutlinedButton(onClick = { onEditDay(state.selectedDay.toEpochDay()) }) {
+                Icon(
+                    Icons.Filled.Edit,
+                    contentDescription = null,
+                    modifier = Modifier.size(18.dp),
+                )
+                Text(
+                    stringResource(R.string.history_edit_day),
+                    modifier = Modifier.padding(start = 8.dp),
+                )
+            }
+        }
         if (state.timeline.isEmpty()) {
             Text(
                 stringResource(R.string.history_nothing),

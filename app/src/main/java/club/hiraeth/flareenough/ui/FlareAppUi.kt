@@ -34,6 +34,8 @@ import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
 import club.hiraeth.flareenough.R
 import club.hiraeth.flareenough.ui.about.AboutScreen
+import club.hiraeth.flareenough.ui.dayedit.DayEditScreen
+import club.hiraeth.flareenough.ui.dayedit.DayEditViewModel
 import club.hiraeth.flareenough.ui.history.HistoryScreen
 import club.hiraeth.flareenough.ui.history.HistoryViewModel
 import club.hiraeth.flareenough.ui.medication.MedicationEditScreen
@@ -69,6 +71,7 @@ fun FlareApp() {
                 onOpenReminderHealth = { rootNav.navigate(Routes.REMINDER_HEALTH) },
                 onOpenAbout = { rootNav.navigate(Routes.ABOUT) },
                 onOpenBodyParts = { rootNav.navigate(Routes.BODY_PARTS) },
+                onEditDay = { epochDay -> rootNav.navigate(Routes.dayEdit(epochDay)) },
             )
         }
 
@@ -131,6 +134,31 @@ fun FlareApp() {
                 )
             }
         }
+
+        composable(
+            route = Routes.DAY_EDIT_PATTERN,
+            arguments = listOf(
+                navArgument(Routes.DAY_EDIT_ARG) { type = NavType.LongType },
+            ),
+        ) { backStackEntry ->
+            val epochDay = backStackEntry.arguments?.getLong(Routes.DAY_EDIT_ARG) ?: 0L
+            val container = rememberAppContainer()
+            val vm: DayEditViewModel = viewModel(
+                factory = viewModelFactory {
+                    initializer {
+                        DayEditViewModel(
+                            epochDay,
+                            container.medicationRepository,
+                            container.doseRepository,
+                            container.symptomRepository,
+                            container.dayRepository,
+                            container.settingsRepository,
+                        )
+                    }
+                },
+            )
+            DayEditScreen(viewModel = vm, onBack = { rootNav.popBackStack() })
+        }
     }
 }
 
@@ -152,6 +180,7 @@ private fun MainShell(
     onOpenReminderHealth: () -> Unit,
     onOpenAbout: () -> Unit,
     onOpenBodyParts: () -> Unit,
+    onEditDay: (Long) -> Unit,
 ) {
     val navController = rememberNavController()
     val backStackEntry by navController.currentBackStackEntryAsState()
@@ -273,7 +302,7 @@ private fun MainShell(
                         }
                     },
                 )
-                HistoryScreen(viewModel = vm)
+                HistoryScreen(viewModel = vm, onEditDay = onEditDay)
             }
             composable(TopDestination.STILLNESS.route) {
                 val context = androidx.compose.ui.platform.LocalContext.current

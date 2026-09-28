@@ -138,15 +138,15 @@ fun SymptomLogScreen(
 
 // A tiny wrapper so the file reads cleanly. Just stringResource.
 @Composable
-private fun stringResourceCompat(id: Int): String = androidx.compose.ui.res.stringResource(id)
+internal fun stringResourceCompat(id: Int): String = androidx.compose.ui.res.stringResource(id)
 
 @Composable
-private fun SectionTitle(text: String) {
+internal fun SectionTitle(text: String) {
     Text(text, style = MaterialTheme.typography.titleMedium, color = MaterialTheme.colorScheme.onBackground)
 }
 
 @Composable
-private fun FlareRow(flare: Boolean, onToggle: () -> Unit) {
+internal fun FlareRow(flare: Boolean, onToggle: () -> Unit) {
     ElevatedCard(modifier = Modifier.fillMaxWidth()) {
         Row(
             modifier = Modifier.fillMaxWidth().heightIn(min = 56.dp).padding(16.dp),
@@ -188,7 +188,7 @@ private fun periodFlowLabelRes(flow: PeriodFlow): Int = when (flow) {
  * it. The app records only: there is no cycle prediction anywhere.
  */
 @Composable
-private fun PeriodSection(flow: PeriodFlow?, onSelect: (PeriodFlow) -> Unit) {
+internal fun PeriodSection(flow: PeriodFlow?, onSelect: (PeriodFlow) -> Unit) {
     val dark = androidx.compose.foundation.isSystemInDarkTheme()
     val tints = if (dark) periodTintDark else periodTintLight
     val textColor = if (dark) levelTextDark else levelTextLight
@@ -236,7 +236,7 @@ private fun PeriodSection(flow: PeriodFlow?, onSelect: (PeriodFlow) -> Unit) {
 }
 
 @Composable
-private fun TrackerCard(
+internal fun TrackerCard(
     tracker: SymptomTrackerEntity,
     value: Int?,
     defaultLabels: List<String>,
@@ -376,7 +376,7 @@ private val soreTintDark = Color(0xFF4A3F2A)
 private val swollenTintDark = Color(0xFF4A342B)
 
 @Composable
-private fun BodyMapSection(
+internal fun BodyMapSection(
     marks: Map<BodyRegion, BodyState>,
     hidden: Set<BodyRegion>,
     onCycle: (BodyRegion) -> Unit,
@@ -471,7 +471,7 @@ private fun StatePill(state: BodyState?) {
 }
 
 @Composable
-private fun NotesSection(
+internal fun NotesSection(
     notes: List<club.hiraeth.flareenough.data.db.entity.DayNoteEntity>,
     onAdd: (String) -> Unit,
     onDelete: (club.hiraeth.flareenough.data.db.entity.DayNoteEntity) -> Unit,
@@ -505,7 +505,7 @@ private fun NotesSection(
 
 @OptIn(ExperimentalLayoutApi::class)
 @Composable
-private fun TagsSection(
+internal fun TagsSection(
     tags: List<club.hiraeth.flareenough.data.db.entity.TagEntity>,
     onAdd: (String) -> Unit,
     onRemove: (Long) -> Unit,
