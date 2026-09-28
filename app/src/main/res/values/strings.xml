@@ -437,6 +437,8 @@
     <string name="data_restore_confirm_title">Restore this backup?</string>
     <string name="data_restore_confirm_body">This replaces everything currently in the app with the backup, and the app will restart. Your backup file is not changed.</string>
     <string name="data_restore_confirm_action">Restore</string>
+    <string name="data_error_title">Something went wrong</string>
+    <string name="action_ok">OK</string>
 
     <!-- CSV column headings. Data only, no interpretation. -->
     <string name="csv_date">Date</string>

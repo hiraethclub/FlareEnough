@@ -13,6 +13,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.text.selection.SelectionContainer
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
@@ -74,17 +75,27 @@ fun DataScreen(onBack: () -> Unit) {
     )
 
     var pendingRestoreUri by remember { mutableStateOf<Uri?>(null) }
+    var errorText by remember { mutableStateOf<String?>(null) }
 
     fun report(result: Result<Unit>, successMessage: String) {
-        val message = if (result.isSuccess) {
-            successMessage
+        if (result.isSuccess) {
+            scope.launch { snackbarHostState.showSnackbar(successMessage) }
         } else {
-            context.getString(
-                R.string.data_failed,
-                result.exceptionOrNull()?.message ?: context.getString(R.string.data_unknown_error),
-            )
+            val e = result.exceptionOrNull()
+            errorText = e?.let { "${it::class.java.simpleName}: ${it.message}" }
+                ?: context.getString(R.string.data_unknown_error)
         }
-        scope.launch { snackbarHostState.showSnackbar(message) }
+    }
+
+    // Opening the system file picker can throw straight away on some devices, for
+    // example if there is no files app to handle it. Catch it so the app shows the
+    // reason plainly instead of closing.
+    fun safeLaunch(block: () -> Unit) {
+        try {
+            block()
+        } catch (t: Throwable) {
+            errorText = "${t::class.java.simpleName}: ${t.message}"
+        }
     }
 
     val backupLauncher = rememberLauncherForActivityResult(
@@ -140,31 +151,31 @@ fun DataScreen(onBack: () -> Unit) {
                 icon = Icons.Filled.Backup,
                 title = stringResource(R.string.data_backup),
                 summary = stringResource(R.string.data_backup_summary),
-                onClick = { backupLauncher.launch(suggestedName("backup", "fenbackup")) },
+                onClick = { safeLaunch { backupLauncher.launch(suggestedName("backup", "fenbackup")) } },
             )
             DataRow(
                 icon = Icons.Filled.SettingsBackupRestore,
                 title = stringResource(R.string.data_restore),
                 summary = stringResource(R.string.data_restore_summary),
-                onClick = { restoreLauncher.launch(arrayOf("*/*")) },
+                onClick = { safeLaunch { restoreLauncher.launch(arrayOf("*/*")) } },
             )
             DataRow(
                 icon = Icons.Filled.Medication,
                 title = stringResource(R.string.data_export_medication),
                 summary = stringResource(R.string.data_export_medication_summary),
-                onClick = { medicationCsvLauncher.launch(suggestedName("medication", "csv")) },
+                onClick = { safeLaunch { medicationCsvLauncher.launch(suggestedName("medication", "csv")) } },
             )
             DataRow(
                 icon = Icons.Filled.EditNote,
                 title = stringResource(R.string.data_export_daily),
                 summary = stringResource(R.string.data_export_daily_summary),
-                onClick = { dailyCsvLauncher.launch(suggestedName("daily-log", "csv")) },
+                onClick = { safeLaunch { dailyCsvLauncher.launch(suggestedName("daily-log", "csv")) } },
             )
             DataRow(
                 icon = Icons.Filled.PictureAsPdf,
                 title = stringResource(R.string.data_export_pdf),
                 summary = stringResource(R.string.data_export_pdf_summary),
-                onClick = { pdfLauncher.launch(suggestedName("report", "pdf")) },
+                onClick = { safeLaunch { pdfLauncher.launch(suggestedName("report", "pdf")) } },
             )
         }
     }
@@ -192,6 +203,20 @@ fun DataScreen(onBack: () -> Unit) {
             dismissButton = {
                 TextButton(onClick = { pendingRestoreUri = null }) {
                     Text(stringResource(R.string.action_cancel))
+                }
+            },
+        )
+    }
+
+    val error = errorText
+    if (error != null) {
+        AlertDialog(
+            onDismissRequest = { errorText = null },
+            title = { Text(stringResource(R.string.data_error_title)) },
+            text = { SelectionContainer { Text(error) } },
+            confirmButton = {
+                TextButton(onClick = { errorText = null }) {
+                    Text(stringResource(R.string.action_ok))
                 }
             },
         )
