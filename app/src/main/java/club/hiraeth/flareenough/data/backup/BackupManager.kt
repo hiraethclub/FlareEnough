@@ -39,6 +39,7 @@ class BackupManager(
             out.use { stream ->
                 databaseFile().inputStream().use { it.copyTo(stream) }
             }
+            Unit
         }
     }
 
