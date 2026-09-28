@@ -101,7 +101,11 @@ android {
         //   - Always signed with the debug key, so this build needs no signing secret
         //     and never uses the real release key. The differing application id means
         //     there is no signature clash with the installed release app.
-        create("testRelease") {
+        //
+        // The build type is named "preview" because the Android Gradle Plugin reserves
+        // build type names starting with "test" for its own test source sets. The name
+        // is internal only; the app shows as "Flare Enough (Test)" on the device.
+        create("preview") {
             initWith(getByName("release"))
             applicationIdSuffix = ".test"
             versionNameSuffix = "-test"
