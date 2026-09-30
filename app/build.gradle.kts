@@ -175,6 +175,9 @@ dependencies {
 
     // App lock. Wraps biometrics and the device PIN or pattern, no Play Services.
     implementation(libs.androidx.biometric)
+    // A current fragment, so the single FragmentActivity works with the modern file
+    // picker API. Without this, biometric pulls in an old fragment that crashes it.
+    implementation(libs.androidx.fragment)
 
     // Compose. The BOM keeps every Compose library on one tested version set.
     implementation(platform(libs.androidx.compose.bom))
