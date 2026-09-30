@@ -36,8 +36,8 @@ Symptoms and how you feel
   duration bands, or a plain number.
 - A flare flag for the day, and a "same as yesterday" shortcut for low energy
   days.
-- A body map to note where it hurts, marking areas as sore or swollen, grouped
-  by part of the body and readable by screen readers.
+- A body map to note where it hurts, marking areas as sore, painful, or swollen,
+  grouped by part of the body and readable by screen readers.
 - An optional period tracker you can turn on in Settings, recording bleeding days
   and flow, and nothing more. It never predicts a cycle.
 - Free text notes and tags for anything that does not fit a tracker.
@@ -47,11 +47,22 @@ History
 - A calm month calendar with soft shading for how heavy a day was.
 - Tap any day to see a plain timeline of that day: doses, symptoms, flares, body
   marks, notes, meditation, and period, all shown as data with no interpretation.
+- Go back and edit any past day, in case you forgot to log something or logged it
+  wrong: change the doses you took, the symptoms, joints, notes, and the rest.
 
 Stillness
 
 - A quiet corner with a simple timer, gentle guided breathing, and a soft bell.
 - Space for your own prompts and readings, which you add yourself.
+
+Your data stays yours
+
+- Back up everything to a single file, and restore it later, all on your device
+  through the system file picker. No cloud, no account.
+- Export your log as a CSV spreadsheet, or a plain PDF report to keep or show a
+  clinician. Data only, with no interpretation.
+- An optional app lock that uses your phone's own unlock (fingerprint, face, PIN,
+  or pattern), so the app opens only for you.
 
 Calm by design
 

@@ -1,0 +1,6 @@
+New in this version:
+- Go back and edit any past day in History: change what medication you took, and your symptoms, joints, and notes.
+- Back up all your data to one file, and restore it later. Everything stays on your device.
+- Export your log as a CSV spreadsheet, or a plain PDF report to keep or show someone. A record only, with no interpretation.
+- An optional app lock, using your phone's own unlock (fingerprint, face, PIN, or pattern).
+- A new Painful option on the body map, alongside Sore and Swollen.
