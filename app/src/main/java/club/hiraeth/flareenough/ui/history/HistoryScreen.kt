@@ -47,7 +47,6 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import club.hiraeth.flareenough.R
-import club.hiraeth.flareenough.data.db.entity.BodyState
 import club.hiraeth.flareenough.data.db.entity.DoseStatus
 import club.hiraeth.flareenough.data.db.entity.PeriodFlow
 import club.hiraeth.flareenough.data.db.entity.SessionType
@@ -316,9 +315,7 @@ private fun timelineContent(item: TimelineItem): Triple<androidx.compose.ui.grap
         is TimelineItem.Body -> Triple(
             Icons.Filled.Healing,
             stringResource(item.region.labelRes()),
-            stringResource(
-                if (item.state == BodyState.SORE) R.string.body_state_sore else R.string.body_state_swollen,
-            ),
+            stringResource(item.state.labelRes()),
         )
         is TimelineItem.Note -> Triple(Icons.Filled.EditNote, item.text, null)
         is TimelineItem.Meditation -> Triple(

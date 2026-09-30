@@ -371,8 +371,10 @@ private fun NumberInput(value: Int?, unit: String?, onChange: (Int?) -> Unit) {
 }
 
 private val soreTintLight = Color(0xFFF3E7CF)
+private val painfulTintLight = Color(0xFFE9D6DE)
 private val swollenTintLight = Color(0xFFF0DCD2)
 private val soreTintDark = Color(0xFF4A3F2A)
+private val painfulTintDark = Color(0xFF46323B)
 private val swollenTintDark = Color(0xFF4A342B)
 
 @Composable
@@ -440,16 +442,17 @@ private fun StatePill(state: BodyState?) {
     val bg = when (state) {
         null -> Color.Transparent
         BodyState.SORE -> if (dark) soreTintDark else soreTintLight
+        BodyState.PAINFUL -> if (dark) painfulTintDark else painfulTintLight
         BodyState.SWOLLEN -> if (dark) swollenTintDark else swollenTintLight
     }
     val fg = when (state) {
         null -> MaterialTheme.colorScheme.onSurfaceVariant
         else -> if (dark) Color(0xFFE6E7E9) else Color(0xFF2B2B2E)
     }
-    val label = when (state) {
-        null -> stringResourceCompat(R.string.body_state_none)
-        BodyState.SORE -> stringResourceCompat(R.string.body_state_sore)
-        BodyState.SWOLLEN -> stringResourceCompat(R.string.body_state_swollen)
+    val label = if (state == null) {
+        stringResourceCompat(R.string.body_state_none)
+    } else {
+        stringResourceCompat(state.labelRes())
     }
     Surface(
         shape = RoundedCornerShape(16.dp),

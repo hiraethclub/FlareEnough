@@ -3,6 +3,7 @@ package club.hiraeth.flareenough.ui.symptoms
 import androidx.annotation.StringRes
 import club.hiraeth.flareenough.R
 import club.hiraeth.flareenough.data.db.entity.BodyRegion
+import club.hiraeth.flareenough.data.db.entity.BodyState
 
 /** Regions grouped by area, each with a heading, for a tidy body map. */
 val bodyRegionGroups: List<Pair<Int, List<BodyRegion>>> = listOf(
@@ -74,4 +75,12 @@ fun BodyRegion.labelRes(): Int = when (this) {
     BodyRegion.ANKLE_RIGHT -> R.string.region_ankle_right
     BodyRegion.FOOT_LEFT -> R.string.region_foot_left
     BodyRegion.FOOT_RIGHT -> R.string.region_foot_right
+}
+
+/** The word for a marked body state. One place, so every screen and the exports agree. */
+@StringRes
+fun BodyState.labelRes(): Int = when (this) {
+    BodyState.SORE -> R.string.body_state_sore
+    BodyState.PAINFUL -> R.string.body_state_painful
+    BodyState.SWOLLEN -> R.string.body_state_swollen
 }

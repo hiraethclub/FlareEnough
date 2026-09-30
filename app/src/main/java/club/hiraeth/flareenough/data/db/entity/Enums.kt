@@ -95,9 +95,10 @@ enum class BodyRegion {
     FOOT_RIGHT,
 }
 
-/** The state marked for a body region. Tap cycles sore, then swollen, then clear. */
+/** The state marked for a body region. Tap cycles sore, painful, swollen, then clear. */
 enum class BodyState {
     SORE,
+    PAINFUL,
     SWOLLEN,
 }
 

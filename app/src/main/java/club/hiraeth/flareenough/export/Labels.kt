@@ -8,6 +8,7 @@ import club.hiraeth.flareenough.data.db.entity.PeriodFlow
 import club.hiraeth.flareenough.data.db.entity.SymptomEntryEntity
 import club.hiraeth.flareenough.data.db.entity.SymptomTrackerEntity
 import club.hiraeth.flareenough.data.db.entity.TrackerType
+import club.hiraeth.flareenough.ui.symptoms.labelRes
 
 /**
  * Shared, plain word labels for the CSV and PDF exports. Everything reads from string
@@ -32,12 +33,8 @@ internal fun periodFlowLabel(context: Context, flow: PeriodFlow): String = conte
     },
 )
 
-internal fun bodyStateLabel(context: Context, state: BodyState): String = context.getString(
-    when (state) {
-        BodyState.SORE -> R.string.body_state_sore
-        BodyState.SWOLLEN -> R.string.body_state_swollen
-    },
-)
+internal fun bodyStateLabel(context: Context, state: BodyState): String =
+    context.getString(state.labelRes())
 
 internal fun trackerValueLabel(
     context: Context,

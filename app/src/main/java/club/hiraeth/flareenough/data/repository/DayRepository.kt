@@ -49,8 +49,9 @@ class DayRepository(private val dao: DayDao) {
         dao.observeBodyMapBetween(startEpochDay, endEpochDay)
 
     /**
-     * Cycle a region's mark: nothing to sore, sore to swollen, swollen to clear.
-     * This matches the tap behaviour of the body map and the list fallback.
+     * Cycle a region's mark: nothing to sore, sore to painful, painful to swollen,
+     * swollen to clear. This matches the tap behaviour of the body map and the list
+     * fallback.
      */
     suspend fun cycleBodyRegion(epochDay: Long, region: BodyRegion, nowMillis: Long) {
         val current = dao.getBodyMap(epochDay).firstOrNull { it.region == region }
@@ -63,7 +64,8 @@ class DayRepository(private val dao: DayDao) {
                     createdAtMillis = nowMillis,
                 ),
             )
-            BodyState.SORE -> dao.setBodyRegion(current.copy(state = BodyState.SWOLLEN))
+            BodyState.SORE -> dao.setBodyRegion(current.copy(state = BodyState.PAINFUL))
+            BodyState.PAINFUL -> dao.setBodyRegion(current.copy(state = BodyState.SWOLLEN))
             BodyState.SWOLLEN -> dao.clearBodyRegion(epochDay, region.name)
         }
     }

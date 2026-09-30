@@ -302,9 +302,10 @@
     <string name="symptom_no_trackers_hint">No trackers are showing. Add one below.</string>
 
     <string name="body_state_sore">Sore</string>
+    <string name="body_state_painful">Painful</string>
     <string name="body_state_swollen">Swollen</string>
     <string name="body_state_none">Not marked</string>
-    <string name="body_map_hint">Tap a part once for sore, again for swollen, again to clear.</string>
+    <string name="body_map_hint">Tap a part once for sore, again for painful, again for swollen, again to clear.</string>
     <string name="body_map_all_hidden">All body parts are hidden. Turn some back on in Settings, Body parts.</string>
 
     <!-- Optional period tracker. Records bleeding days only, never predicts a cycle. -->
