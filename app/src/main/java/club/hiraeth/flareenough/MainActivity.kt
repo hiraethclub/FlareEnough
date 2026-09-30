@@ -32,13 +32,37 @@ class MainActivity : FragmentActivity() {
     // Whether the person has unlocked the app this time it is in the foreground.
     private var authenticated by mutableStateOf(false)
 
-    // True only while the system prompt is showing. It stops the app relocking itself
-    // when the device credential screen briefly sends the activity to the background.
-    private var promptInProgress = false
+    // Built once and reused. Creating a fresh prompt per tap left a stale one behind
+    // and could leave the Unlock button doing nothing.
+    private lateinit var biometricPrompt: BiometricPrompt
+
+    private val promptInfo: BiometricPrompt.PromptInfo by lazy {
+        BiometricPrompt.PromptInfo.Builder()
+            .setTitle(getString(R.string.app_lock_prompt_title, getString(R.string.app_name)))
+            .setSubtitle(getString(R.string.app_lock_prompt_subtitle))
+            .setAllowedAuthenticators(
+                BiometricManager.Authenticators.BIOMETRIC_WEAK or
+                    BiometricManager.Authenticators.DEVICE_CREDENTIAL,
+            )
+            .build()
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         enableEdgeToEdge()
         super.onCreate(savedInstanceState)
+
+        biometricPrompt = BiometricPrompt(
+            this,
+            ContextCompat.getMainExecutor(this),
+            object : BiometricPrompt.AuthenticationCallback() {
+                override fun onAuthenticationSucceeded(result: BiometricPrompt.AuthenticationResult) {
+                    authenticated = true
+                }
+                // Errors (including the person cancelling) leave the app locked. The
+                // lock screen keeps its Unlock button so they can try again.
+            },
+        )
+
         setContent {
             FlareEnoughTheme {
                 Gate()
@@ -48,9 +72,9 @@ class MainActivity : FragmentActivity() {
 
     override fun onStop() {
         super.onStop()
-        if (!promptInProgress) {
-            authenticated = false
-        }
+        // Re-lock when the app leaves the foreground. While it is still locked this is
+        // a no op, so it only takes effect once the app has actually been opened.
+        authenticated = false
     }
 
     @Composable
@@ -74,32 +98,10 @@ class MainActivity : FragmentActivity() {
     }
 
     private fun promptUnlock() {
-        if (promptInProgress) return
-        val executor = ContextCompat.getMainExecutor(this)
-        val prompt = BiometricPrompt(
-            this,
-            executor,
-            object : BiometricPrompt.AuthenticationCallback() {
-                override fun onAuthenticationSucceeded(result: BiometricPrompt.AuthenticationResult) {
-                    promptInProgress = false
-                    authenticated = true
-                }
-
-                override fun onAuthenticationError(errorCode: Int, errString: CharSequence) {
-                    // Left locked. The lock screen keeps its own Unlock button to retry.
-                    promptInProgress = false
-                }
-            },
-        )
-        val info = BiometricPrompt.PromptInfo.Builder()
-            .setTitle(getString(R.string.app_lock_prompt_title, getString(R.string.app_name)))
-            .setSubtitle(getString(R.string.app_lock_prompt_subtitle))
-            .setAllowedAuthenticators(
-                BiometricManager.Authenticators.BIOMETRIC_WEAK or
-                    BiometricManager.Authenticators.DEVICE_CREDENTIAL,
-            )
-            .build()
-        promptInProgress = true
-        prompt.authenticate(info)
+        try {
+            biometricPrompt.authenticate(promptInfo)
+        } catch (t: Throwable) {
+            // If the prompt cannot be shown, stay on the lock screen with its button.
+        }
     }
 }
