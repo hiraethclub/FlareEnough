@@ -90,11 +90,37 @@ jobs:
           cp app/build/outputs/apk/release/app-release.apk \
              "dist/flare-enough-${{ steps.rel.outputs.tag }}.apk"
 
+      - name: Write the release notes
+        run: |
+          # Use the store changelog for this version code as the notes, so the
+          # Release page, F-Droid, and the in app changelog all say the same thing.
+          vcode=$(grep -oE 'versionCode = [0-9]+' app/build.gradle.kts | grep -oE '[0-9]+' | head -1)
+          changelog="fastlane/metadata/android/en-US/changelogs/${vcode}.txt"
+          {
+            if [ -f "$changelog" ]; then
+              cat "$changelog"
+              echo
+            fi
+            echo "### Install"
+            echo
+            echo "Download the APK below and open it on your phone. Android will ask you to allow installing from this source, which is normal for anything outside the Play Store."
+            echo
+            echo "The app works fully offline: no internet permission, no ads, no trackers, no accounts."
+          } > release-notes.md
+
       - name: Publish the GitHub Release
         env:
           GH_TOKEN: ${{ github.token }}
         run: |
-          gh release create "${{ steps.rel.outputs.tag }}" \
-            "dist/flare-enough-${{ steps.rel.outputs.tag }}.apk" \
-            --title "Flare Enough ${{ steps.rel.outputs.tag }}" \
-            --generate-notes ${{ steps.rel.outputs.target }}
+          tag="${{ steps.rel.outputs.tag }}"
+          apk="dist/flare-enough-${tag}.apk"
+          # Idempotent: edit the release if it already exists (for example when re-run
+          # to refresh the notes), otherwise create it.
+          if gh release view "$tag" >/dev/null 2>&1; then
+            gh release edit "$tag" --title "Flare Enough $tag" --notes-file release-notes.md
+            gh release upload "$tag" "$apk" --clobber
+          else
+            gh release create "$tag" "$apk" \
+              --title "Flare Enough $tag" \
+              --notes-file release-notes.md ${{ steps.rel.outputs.target }}
+          fi
