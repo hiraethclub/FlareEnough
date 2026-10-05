@@ -1,0 +1,1 @@
+Store listing only: add the app icon, a banner, and screenshots for F-Droid. The app itself is unchanged from 0.1.3.
