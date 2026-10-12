@@ -1,6 +1,6 @@
 package club.hiraeth.flareenough.data.db
 
-import club.hiraeth.flareenough.data.db.entity.BodyRegion
+import club.hiraeth.flareenough.data.db.entity.BodyState
 import club.hiraeth.flareenough.data.db.entity.DoseStatus
 import club.hiraeth.flareenough.data.db.entity.MedicationForm
 import club.hiraeth.flareenough.data.db.entity.ScheduleType
@@ -32,8 +32,8 @@ class ConvertersTest {
             converters.toDoseStatus(converters.fromDoseStatus(DoseStatus.MISSED)),
         )
         assertEquals(
-            BodyRegion.FINGERS_LEFT,
-            converters.toBodyRegion(converters.fromBodyRegion(BodyRegion.FINGERS_LEFT)),
+            BodyState.PAINFUL,
+            converters.toBodyState(converters.fromBodyState(BodyState.PAINFUL)),
         )
     }
 

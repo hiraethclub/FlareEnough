@@ -2,29 +2,99 @@ package club.hiraeth.flareenough.ui.settings
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import club.hiraeth.flareenough.data.db.entity.BodyRegion
-import club.hiraeth.flareenough.data.settings.SettingsRepository
+import club.hiraeth.flareenough.data.db.entity.BodyPartCategoryEntity
+import club.hiraeth.flareenough.data.db.entity.BodyPartEntity
+import club.hiraeth.flareenough.data.db.relation.CategoryWithParts
+import club.hiraeth.flareenough.data.repository.BodyPartRepository
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 
 /**
- * Lets the person choose which body parts appear in symptom logging. A hidden part
- * is simply not shown when logging, so the list stays short and calm for anyone who
- * only tracks a few places.
+ * Drives the body parts editor. The person can add their own categories and parts
+ * (for example a single finger or toe), rename them, reorder them, hide the ones they
+ * do not use, and remove them.
+ *
+ * Hiding is always safe and keeps every recorded mark. Removing a part deletes the
+ * marks recorded on it, and removing a category removes its parts too, so the screen
+ * asks for confirmation first and shows how many marks would go.
  */
 class BodyPartsViewModel(
-    private val settingsRepository: SettingsRepository,
+    private val repository: BodyPartRepository,
 ) : ViewModel() {
 
-    val hiddenRegions: StateFlow<Set<BodyRegion>> =
-        settingsRepository.observeHiddenBodyRegions()
-            .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5_000), emptySet())
+    val categories: StateFlow<List<CategoryWithParts>> =
+        repository.observeCategoriesWithParts()
+            .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5_000), emptyList())
 
-    fun setVisible(region: BodyRegion, visible: Boolean) {
-        viewModelScope.launch {
-            settingsRepository.setBodyRegionVisible(region, visible)
-        }
+    private fun now() = System.currentTimeMillis()
+
+    // Categories.
+
+    fun addCategory(name: String) {
+        if (name.isBlank()) return
+        viewModelScope.launch { repository.addCategory(name, now()) }
     }
+
+    fun renameCategory(category: BodyPartCategoryEntity, name: String) {
+        if (name.isBlank()) return
+        viewModelScope.launch { repository.renameCategory(category, name) }
+    }
+
+    fun deleteCategory(category: BodyPartCategoryEntity) {
+        viewModelScope.launch { repository.deleteCategory(category) }
+    }
+
+    fun moveCategory(category: BodyPartCategoryEntity, up: Boolean) {
+        val ordered = categories.value.map { it.category }
+        val index = ordered.indexOfFirst { it.id == category.id }
+        val target = if (up) index - 1 else index + 1
+        if (index < 0 || target !in ordered.indices) return
+        val reordered = ordered.toMutableList().also {
+            val moved = it.removeAt(index)
+            it.add(target, moved)
+        }
+        viewModelScope.launch { repository.reorderCategories(reordered) }
+    }
+
+    // Parts.
+
+    fun addPart(categoryId: Long, name: String) {
+        if (name.isBlank()) return
+        viewModelScope.launch { repository.addPart(categoryId, name, now()) }
+    }
+
+    fun renamePart(part: BodyPartEntity, name: String) {
+        if (name.isBlank()) return
+        viewModelScope.launch { repository.renamePart(part, name) }
+    }
+
+    fun setPartVisible(part: BodyPartEntity, visible: Boolean) {
+        viewModelScope.launch { repository.setPartVisible(part, visible) }
+    }
+
+    fun deletePart(part: BodyPartEntity) {
+        viewModelScope.launch { repository.deletePart(part) }
+    }
+
+    fun movePart(categoryId: Long, part: BodyPartEntity, up: Boolean) {
+        val group = categories.value.firstOrNull { it.category.id == categoryId } ?: return
+        val ordered = group.parts.sortedBy { it.sortOrder }
+        val index = ordered.indexOfFirst { it.id == part.id }
+        val target = if (up) index - 1 else index + 1
+        if (index < 0 || target !in ordered.indices) return
+        val reordered = ordered.toMutableList().also {
+            val moved = it.removeAt(index)
+            it.add(target, moved)
+        }
+        viewModelScope.launch { repository.reorderParts(reordered) }
+    }
+
+    fun restoreDefaults() {
+        viewModelScope.launch { repository.restoreDefaults(now()) }
+    }
+
+    /** How many recorded marks a part has, so the delete prompt can warn before removing them. */
+    suspend fun markCountForPart(key: String): Int = repository.markCountForPart(key)
 }

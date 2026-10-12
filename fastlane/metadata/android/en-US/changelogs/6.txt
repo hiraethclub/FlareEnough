@@ -1,0 +1,5 @@
+New in this version:
+- You can now set up the body map to match your own body. Add your own body parts, including a single finger or toe, rename them, reorder them, hide the ones you do not use, or remove them.
+- Add and reorder your own categories too, alongside the built in ones.
+- Hiding a part keeps everything you have already recorded. Removing a part, or a category with parts in it, asks first and tells you how many recorded marks would go.
+- A Restore default parts button brings back any of the built in parts you have removed.

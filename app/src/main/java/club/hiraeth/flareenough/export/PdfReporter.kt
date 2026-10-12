@@ -5,13 +5,14 @@ import android.graphics.Paint
 import android.graphics.pdf.PdfDocument
 import android.net.Uri
 import club.hiraeth.flareenough.R
+import club.hiraeth.flareenough.data.db.dao.BodyPartDao
 import club.hiraeth.flareenough.data.db.dao.DayDao
 import club.hiraeth.flareenough.data.db.dao.DoseDao
 import club.hiraeth.flareenough.data.db.dao.MedicationDao
 import club.hiraeth.flareenough.data.db.dao.SymptomDao
 import club.hiraeth.flareenough.data.db.entity.SymptomEntryEntity
 import club.hiraeth.flareenough.ui.support.formatEpochDay
-import club.hiraeth.flareenough.ui.symptoms.labelRes
+import club.hiraeth.flareenough.ui.symptoms.bodyPartDisplayName
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import java.time.LocalDate
@@ -29,6 +30,7 @@ class PdfReporter(
     private val doseDao: DoseDao,
     private val symptomDao: SymptomDao,
     private val dayDao: DayDao,
+    private val bodyPartDao: BodyPartDao,
 ) {
 
     suspend fun writeReport(uri: Uri): Result<Unit> = withContext(Dispatchers.IO) {
@@ -40,6 +42,7 @@ class PdfReporter(
             val flareDays = dayDao.getAllFlareDays().map { it.epochDay }.toSet()
             val periodByDay = dayDao.getAllPeriodDays().associate { it.epochDay to it.flow }
             val bodyByDay = dayDao.getAllBodyMap().groupBy { it.epochDay }
+            val partNames = bodyPartDao.getAllParts().associate { it.key to it.name }
             val notesByDay = dayDao.getAllNotes().groupBy { it.epochDay }
             val tagsById = dayDao.getAllTags().associate { it.id to it.name }
             val tagIdsByDay = dayDao.getAllDayTags().groupBy({ it.epochDay }, { it.tagId })
@@ -95,7 +98,8 @@ class PdfReporter(
                     }
 
                     val joints = bodyByDay[day].orEmpty().joinToString("; ") { entry ->
-                        "${context.getString(entry.region.labelRes())} (${bodyStateLabel(context, entry.state)})"
+                        val region = bodyPartDisplayName(context, entry.region, partNames[entry.region])
+                        "$region (${bodyStateLabel(context, entry.state)})"
                     }
                     if (joints.isNotBlank()) {
                         page.body("${context.getString(R.string.csv_joints)}: $joints")

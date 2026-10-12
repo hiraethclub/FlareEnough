@@ -45,8 +45,8 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import club.hiraeth.flareenough.R
-import club.hiraeth.flareenough.data.db.entity.BodyRegion
 import club.hiraeth.flareenough.data.db.entity.BodyState
+import club.hiraeth.flareenough.data.db.relation.CategoryWithParts
 import club.hiraeth.flareenough.data.db.entity.PeriodFlow
 import club.hiraeth.flareenough.data.db.entity.SymptomTrackerEntity
 import club.hiraeth.flareenough.data.db.entity.TrackerType
@@ -60,9 +60,9 @@ fun SymptomLogScreen(
     val noTrackers by viewModel.noTrackersAtAll.collectAsStateWithLifecycle()
     val flare by viewModel.flare.collectAsStateWithLifecycle()
     val bodyMap by viewModel.bodyMap.collectAsStateWithLifecycle()
+    val bodyCategories by viewModel.bodyPartCategories.collectAsStateWithLifecycle()
     val dayTags by viewModel.dayTags.collectAsStateWithLifecycle()
     val notes by viewModel.notes.collectAsStateWithLifecycle()
-    val hiddenRegions by viewModel.hiddenBodyRegions.collectAsStateWithLifecycle()
     val periodEnabled by viewModel.periodTrackingEnabled.collectAsStateWithLifecycle()
     val periodFlow by viewModel.periodFlowToday.collectAsStateWithLifecycle()
 
@@ -115,8 +115,8 @@ fun SymptomLogScreen(
 
         item {
             BodyMapSection(
+                categories = bodyCategories,
                 marks = bodyMap,
-                hidden = hiddenRegions,
                 onCycle = { viewModel.cycleRegion(it) },
             )
         }
@@ -379,10 +379,11 @@ private val swollenTintDark = Color(0xFF4A342B)
 
 @Composable
 internal fun BodyMapSection(
-    marks: Map<BodyRegion, BodyState>,
-    hidden: Set<BodyRegion>,
-    onCycle: (BodyRegion) -> Unit,
+    categories: List<CategoryWithParts>,
+    marks: Map<String, BodyState>,
+    onCycle: (String) -> Unit,
 ) {
+    val context = androidx.compose.ui.platform.LocalContext.current
     Column(verticalArrangement = Arrangement.spacedBy(6.dp)) {
         SectionTitle(stringResourceCompat(R.string.symptom_body_map))
         Text(
@@ -390,8 +391,8 @@ internal fun BodyMapSection(
             style = MaterialTheme.typography.bodyMedium,
             color = MaterialTheme.colorScheme.onSurfaceVariant,
         )
-        val anyVisible = bodyRegionGroups.any { (_, regions) -> regions.any { it !in hidden } }
-        if (!anyVisible) {
+        val visibleCategories = categories.filter { cwp -> cwp.parts.any { it.visible } }
+        if (visibleCategories.isEmpty()) {
             Text(
                 stringResourceCompat(R.string.body_map_all_hidden),
                 style = MaterialTheme.typography.bodyMedium,
@@ -399,20 +400,19 @@ internal fun BodyMapSection(
                 modifier = Modifier.padding(top = 8.dp),
             )
         }
-        bodyRegionGroups.forEach { (areaRes, regions) ->
-            val visible = regions.filterNot { it in hidden }
-            if (visible.isEmpty()) return@forEach
+        visibleCategories.forEach { cwp ->
+            val parts = cwp.parts.filter { it.visible }.sortedBy { it.sortOrder }
             Text(
-                stringResourceCompat(areaRes),
+                categoryDisplayName(context, cwp.category.key, cwp.category.name),
                 style = MaterialTheme.typography.labelLarge,
                 color = MaterialTheme.colorScheme.primary,
                 modifier = Modifier.padding(top = 10.dp, bottom = 2.dp),
             )
-            visible.forEach { region ->
+            parts.forEach { part ->
                 RegionRow(
-                    name = stringResourceCompat(region.labelRes()),
-                    state = marks[region],
-                    onClick = { onCycle(region) },
+                    name = bodyPartDisplayName(context, part.key, part.name),
+                    state = marks[part.key],
+                    onClick = { onCycle(part.key) },
                 )
             }
         }

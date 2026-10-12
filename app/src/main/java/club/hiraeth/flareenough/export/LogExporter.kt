@@ -3,12 +3,13 @@ package club.hiraeth.flareenough.export
 import android.content.Context
 import android.net.Uri
 import club.hiraeth.flareenough.R
+import club.hiraeth.flareenough.data.db.dao.BodyPartDao
 import club.hiraeth.flareenough.data.db.dao.DayDao
 import club.hiraeth.flareenough.data.db.dao.DoseDao
 import club.hiraeth.flareenough.data.db.dao.MedicationDao
 import club.hiraeth.flareenough.data.db.dao.SymptomDao
 import club.hiraeth.flareenough.data.db.entity.SymptomEntryEntity
-import club.hiraeth.flareenough.ui.symptoms.labelRes
+import club.hiraeth.flareenough.ui.symptoms.bodyPartDisplayName
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import java.time.Instant
@@ -27,6 +28,7 @@ class LogExporter(
     private val doseDao: DoseDao,
     private val symptomDao: SymptomDao,
     private val dayDao: DayDao,
+    private val bodyPartDao: BodyPartDao,
 ) {
 
     private val zone: ZoneId = ZoneId.systemDefault()
@@ -82,6 +84,7 @@ class LogExporter(
             val flareDays = dayDao.getAllFlareDays().map { it.epochDay }.toSet()
             val periodByDay = dayDao.getAllPeriodDays().associate { it.epochDay to it.flow }
             val bodyByDay = dayDao.getAllBodyMap().groupBy { it.epochDay }
+            val partNames = bodyPartDao.getAllParts().associate { it.key to it.name }
             val notesByDay = dayDao.getAllNotes().groupBy { it.epochDay }
             val tagsById = dayDao.getAllTags().associate { it.id to it.name }
             val tagIdsByDay = dayDao.getAllDayTags().groupBy({ it.epochDay }, { it.tagId })
@@ -124,7 +127,7 @@ class LogExporter(
 
                 row.add(
                     bodyByDay[day].orEmpty().joinToString("; ") { entry ->
-                        val region = context.getString(entry.region.labelRes())
+                        val region = bodyPartDisplayName(context, entry.region, partNames[entry.region])
                         "$region (${bodyStateLabel(context, entry.state)})"
                     },
                 )

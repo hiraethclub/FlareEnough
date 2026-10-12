@@ -1,56 +1,20 @@
 package club.hiraeth.flareenough.ui.symptoms
 
+import android.content.Context
 import androidx.annotation.StringRes
 import club.hiraeth.flareenough.R
 import club.hiraeth.flareenough.data.db.entity.BodyRegion
 import club.hiraeth.flareenough.data.db.entity.BodyState
 
-/** Regions grouped by area, each with a heading, for a tidy body map. */
-val bodyRegionGroups: List<Pair<Int, List<BodyRegion>>> = listOf(
-    R.string.body_area_head to listOf(BodyRegion.JAW, BodyRegion.NECK),
-    R.string.body_area_arms to listOf(
-        BodyRegion.SHOULDER_LEFT, BodyRegion.SHOULDER_RIGHT,
-        BodyRegion.ELBOW_LEFT, BodyRegion.ELBOW_RIGHT,
-        BodyRegion.WRIST_LEFT, BodyRegion.WRIST_RIGHT,
-    ),
-    R.string.body_area_hands to listOf(
-        BodyRegion.HAND_LEFT, BodyRegion.HAND_RIGHT,
-        BodyRegion.FINGERS_LEFT, BodyRegion.FINGERS_RIGHT,
-    ),
-    R.string.body_area_back to listOf(
-        BodyRegion.BACK, BodyRegion.HIP_LEFT, BodyRegion.HIP_RIGHT,
-    ),
-    R.string.body_area_legs to listOf(
-        BodyRegion.KNEE_LEFT, BodyRegion.KNEE_RIGHT,
-        BodyRegion.ANKLE_LEFT, BodyRegion.ANKLE_RIGHT,
-        BodyRegion.FOOT_LEFT, BodyRegion.FOOT_RIGHT,
-    ),
-)
-
-/** The order regions appear in the body map list, roughly head to toe. */
-val bodyRegionOrder: List<BodyRegion> = listOf(
-    BodyRegion.JAW,
-    BodyRegion.NECK,
-    BodyRegion.SHOULDER_LEFT,
-    BodyRegion.SHOULDER_RIGHT,
-    BodyRegion.ELBOW_LEFT,
-    BodyRegion.ELBOW_RIGHT,
-    BodyRegion.WRIST_LEFT,
-    BodyRegion.WRIST_RIGHT,
-    BodyRegion.HAND_LEFT,
-    BodyRegion.HAND_RIGHT,
-    BodyRegion.FINGERS_LEFT,
-    BodyRegion.FINGERS_RIGHT,
-    BodyRegion.BACK,
-    BodyRegion.HIP_LEFT,
-    BodyRegion.HIP_RIGHT,
-    BodyRegion.KNEE_LEFT,
-    BodyRegion.KNEE_RIGHT,
-    BodyRegion.ANKLE_LEFT,
-    BodyRegion.ANKLE_RIGHT,
-    BodyRegion.FOOT_LEFT,
-    BodyRegion.FOOT_RIGHT,
-)
+/**
+ * Display names for body parts, categories, and states.
+ *
+ * Body parts and categories are editable and stored in the database by a stable key.
+ * Built in ones keep a null name and are shown through these translated string
+ * resources, so the defaults stay translatable. A part or category the person names or
+ * renames carries its own text instead. [bodyPartDisplayName] and [categoryDisplayName]
+ * put those two rules together.
+ */
 
 @StringRes
 fun BodyRegion.labelRes(): Int = when (this) {
@@ -84,3 +48,25 @@ fun BodyState.labelRes(): Int = when (this) {
     BodyState.PAINFUL -> R.string.body_state_painful
     BodyState.SWOLLEN -> R.string.body_state_swollen
 }
+
+/** The string resource for a default category name, or null if the key is not a default. */
+fun defaultCategoryNameRes(key: String): Int? = when (key) {
+    "head" -> R.string.body_area_head
+    "arms" -> R.string.body_area_arms
+    "hands" -> R.string.body_area_hands
+    "back" -> R.string.body_area_back
+    "legs" -> R.string.body_area_legs
+    else -> null
+}
+
+/** The string resource for a default body part name, or null if the key is not a default. */
+fun defaultBodyPartNameRes(key: String): Int? =
+    runCatching { BodyRegion.valueOf(key).labelRes() }.getOrNull()
+
+/** The person's own category name, else the translated default, else the raw key as a fallback. */
+fun categoryDisplayName(context: Context, key: String, customName: String?): String =
+    customName ?: defaultCategoryNameRes(key)?.let { context.getString(it) } ?: key
+
+/** The person's own part name, else the translated default, else the raw key as a fallback. */
+fun bodyPartDisplayName(context: Context, key: String, customName: String?): String =
+    customName ?: defaultBodyPartNameRes(key)?.let { context.getString(it) } ?: key

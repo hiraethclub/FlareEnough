@@ -1,6 +1,5 @@
 package club.hiraeth.flareenough.ui.history
 
-import club.hiraeth.flareenough.data.db.entity.BodyRegion
 import club.hiraeth.flareenough.data.db.entity.BodyState
 import club.hiraeth.flareenough.data.db.entity.DoseStatus
 import club.hiraeth.flareenough.data.db.entity.PeriodFlow
@@ -45,7 +44,8 @@ sealed interface TimelineItem {
 
     data class Body(
         override val timeMillis: Long?,
-        val region: BodyRegion,
+        val partKey: String,
+        val customName: String?,
         val state: BodyState,
     ) : TimelineItem
 

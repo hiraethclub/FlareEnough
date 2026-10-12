@@ -145,17 +145,44 @@
     <string name="settings_about">About</string>
     <string name="settings_about_summary">Version, licence, and the not medical advice notice</string>
     <string name="settings_body_parts">Body parts</string>
-    <string name="settings_body_parts_summary">Choose which body parts show up when logging</string>
+    <string name="settings_body_parts_summary">Add, rename, reorder, hide, or remove the body parts you log</string>
     <string name="settings_period">Period tracking</string>
     <string name="settings_period_summary">Show a place to log bleeding days when you log symptoms</string>
 
     <!-- Body parts settings screen. -->
     <string name="body_parts_title">Body parts</string>
-    <string name="body_parts_intro">Tick the body parts you want to see when logging symptoms. Anything unticked is hidden from the log. This does not change anything you have already recorded.</string>
+    <string name="body_parts_intro">Set up the body parts you log. You can add your own, rename or reorder them, hide any you do not use, or remove them. Hiding a part keeps everything you have already recorded.</string>
+    <string name="body_parts_empty">You have no body parts yet. Add one below, or restore the defaults.</string>
+    <string name="body_parts_add_category">Add category</string>
+    <string name="body_parts_add_part">Add part</string>
+    <string name="body_parts_restore_defaults">Restore default parts</string>
+    <string name="body_parts_rename">Rename</string>
+    <string name="body_parts_move_up">Move up</string>
+    <string name="body_parts_move_down">Move down</string>
+    <string name="body_parts_shown">Shown when logging</string>
+    <string name="body_parts_more_options">More options for %1$s</string>
+    <string name="body_parts_category_name_hint">Category name</string>
+    <string name="body_parts_part_name_hint">Body part name</string>
+    <string name="body_parts_new_category_title">New category</string>
+    <string name="body_parts_new_part_title">New body part</string>
+    <string name="body_parts_rename_category_title">Rename category</string>
+    <string name="body_parts_rename_part_title">Rename body part</string>
+    <string name="body_parts_delete_part_title">Remove this body part?</string>
+    <string name="body_parts_delete_part_message">This removes it from the log. Nothing recorded on it will be affected.</string>
+    <string name="body_parts_delete_category_title">Remove this category?</string>
+    <string name="body_parts_delete_category_message">This removes the category. It has no body parts in it.</string>
+    <plurals name="body_parts_delete_part_marks">
+        <item quantity="one">This body part has %1$d recorded mark. Removing it also removes that mark, and this cannot be undone.</item>
+        <item quantity="other">This body part has %1$d recorded marks. Removing it also removes those marks, and this cannot be undone.</item>
+    </plurals>
+    <plurals name="body_parts_delete_category_parts">
+        <item quantity="one">This category has %1$d body part in it. Removing the category also removes that part, along with anything recorded on it, and this cannot be undone.</item>
+        <item quantity="other">This category has %1$d body parts in it. Removing the category also removes those parts, along with anything recorded on them, and this cannot be undone.</item>
+    </plurals>
 
     <!-- About screen. -->
     <string name="about_title">About</string>
-    <string name="about_version">Version 0.1.4</string>
+    <string name="about_version">Version 0.1.5</string>
     <string name="about_tagline">Free and open source. No ads, no tracking, no accounts.</string>
     <string name="about_licence">Licensed under the GPL, version 3 or later, so it and any forks stay free.</string>
     <string name="about_not_medical_title">Not medical advice</string>
@@ -306,7 +333,7 @@
     <string name="body_state_swollen">Swollen</string>
     <string name="body_state_none">Not marked</string>
     <string name="body_map_hint">Tap a part once for sore, again for painful, again for swollen, again to clear.</string>
-    <string name="body_map_all_hidden">All body parts are hidden. Turn some back on in Settings, Body parts.</string>
+    <string name="body_map_all_hidden">No body parts to show here. You can add or show body parts in Settings, Body parts.</string>
 
     <!-- Optional period tracker. Records bleeding days only, never predicts a cycle. -->
     <string name="period_title">Period</string>

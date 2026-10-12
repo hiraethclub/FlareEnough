@@ -3,13 +3,14 @@ package club.hiraeth.flareenough.ui.symptoms
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import club.hiraeth.flareenough.data.settings.SettingsRepository
-import club.hiraeth.flareenough.data.db.entity.BodyRegion
 import club.hiraeth.flareenough.data.db.entity.BodyState
 import club.hiraeth.flareenough.data.db.entity.PeriodFlow
 import club.hiraeth.flareenough.data.db.entity.DayNoteEntity
 import club.hiraeth.flareenough.data.db.entity.SymptomEntryEntity
 import club.hiraeth.flareenough.data.db.entity.SymptomTrackerEntity
 import club.hiraeth.flareenough.data.db.entity.TagEntity
+import club.hiraeth.flareenough.data.db.relation.CategoryWithParts
+import club.hiraeth.flareenough.data.repository.BodyPartRepository
 import club.hiraeth.flareenough.data.repository.DayRepository
 import club.hiraeth.flareenough.data.repository.SymptomRepository
 import kotlinx.coroutines.flow.SharingStarted
@@ -33,14 +34,15 @@ data class TrackerRow(
 class SymptomLogViewModel(
     private val symptomRepository: SymptomRepository,
     private val dayRepository: DayRepository,
+    private val bodyPartRepository: BodyPartRepository,
     settingsRepository: SettingsRepository,
 ) : ViewModel() {
 
     private val today: Long = LocalDate.now().toEpochDay()
 
-    val hiddenBodyRegions: StateFlow<Set<BodyRegion>> =
-        settingsRepository.observeHiddenBodyRegions()
-            .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5_000), emptySet())
+    val bodyPartCategories: StateFlow<List<CategoryWithParts>> =
+        bodyPartRepository.observeCategoriesWithParts()
+            .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5_000), emptyList())
 
     val periodTrackingEnabled: StateFlow<Boolean> =
         settingsRepository.observePeriodTrackingEnabled()
@@ -70,7 +72,7 @@ class SymptomLogViewModel(
             .map { it == true }
             .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5_000), false)
 
-    val bodyMap: StateFlow<Map<BodyRegion, BodyState>> =
+    val bodyMap: StateFlow<Map<String, BodyState>> =
         dayRepository.observeBodyMap(today)
             .map { list -> list.associate { it.region to it.state } }
             .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5_000), emptyMap())
@@ -116,9 +118,9 @@ class SymptomLogViewModel(
         }
     }
 
-    fun cycleRegion(region: BodyRegion) {
+    fun cycleRegion(partKey: String) {
         viewModelScope.launch {
-            dayRepository.cycleBodyRegion(today, region, System.currentTimeMillis())
+            dayRepository.cycleBodyPart(today, partKey, System.currentTimeMillis())
         }
     }
 

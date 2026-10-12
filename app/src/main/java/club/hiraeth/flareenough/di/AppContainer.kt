@@ -3,6 +3,7 @@ package club.hiraeth.flareenough.di
 import android.content.Context
 import club.hiraeth.flareenough.data.backup.BackupManager
 import club.hiraeth.flareenough.data.db.FlareDatabase
+import club.hiraeth.flareenough.data.repository.BodyPartRepository
 import club.hiraeth.flareenough.data.repository.DayRepository
 import club.hiraeth.flareenough.data.repository.DoseRepository
 import club.hiraeth.flareenough.data.repository.MedicationRepository
@@ -46,6 +47,10 @@ class AppContainer(private val appContext: Context) {
         DayRepository(database.dayDao())
     }
 
+    val bodyPartRepository: BodyPartRepository by lazy {
+        BodyPartRepository(database.bodyPartDao())
+    }
+
     val meditationRepository: MeditationRepository by lazy {
         MeditationRepository(database.meditationDao())
     }
@@ -67,6 +72,7 @@ class AppContainer(private val appContext: Context) {
             database.doseDao(),
             database.symptomDao(),
             database.dayDao(),
+            database.bodyPartDao(),
         )
     }
 
@@ -77,6 +83,7 @@ class AppContainer(private val appContext: Context) {
             database.doseDao(),
             database.symptomDao(),
             database.dayDao(),
+            database.bodyPartDao(),
         )
     }
 

@@ -158,6 +158,7 @@ fun FlareApp() {
                             container.doseRepository,
                             container.symptomRepository,
                             container.dayRepository,
+                            container.bodyPartRepository,
                             container.settingsRepository,
                         )
                     }
@@ -287,6 +288,7 @@ private fun MainShell(
                             SymptomLogViewModel(
                                 container.symptomRepository,
                                 container.dayRepository,
+                                container.bodyPartRepository,
                                 container.settingsRepository,
                             )
                         }
@@ -305,6 +307,7 @@ private fun MainShell(
                                 container.symptomRepository,
                                 container.dayRepository,
                                 container.meditationRepository,
+                                container.bodyPartRepository,
                             )
                         }
                     },

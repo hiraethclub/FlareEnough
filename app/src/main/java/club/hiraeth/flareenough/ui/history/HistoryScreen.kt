@@ -52,6 +52,7 @@ import club.hiraeth.flareenough.data.db.entity.PeriodFlow
 import club.hiraeth.flareenough.data.db.entity.SessionType
 import club.hiraeth.flareenough.data.db.entity.SymptomTrackerEntity
 import club.hiraeth.flareenough.data.db.entity.TrackerType
+import club.hiraeth.flareenough.ui.symptoms.bodyPartDisplayName
 import club.hiraeth.flareenough.ui.symptoms.labelRes
 import club.hiraeth.flareenough.ui.support.formatEpochDay
 import club.hiraeth.flareenough.ui.support.formatInstantTime
@@ -314,7 +315,7 @@ private fun timelineContent(item: TimelineItem): Triple<androidx.compose.ui.grap
         )
         is TimelineItem.Body -> Triple(
             Icons.Filled.Healing,
-            stringResource(item.region.labelRes()),
+            bodyPartDisplayName(LocalContext.current, item.partKey, item.customName),
             stringResource(item.state.labelRes()),
         )
         is TimelineItem.Note -> Triple(Icons.Filled.EditNote, item.text, null)

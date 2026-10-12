@@ -56,8 +56,13 @@ data class SymptomEntryEntity(
 )
 
 /**
- * A marked region on the body map for a day. Tapping cycles sore, then swollen,
+ * A marked part on the body map for a day. Tapping cycles sore, painful, swollen,
  * then clear (clear removes the row).
+ *
+ * [region] holds the body part's stable key (see BodyPartEntity.key). It keeps the
+ * column name "region" and its text type from before body parts became editable, so no
+ * existing mark is disturbed: a mark made against the built in HAND_LEFT still reads as
+ * HAND_LEFT and lines up with that part.
  */
 @Entity(
     tableName = "body_map_entries",
@@ -66,7 +71,7 @@ data class SymptomEntryEntity(
 data class BodyMapEntryEntity(
     @PrimaryKey(autoGenerate = true) val id: Long = 0,
     val epochDay: Long,
-    val region: BodyRegion,
+    val region: String,
     val state: BodyState,
     val createdAtMillis: Long,
 )

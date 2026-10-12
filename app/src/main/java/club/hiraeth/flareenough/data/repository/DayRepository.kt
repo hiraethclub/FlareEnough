@@ -9,7 +9,6 @@ import club.hiraeth.flareenough.data.db.entity.FlareDayEntity
 import club.hiraeth.flareenough.data.db.entity.PeriodDayEntity
 import club.hiraeth.flareenough.data.db.entity.PeriodFlow
 import club.hiraeth.flareenough.data.db.entity.TagEntity
-import club.hiraeth.flareenough.data.db.entity.BodyRegion
 import kotlinx.coroutines.flow.Flow
 
 /** Day level data: flare flag, body map, notes, and tags. */
@@ -49,24 +48,24 @@ class DayRepository(private val dao: DayDao) {
         dao.observeBodyMapBetween(startEpochDay, endEpochDay)
 
     /**
-     * Cycle a region's mark: nothing to sore, sore to painful, painful to swollen,
-     * swollen to clear. This matches the tap behaviour of the body map and the list
-     * fallback.
+     * Cycle a part's mark: nothing to sore, sore to painful, painful to swollen,
+     * swollen to clear. [partKey] is the body part's stable key. This matches the tap
+     * behaviour of the body map and the list fallback.
      */
-    suspend fun cycleBodyRegion(epochDay: Long, region: BodyRegion, nowMillis: Long) {
-        val current = dao.getBodyMap(epochDay).firstOrNull { it.region == region }
+    suspend fun cycleBodyPart(epochDay: Long, partKey: String, nowMillis: Long) {
+        val current = dao.getBodyMap(epochDay).firstOrNull { it.region == partKey }
         when (current?.state) {
             null -> dao.setBodyRegion(
                 BodyMapEntryEntity(
                     epochDay = epochDay,
-                    region = region,
+                    region = partKey,
                     state = BodyState.SORE,
                     createdAtMillis = nowMillis,
                 ),
             )
             BodyState.SORE -> dao.setBodyRegion(current.copy(state = BodyState.PAINFUL))
             BodyState.PAINFUL -> dao.setBodyRegion(current.copy(state = BodyState.SWOLLEN))
-            BodyState.SWOLLEN -> dao.clearBodyRegion(epochDay, region.name)
+            BodyState.SWOLLEN -> dao.clearBodyRegion(epochDay, partKey)
         }
     }
 

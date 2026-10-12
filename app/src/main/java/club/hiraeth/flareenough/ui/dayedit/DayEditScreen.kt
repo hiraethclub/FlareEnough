@@ -56,7 +56,7 @@ fun DayEditScreen(viewModel: DayEditViewModel, onBack: () -> Unit) {
     val rows by viewModel.trackerRows.collectAsStateWithLifecycle()
     val flare by viewModel.flare.collectAsStateWithLifecycle()
     val bodyMap by viewModel.bodyMap.collectAsStateWithLifecycle()
-    val hidden by viewModel.hiddenBodyRegions.collectAsStateWithLifecycle()
+    val bodyCategories by viewModel.bodyPartCategories.collectAsStateWithLifecycle()
     val periodEnabled by viewModel.periodTrackingEnabled.collectAsStateWithLifecycle()
     val periodFlow by viewModel.periodFlow.collectAsStateWithLifecycle()
     val notes by viewModel.notes.collectAsStateWithLifecycle()
@@ -123,8 +123,8 @@ fun DayEditScreen(viewModel: DayEditViewModel, onBack: () -> Unit) {
 
             item {
                 BodyMapSection(
+                    categories = bodyCategories,
                     marks = bodyMap,
-                    hidden = hidden,
                     onCycle = { viewModel.cycleRegion(it) },
                 )
             }

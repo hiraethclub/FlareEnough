@@ -11,6 +11,7 @@ import club.hiraeth.flareenough.data.db.entity.PeriodDayEntity
 import club.hiraeth.flareenough.data.db.entity.SymptomEntryEntity
 import club.hiraeth.flareenough.data.db.entity.SymptomTrackerEntity
 import club.hiraeth.flareenough.data.db.entity.TrackerType
+import club.hiraeth.flareenough.data.repository.BodyPartRepository
 import club.hiraeth.flareenough.data.repository.DayRepository
 import club.hiraeth.flareenough.data.repository.DoseRepository
 import club.hiraeth.flareenough.data.repository.MedicationRepository
@@ -47,6 +48,7 @@ class HistoryViewModel(
     private val symptomRepository: SymptomRepository,
     private val dayRepository: DayRepository,
     private val meditationRepository: MeditationRepository,
+    bodyPartRepository: BodyPartRepository,
 ) : ViewModel() {
 
     private val zone: ZoneId = ZoneId.systemDefault()
@@ -61,6 +63,15 @@ class HistoryViewModel(
     private val trackers: StateFlow<Map<Long, SymptomTrackerEntity>> =
         symptomRepository.observeAllTrackers()
             .map { list -> list.associateBy { it.id } }
+            .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5_000), emptyMap())
+
+    // The custom name for each body part by its key (null for a default part, which the
+    // screen shows through its translated resource). Used to label body marks.
+    private val partNames: StateFlow<Map<String, String?>> =
+        bodyPartRepository.observeCategoriesWithParts()
+            .map { categories ->
+                categories.flatMap { it.parts }.associate { it.key to it.name }
+            }
             .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5_000), emptyMap())
 
     private val monthData: StateFlow<MonthRaw> =
@@ -93,12 +104,23 @@ class HistoryViewModel(
         )
 
     val uiState: StateFlow<HistoryUiState> =
-        combine(month, selected, monthData, medNames, trackers) { ym, day, raw, names, trackerMap ->
+        combine(month, selected, monthData, medNames, trackers, partNames) { values ->
+            @Suppress("UNCHECKED_CAST")
+            val ym = values[0] as YearMonth
+            @Suppress("UNCHECKED_CAST")
+            val day = values[1] as LocalDate
+            val raw = values[2] as MonthRaw
+            @Suppress("UNCHECKED_CAST")
+            val names = values[3] as Map<Long, String>
+            @Suppress("UNCHECKED_CAST")
+            val trackerMap = values[4] as Map<Long, SymptomTrackerEntity>
+            @Suppress("UNCHECKED_CAST")
+            val pNames = values[5] as Map<String, String?>
             HistoryUiState(
                 yearMonth = ym,
                 selectedDay = day,
                 summaries = buildSummaries(ym, raw, trackerMap),
-                timeline = buildTimeline(day, raw, names, trackerMap),
+                timeline = buildTimeline(day, raw, names, trackerMap, pNames),
             )
         }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(5_000), HistoryUiState())
 
@@ -163,6 +185,7 @@ class HistoryViewModel(
         raw: MonthRaw,
         names: Map<Long, String>,
         trackerMap: Map<Long, SymptomTrackerEntity>,
+        partNames: Map<String, String?>,
     ): List<TimelineItem> {
         val epochDay = day.toEpochDay()
         val items = mutableListOf<TimelineItem>()
@@ -199,7 +222,8 @@ class HistoryViewModel(
             items.add(
                 TimelineItem.Body(
                     timeMillis = mark.createdAtMillis,
-                    region = mark.region,
+                    partKey = mark.region,
+                    customName = partNames[mark.region],
                     state = mark.state,
                 ),
             )

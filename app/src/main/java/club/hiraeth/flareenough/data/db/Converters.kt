@@ -1,7 +1,6 @@
 package club.hiraeth.flareenough.data.db
 
 import androidx.room.TypeConverter
-import club.hiraeth.flareenough.data.db.entity.BodyRegion
 import club.hiraeth.flareenough.data.db.entity.BodyState
 import club.hiraeth.flareenough.data.db.entity.DoseStatus
 import club.hiraeth.flareenough.data.db.entity.LoggedVia
@@ -66,12 +65,6 @@ class Converters {
 
     @TypeConverter
     fun toTrackerType(value: String): TrackerType = TrackerType.valueOf(value)
-
-    @TypeConverter
-    fun fromBodyRegion(value: BodyRegion): String = value.name
-
-    @TypeConverter
-    fun toBodyRegion(value: String): BodyRegion = BodyRegion.valueOf(value)
 
     @TypeConverter
     fun fromBodyState(value: BodyState): String = value.name

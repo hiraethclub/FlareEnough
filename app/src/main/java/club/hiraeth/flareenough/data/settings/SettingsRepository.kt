@@ -5,9 +5,7 @@ import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.core.booleanPreferencesKey
 import androidx.datastore.preferences.core.edit
-import androidx.datastore.preferences.core.stringSetPreferencesKey
 import androidx.datastore.preferences.preferencesDataStore
-import club.hiraeth.flareenough.data.db.entity.BodyRegion
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 
@@ -15,29 +13,12 @@ private val Context.settingsDataStore: DataStore<Preferences> by preferencesData
 
 /**
  * App settings, kept in DataStore. Small preferences that are not medical records
- * live here rather than in the database.
- *
- * Body part visibility is stored as the set of hidden region names. Anything not in
- * that set is shown, so a fresh install shows every body part by default.
+ * live here rather than in the database. Body part visibility is a property of each
+ * body part now (see BodyPartEntity), not a setting.
  */
 class SettingsRepository(context: Context) {
 
     private val store = context.applicationContext.settingsDataStore
-
-    fun observeHiddenBodyRegions(): Flow<Set<BodyRegion>> =
-        store.data.map { prefs ->
-            (prefs[HIDDEN_BODY_REGIONS] ?: emptySet())
-                .mapNotNull { name -> runCatching { BodyRegion.valueOf(name) }.getOrNull() }
-                .toSet()
-        }
-
-    suspend fun setBodyRegionVisible(region: BodyRegion, visible: Boolean) {
-        store.edit { prefs ->
-            val current = prefs[HIDDEN_BODY_REGIONS]?.toMutableSet() ?: mutableSetOf()
-            if (visible) current.remove(region.name) else current.add(region.name)
-            prefs[HIDDEN_BODY_REGIONS] = current
-        }
-    }
 
     /**
      * Whether the optional period tracker is on. Off by default, so it appears only
@@ -63,7 +44,6 @@ class SettingsRepository(context: Context) {
     }
 
     private companion object {
-        val HIDDEN_BODY_REGIONS = stringSetPreferencesKey("hidden_body_regions")
         val PERIOD_TRACKING_ENABLED = booleanPreferencesKey("period_tracking_enabled")
         val APP_LOCK_ENABLED = booleanPreferencesKey("app_lock_enabled")
     }
