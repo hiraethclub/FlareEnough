@@ -59,7 +59,16 @@ fun defaultCategoryNameRes(key: String): Int? = when (key) {
     else -> null
 }
 
-/** The string resource for a default body part name, or null if the key is not a default. */
+/**
+ * The string resource for a default body part name, or null if the key is not a default.
+ *
+ * This, [defaultCategoryNameRes], and the [BodyRegion] enum are a permanent compatibility
+ * layer, not dead code. Built in parts store their name as null and are shown through
+ * these resources so the defaults stay translatable, and every mark recorded before body
+ * parts became editable is keyed by the old region name (for example HAND_LEFT). Removing
+ * the enum or these mappings would make those built in parts and old marks fall back to
+ * showing a raw key. Keep them even if nothing else references the enum.
+ */
 fun defaultBodyPartNameRes(key: String): Int? =
     runCatching { BodyRegion.valueOf(key).labelRes() }.getOrNull()
 

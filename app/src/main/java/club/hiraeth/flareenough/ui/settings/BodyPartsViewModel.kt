@@ -17,8 +17,9 @@ import kotlinx.coroutines.launch
  * do not use, and remove them.
  *
  * Hiding is always safe and keeps every recorded mark. Removing a part deletes the
- * marks recorded on it, and removing a category removes its parts too, so the screen
- * asks for confirmation first and shows how many marks would go.
+ * marks recorded on it, so the screen confirms first and says how many marks would go.
+ * A category can only be removed once it is empty, so removing one never deletes parts
+ * or marks; the screen asks the person to clear its parts out first.
  */
 class BodyPartsViewModel(
     private val repository: BodyPartRepository,
@@ -42,7 +43,14 @@ class BodyPartsViewModel(
         viewModelScope.launch { repository.renameCategory(category, name) }
     }
 
+    /**
+     * Remove a category, but only once it is empty. A category that still holds parts is
+     * protected, so deleting one can never strand the marks recorded on its parts. The
+     * screen stops this case before it reaches here; this guard is a second line.
+     */
     fun deleteCategory(category: BodyPartCategoryEntity) {
+        val group = categories.value.firstOrNull { it.category.id == category.id }
+        if (group != null && group.parts.isNotEmpty()) return
         viewModelScope.launch { repository.deleteCategory(category) }
     }
 

@@ -65,9 +65,10 @@ import kotlinx.coroutines.launch
  * reordered, hidden, or removed, so someone can track exactly the places they need, a
  * single finger or toe included.
  *
- * Hiding a part keeps everything recorded on it. Removing a part, or a category with
- * parts in it, deletes the marks recorded there, so those actions ask first and say
- * how many marks would go.
+ * Hiding a part keeps everything recorded on it. Removing a part deletes the marks
+ * recorded on it, so it asks first and says how many marks would go. A category can
+ * only be removed once it holds no parts, so removing one never deletes marks; a
+ * category that still has parts shows a notice asking for those to be cleared first.
  */
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -232,18 +233,23 @@ fun BodyPartsScreen(onBack: () -> Unit) {
     }
 
     deleteCategoryTarget?.let { group ->
-        val partCount = group.parts.size
-        val message = if (partCount > 0) {
-            pluralStringResource(R.plurals.body_parts_delete_category_parts, partCount, partCount)
+        if (group.parts.isNotEmpty()) {
+            // A category is protected while it holds parts, so removing it can never
+            // strand the marks recorded on those parts. The person clears the parts
+            // out first.
+            NoticeDialog(
+                title = stringResource(R.string.body_parts_category_not_empty_title),
+                message = stringResource(R.string.body_parts_category_not_empty_message),
+                onDismiss = { deleteCategoryTarget = null },
+            )
         } else {
-            stringResource(R.string.body_parts_delete_category_message)
+            ConfirmDialog(
+                title = stringResource(R.string.body_parts_delete_category_title),
+                message = stringResource(R.string.body_parts_delete_category_message),
+                onConfirm = { viewModel.deleteCategory(group.category); deleteCategoryTarget = null },
+                onDismiss = { deleteCategoryTarget = null },
+            )
         }
-        ConfirmDialog(
-            title = stringResource(R.string.body_parts_delete_category_title),
-            message = message,
-            onConfirm = { viewModel.deleteCategory(group.category); deleteCategoryTarget = null },
-            onDismiss = { deleteCategoryTarget = null },
-        )
     }
 }
 
@@ -423,6 +429,22 @@ private fun TextEntryDialog(
         },
         dismissButton = {
             TextButton(onClick = onDismiss) { Text(stringResource(R.string.action_cancel)) }
+        },
+    )
+}
+
+@Composable
+private fun NoticeDialog(
+    title: String,
+    message: String,
+    onDismiss: () -> Unit,
+) {
+    AlertDialog(
+        onDismissRequest = onDismiss,
+        title = { Text(title) },
+        text = { Text(message) },
+        confirmButton = {
+            TextButton(onClick = onDismiss) { Text(stringResource(R.string.action_ok)) }
         },
     )
 }
